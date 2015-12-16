@@ -1,0 +1,11 @@
+{
+    "name": "git",
+    "main": "./lib/index.js",
+    "description": "Pure javascript git implementation",
+    "version": "0.0.0",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "lodash": "3.10.1",
+        "q": "1.4.1"
+    }
+}
