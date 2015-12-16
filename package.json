@@ -6,6 +6,10 @@
     "license": "Apache-2.0",
     "dependencies": {
         "lodash": "3.10.1",
-        "q": "1.4.1"
+        "q": "1.4.1",
+        "commander": "2.9.0"
+    },
+    "scripts": {
+        "gitjs": "./bin/gitjs.js"
     }
 }
