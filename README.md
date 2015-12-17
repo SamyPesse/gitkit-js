@@ -83,6 +83,20 @@ head.resolve()
     });
 ```
 
+#### Tree
+
+Git stores content in a manner similar to a UNIX filesystem, with trees corresponding to UNIX directory entries and blobs corresponding more or less to inodes or file contents.
+
+```js
+var tree = repo.Tree('9e338a24037145d39696c544ed314acb29fe392f');
+
+tree.parse()
+    .then(function() {
+        // tree.entries is a map:
+        // filename -> {mode,type,sha}
+    });
+```
+
 #### Commits
 
 ###### Get a commit
