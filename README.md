@@ -1,6 +1,6 @@
 # git.js
 
-Pure javascript implementations of Git.
+Pure javascript implementation of Git.
 
 - ✨ Promise based
 - ✨ Node.js and Browser support
@@ -98,6 +98,35 @@ head.resolve()
 
 #### Commits
 
+```js
+
+var commit = repo.Commit('719578e6b1d9ab03ffff60d784f5cfd0dfea4471')
+
+commit.parse()
+    .then(function() {
+        // commit.email == 'samypesse@gmail.com'
+        // commit.message == 'My commit message'
+        // commit.parents is an array of Commit
+        // commit.author and commit.committer are of type Author
+    });
+```
+
+#### Author
+
+The class `Author` is an utility to access and generate author informations
+
+```js
+var me = new git.Author({
+    email: 'samypesse@gmail.com',
+    name: 'Samy Pessé'
+});
+
+repo.createCommit({
+    author: me,
+    committer: me,
+    ...
+});
+```
 
 #### Utilities
 
