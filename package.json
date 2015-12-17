@@ -9,7 +9,14 @@
         "q": "1.4.1",
         "commander": "2.9.0"
     },
+    "devDependencies": {
+        "mocha": "2.3.4",
+        "should": "8.0.1"
+    },
     "scripts": {
+        "test": "node_modules/.bin/mocha -b --reporter spec --timeout 15000"
+    },
+    "bin": {
         "gitjs": "./bin/gitjs.js"
     }
 }
