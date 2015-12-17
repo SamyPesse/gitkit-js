@@ -5,7 +5,7 @@ Pure javascript implementations of Git.
 - ✨ Promise based
 - ✨ Node.js and Browser support
 - ✨ Low-level API
-- ✨ High-level API
+- ✨ High-level API and easy to use utility methods
 
 ### Installation
 
@@ -20,10 +20,10 @@ $ npm install <name>
 The first step is to create a `Repo` object binded to a `FS`.
 
 ```js
-var GitRepo = require('<name>').Repo;
+var git = require('<name>');
 var FS = require('<name>/lib/fs/node');
 
-var repo = new GitRepo(FS(__dirname), {
+var repo = new git.Repo(FS(__dirname), {
     bare: false
 });
 ```
@@ -98,4 +98,18 @@ head.resolve()
 
 #### Commits
 
+
+#### Utilities
+
+##### Iterate over commits tree
+
+`repo.forEachCommit` makes it easy to iterate over the tree of commits by fetching parents.
+
+```js
+git.utils.forEachCommit(baseCommit, function(commit) {
+    console.log(commit.sha);
+}, {
+    limit: 100
+});
+```
 
