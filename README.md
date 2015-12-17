@@ -30,29 +30,35 @@ var repo = new GitRepo(FS(__dirname), {
 
 #### Branches
 
+Branches are a specific type of refs.
+
 ##### Listing branches
 
 ```js
 repo.listBranches()
-.then(function(branches) {
-    // branches is an array of Ref objects
-})
+    .then(function(branches) {
+        // branches is an array of Ref objects
+    })
 ```
 
 #### Refs (Branches, Tags)
+
+Refs are pointers to commits.
 
 ##### Listing refs
 
 ```js
 repo.listRefs('heads')
-.then(function(refs) {
-    // refs is an array of Ref objects
-})
+    .then(function(refs) {
+        // refs is an array of Ref objects
+    })
 ```
 
 `repo.listBranches` and `repo.listTags` are shortcuts for listing specific type of refs.
 
 ##### Update a ref
+
+Update a reference to point to a new commit is easy (for example after creating a new commit):
 
 ```js
 var master = repo.Head('refs/heads/master');
@@ -64,9 +70,30 @@ master.update(commit).then(function() { ... });
 
 ```js
 master.resolveToCommit()
-.then(function(commit) {
-    // commit is a Commit object
-})
+    .then(function(commit) {
+        // commit is a Commit object
+    })
+```
+
+#### Head
+
+`HEAD` files point to the current branch in a specific context. For example `.git/HEAD` points to the branch you currently have checked out; `.git/ORIG_HEAD` points to the corresponding branch on the origin remote.
+
+```js
+// By default it will resolve to '.git/HEAD'
+var head = repo.Head();
+
+// You can specify another HEAD file
+var origHead = repo.Head('ORIG_HEAD');
+```
+
+##### Resolve to a Ref
+
+```js
+head.resolve()
+    .then(function(ref) {
+
+    });
 ```
 
 #### Commits
