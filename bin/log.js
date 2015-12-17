@@ -11,6 +11,8 @@ program
             return commit.parse()
             .then(function() {
                 console.log(commit.sha);
+                console.log(commit.author.toString())
+                console.log(commit.message);
                 console.log('');
             });
         }
