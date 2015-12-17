@@ -32,7 +32,7 @@ var repo = new git.Repo(FS(__dirname), {
 
 Refs are pointers to commits.
 
-##### Listing refs
+###### Listing refs
 
 ```js
 repo.listRefs('heads')
@@ -43,7 +43,7 @@ repo.listRefs('heads')
 
 `repo.listBranches()` and `repo.listTags()` are shortcuts for listing specific type of refs.
 
-##### Update a ref
+###### Update a ref
 
 Update a reference to point to a new commit is easy (for example after creating a new commit):
 
@@ -53,7 +53,7 @@ var master = repo.Head('refs/heads/master');
 master.update(commit).then(function() { ... });
 ```
 
-##### Resolve a ref to a commit
+###### Resolve a ref to a commit
 
 ```js
 master.resolveToCommit()
@@ -74,7 +74,7 @@ var head = repo.Head();
 var origHead = repo.Head('ORIG_HEAD');
 ```
 
-##### Resolve to a Ref
+###### Resolve to a Ref
 
 ```js
 head.resolve()
@@ -85,8 +85,9 @@ head.resolve()
 
 #### Commits
 
-```js
+###### Get a commit
 
+```js
 var commit = repo.Commit('719578e6b1d9ab03ffff60d784f5cfd0dfea4471')
 
 commit.parse()
@@ -96,6 +97,22 @@ commit.parse()
         // commit.parents is an array of Commit
         // commit.author and commit.committer are of type Author
     });
+```
+
+###### Create a commit
+
+```js
+var tree = repo.Tree('...');
+
+repo.createCommit({
+    author: me,
+    committer: me,
+    message: 'My Awesome commit',
+    tree: tree
+})
+.then(function(commit) {
+    ...
+});
 ```
 
 #### Author
@@ -117,7 +134,7 @@ repo.createCommit({
 
 #### Utilities
 
-##### Iterate over commits tree
+###### Iterate over commits tree
 
 `repo.forEachCommit` makes it easy to iterate over the tree of commits by fetching parents.
 
