@@ -83,6 +83,14 @@ head.parse()
     });
 ```
 
+###### Update the HEAD
+
+When checkout a new branch, you need to update the HEAD to point to a new branch:
+
+```js
+head.update(myRef)
+```
+
 #### Tree
 
 Git stores content in a manner similar to a UNIX filesystem, with trees corresponding to UNIX directory entries and blobs corresponding more or less to inodes or file contents.
