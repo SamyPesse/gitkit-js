@@ -28,19 +28,6 @@ var repo = new git.Repo(FS(__dirname), {
 });
 ```
 
-#### Branches
-
-Branches are a specific type of refs.
-
-##### Listing branches
-
-```js
-repo.listBranches()
-    .then(function(branches) {
-        // branches is an array of Ref objects
-    })
-```
-
 #### Refs (Branches, Tags)
 
 Refs are pointers to commits.
@@ -54,7 +41,7 @@ repo.listRefs('heads')
     })
 ```
 
-`repo.listBranches` and `repo.listTags` are shortcuts for listing specific type of refs.
+`repo.listBranches()` and `repo.listTags()` are shortcuts for listing specific type of refs.
 
 ##### Update a ref
 
