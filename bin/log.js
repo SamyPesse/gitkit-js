@@ -17,12 +17,12 @@ program
             console.log('');
         }
 
-        head.resolve()
-        .then(function(ref) {
-            return ref.resolveToCommit();
+        head.parse()
+        .then(function() {
+            return head.ref.parse();
         })
-        .then(function(base) {
-            return git.utils.forEachCommit(base, printCommit, { limit: limit });
+        .then(function() {
+            return git.utils.forEachCommit(head.ref.commit, printCommit, { limit: limit });
         })
         .fail(console.log.bind(console));
     });

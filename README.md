@@ -53,12 +53,12 @@ var master = repo.Head('refs/heads/master');
 master.update(commit).then(function() { ... });
 ```
 
-###### Resolve a ref to a commit
+###### Parse and resolve a ref
 
 ```js
-master.resolveToCommit()
-    .then(function(commit) {
-        // commit is a Commit object
+master.parse()
+    .then(function() {
+        // master.commit is a Commit object
     })
 ```
 
@@ -74,12 +74,12 @@ var head = repo.Head();
 var origHead = repo.Head('ORIG_HEAD');
 ```
 
-###### Resolve to a Ref
+###### Parse and resolve
 
 ```js
-head.resolve()
-    .then(function(ref) {
-
+head.parse()
+    .then(function() {
+        // head.ref is Ref object
     });
 ```
 
