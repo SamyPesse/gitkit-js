@@ -161,7 +161,7 @@ repo.createCommit({
 `repo.forEachCommit` makes it easy to iterate over the tree of commits by fetching parents.
 
 ```js
-git.utils.forEachCommit(baseCommit, function(commit) {
+git.iterate.forEachCommit(baseCommit, function(commit) {
     console.log(commit.sha);
 }, {
     limit: 100
