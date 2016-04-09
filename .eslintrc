@@ -10,20 +10,10 @@
         } ],
         "spaced-comment": [ 2, "always" ]
     },
-    "ecmaFeatures": {
-        "jsx": true,
-        "experimentalObjectRestSpread": true
-    },
     "env": {
         "node": true,
-        "browser": true
-    },
-    "plugins": [
-        "react"
-    ],
-    "globals": {
-        "electronRequire": true,
-        "remote": true
+        "mocha": true,
+        "browser": false
     },
     "extends": "eslint:recommended"
 }
