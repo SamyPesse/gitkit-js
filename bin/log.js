@@ -18,13 +18,8 @@ module.exports = command('log', function(repo, args) {
         if (i >= MAX) return false;
     }
 
-    return git.Head.readFromRepo(repo)
-        .then(function(head) {
-            var refName = head.getRef();
-            return git.Ref.readFromRepo(repo, refName);
-        })
-        .then(function(ref) {
-            var baseSHA = ref.getCommit();
+    return git.CommitUtils.getHead(repo)
+        .then(function(baseSHA) {
             return git.CommitUtils.walk(repo, baseSHA, logCommit);
         });
 });
