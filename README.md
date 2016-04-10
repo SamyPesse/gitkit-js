@@ -24,3 +24,16 @@ $ gitjs cat-file [sha]
 $ gitjs ls-files
 ```
 
+### Usage
+
+##### Track a file
+
+Add a file to the working index:
+
+```js
+git.WorkingUtils.add(repo, 'README.md')
+    .then(function() {
+        ...
+    });
+```
+
