@@ -7,7 +7,7 @@ module.exports = command('log', function(repo, args) {
     var MAX = 100;
     var i = 0;
 
-    function logCommit(sha, commit, depth) {
+    function printCommit(sha, commit, depth) {
         i++;
 
         console.log('commit', sha);
@@ -20,6 +20,6 @@ module.exports = command('log', function(repo, args) {
 
     return git.CommitUtils.getHead(repo)
         .then(function(baseSHA) {
-            return git.CommitUtils.walk(repo, baseSHA, logCommit);
+            return git.CommitUtils.walk(repo, baseSHA, printCommit);
         });
 });

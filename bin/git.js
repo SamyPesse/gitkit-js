@@ -11,7 +11,8 @@ var FS = require('../lib/fs/node');
 var COMMANDS = [
     require('./log'),
     require('./ls-tree'),
-    require('./cat-file')
+    require('./cat-file'),
+    require('./branch')
 ];
 
 var fs = new FS(process.cwd());
@@ -19,6 +20,7 @@ var repo = git.Repository.createWithFS(fs);
 var log = console.log.bind(console);
 
 program
+    .option('--debug', 'Enable debugging')
     .version(pkg.version);
 
 COMMANDS.forEach(function(command) {
@@ -31,7 +33,10 @@ COMMANDS.forEach(function(command) {
         .then(function() {
             return command.exec(repo, args, {});
         })
-        .fail(log);
+        .fail(function(err) {
+            console.error(program.debug? err.stack : err.message);
+            process.exit(1);
+        });
     });
 });
 
