@@ -7,5 +7,5 @@ module.exports = command('status', function(repo, args) {
     return git.WorkingIndex.readFromRepo(repo)
         .then(function(index) {
 
-        })
+        });
 });

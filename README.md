@@ -19,5 +19,8 @@ $ gitjs ls-tree [sha]
 
 # Print an object (blob / tree / commit)
 $ gitjs cat-file [sha]
+
+# List all files in working directory
+$ gitjs ls-files
 ```
 

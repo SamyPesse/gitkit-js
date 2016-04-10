@@ -11,6 +11,7 @@ var FS = require('../lib/fs/node');
 var COMMANDS = [
     require('./log'),
     require('./ls-tree'),
+    require('./ls-files'),
     require('./cat-file'),
     require('./branch'),
     require('./status')
