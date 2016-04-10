@@ -10,7 +10,8 @@ var FS = require('../lib/fs/node');
 
 var COMMANDS = [
     require('./log'),
-    require('./ls-tree')
+    require('./ls-tree'),
+    require('./cat-file')
 ];
 
 var fs = new FS(process.cwd());

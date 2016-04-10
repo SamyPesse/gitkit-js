@@ -8,6 +8,16 @@ Pure JavaScript implementation of Git backed by immutable models.
 $ npm install <name>
 ```
 
-### Usage
+### Command line Usage
 
+```
+# List commits on the current branch
+$ gitjs log
+
+# List entries in a tree
+$ gitjs ls-tree [sha]
+
+# Print an object (blob / tree / commit)
+$ gitjs cat-file [sha]
+```
 

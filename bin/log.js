@@ -10,7 +10,7 @@ module.exports = command('log', function(repo, args) {
     function logCommit(sha, commit, depth) {
         i++;
 
-        console.log(sha);
+        console.log('commit', sha);
         console.log(commit.getAuthor().toString());
         console.log(commit.getMessage());
         console.log('');
