@@ -6,10 +6,11 @@
     @param {Function} func
     @return {Object}
 */
-function createCommand(description, func) {
+function createCommand(description, func, opts) {
     return {
         description: description,
-        exec: func
+        exec: func,
+        options: opts || []
     };
 }
 

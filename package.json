@@ -18,7 +18,7 @@
   "devDependencies": {
     "eslint": "^2.7.0",
     "mocha": "2.3.4",
-    "should": "8.0.1"
+    "should": "^8.0.1"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha -b --reporter spec --timeout 15000 ./test/all.js"

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 
+var Q = require('q');
+var is = require('is');
 var program = require('commander');
 
 var pkg = require('../package.json');
@@ -14,6 +16,7 @@ var COMMANDS = [
     require('./cat-file'),
     require('./branch'),
     require('./status'),
+    require('./commit'),
     require('./add'),
     require('./init')
 ];
@@ -25,14 +28,32 @@ program
     .version(pkg.version);
 
 COMMANDS.forEach(function(command) {
-    program
-    .command(command.description)
-    .action(function() {
-        var args = Array.prototype.slice.call(arguments, 0, -1);
+    var cmd = program.command(command.description);
 
-        Git.RepoUtils.prepare(fs)
+    command.options.forEach(function(opt) {
+        cmd = cmd.option('--'+opt.name+' ['+opt.name+']', opt.description);
+    });
+
+    cmd.action(function() {
+        var args = Array.prototype.slice.call(arguments, 0, -1);
+        var kwargs;
+
+        Q()
+        .then(function() {
+            kwargs = command.options.reduce(function(out, opt) {
+                out[opt.name] = command.options[opt.name];
+
+                if (is.undefined(out[opt.name]) && opt.required) {
+                    throw new Error('Parameter "' + opt.name + '" is required');
+                }
+
+                return out;
+            }, {});
+
+            return Git.RepoUtils.prepare(fs);
+        })
         .then(function(repo) {
-            return command.exec(repo, args, {});
+            return command.exec(repo, args, kwargs);
         })
         .fail(function(err) {
             console.error(program.debug? err.stack : err.message);

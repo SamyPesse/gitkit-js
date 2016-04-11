@@ -59,7 +59,7 @@ Git.Blob.writeToRepo(blob)
 ##### Create a tree
 
 ```js
-var treeEntry = Git.TreeEntry.createForBlob('test.txt');
+var treeEntry = Git.TreeEntry.createForBlob('test.txt', blobSha);
 
 var tree = Git.Tree.create([
     treeEntry
