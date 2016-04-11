@@ -17,7 +17,12 @@ var nonBare = Git.Repository.createWithFS(
     false
 );
 
+// Create a john doe person
+var person = Git.Person.create('John Doe', 'john.doe@gmail.com');
+
+
 module.exports = {
     bare: bare,
-    nonBare: nonBare
+    nonBare: nonBare,
+    person: person
 };
