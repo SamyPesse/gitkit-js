@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 
-var Q = require('q');
 var program = require('commander');
 
 var pkg = require('../package.json');
-var git = require('../lib');
+var Git = require('../lib');
 var FS = require('../lib/fs/node');
 
 var COMMANDS = [
@@ -19,8 +18,6 @@ var COMMANDS = [
 ];
 
 var fs = new FS(process.cwd());
-var repo = git.Repository.createWithFS(fs);
-var log = console.log.bind(console);
 
 program
     .option('--debug', 'Enable debugging')
@@ -32,8 +29,8 @@ COMMANDS.forEach(function(command) {
     .action(function() {
         var args = Array.prototype.slice.call(arguments, 0, -1);
 
-        Q()
-        .then(function() {
+        Git.RepoUtils.prepare(fs)
+        .then(function(repo) {
             return command.exec(repo, args, {});
         })
         .fail(function(err) {

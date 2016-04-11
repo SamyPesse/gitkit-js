@@ -34,7 +34,7 @@ var NodeFS = require('git-js/lib/fs/node');
 var fs = NodeFS(process.cwd());
 
 // Create a repository instance
-var repo = Repository.createWithFS(fs);
+var repo = Repository.createWithFS(fs, isBare);
 ```
 
 ##### Track a file
