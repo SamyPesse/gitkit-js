@@ -14,7 +14,8 @@ var COMMANDS = [
     require('./cat-file'),
     require('./branch'),
     require('./status'),
-    require('./add')
+    require('./add'),
+    require('./init')
 ];
 
 var fs = new FS(process.cwd());

@@ -11,6 +11,7 @@
     "immutable": "^3.7.6",
     "is": "^3.1.0",
     "lodash": "3.10.1",
+    "mkdir": "0.0.2",
     "q": "1.4.1"
   },
   "devDependencies": {

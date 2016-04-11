@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-var git = require('../');
+var Git = require('../');
 var command = require('./command');
 
 module.exports = command('log', function(repo, args) {
@@ -18,8 +18,8 @@ module.exports = command('log', function(repo, args) {
         if (i >= MAX) return false;
     }
 
-    return git.CommitUtils.getHead(repo)
+    return Git.CommitUtils.getHead(repo)
         .then(function(baseSHA) {
-            return git.CommitUtils.walk(repo, baseSHA, printCommit);
+            return Git.CommitUtils.walk(repo, baseSHA, printCommit);
         });
 });
