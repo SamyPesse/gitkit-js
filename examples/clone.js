@@ -21,5 +21,5 @@ Git.RepoUtils.init(repo)
         console.log('Clone succeed!');
     }, function(err) {
         console.log('Clone failed:');
-        console.log(err);
+        console.log(err.stack || err);
     });
