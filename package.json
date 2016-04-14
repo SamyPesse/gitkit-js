@@ -9,21 +9,25 @@
     "bash-color": "0.0.3",
     "binary": "^0.3.0",
     "commander": "2.9.0",
+    "http-browserify": "^1.7.0",
     "ignore": "^3.1.1",
     "immutable": "^3.7.6",
     "is": "^3.1.0",
     "lodash": "3.10.1",
     "mkdir": "0.0.2",
     "pad": "^1.0.0",
-    "q": "1.4.1"
+    "q": "1.4.1",
+    "stream-combiner2": "^1.1.1",
+    "through2": "^2.0.1"
   },
   "devDependencies": {
     "eslint": "^2.7.0",
+    "into-stream": "^2.0.0",
     "mocha": "2.3.4",
     "should": "^8.0.1"
   },
   "scripts": {
-    "test": "node_modules/.bin/mocha -b --reporter spec --timeout 15000 ./test/all.js"
+    "test": "node_modules/.bin/mocha -b --reporter spec --bail --timeout 15000 ./test/all.js"
   },
   "bin": {
     "gitjs": "./bin/git.js"
