@@ -1,5 +1,5 @@
 {
-  "name": "git",
+  "name": "gitkit",
   "main": "./lib/index.js",
   "description": "Pure javascript git implementation",
   "version": "0.0.0",
@@ -30,6 +30,6 @@
     "test": "node_modules/.bin/mocha -b --reporter spec --bail --timeout 15000 ./test/all.js"
   },
   "bin": {
-    "gitjs": "./bin/git.js"
+    "gitkit": "./bin/git.js"
   }
 }

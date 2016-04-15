@@ -1,27 +1,27 @@
-# git.js
+# gitkit
 
 Pure JavaScript implementation of Git backed by immutable models and promises.
 
 ## Installation
 
 ```
-$ npm install <name>
+$ npm install gitkit
 ```
 
 ## Command line Usage
 
 ```
 # List commits on the current branch
-$ gitjs log
+$ gitkit log
 
 # List entries in a tree
-$ gitjs ls-tree [sha]
+$ gitkit ls-tree [sha]
 
 # Print an object (blob / tree / commit)
-$ gitjs cat-file [sha]
+$ gitkit cat-file [sha]
 
 # List all files in working directory
-$ gitjs ls-files
+$ gitkit ls-files
 ```
 
 ## Usage
