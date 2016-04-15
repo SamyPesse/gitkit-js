@@ -1,7 +1,8 @@
 require('should');
 
 require('./parsePktLines');
+require('./parseDiscovery');
 
-require('./blob');
-require('./RepoUtils');
+//require('./blob');
+//require('./RepoUtils');
 

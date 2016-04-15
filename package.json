@@ -9,6 +9,7 @@
     "bash-color": "0.0.3",
     "binary": "^0.3.0",
     "commander": "2.9.0",
+    "dissolve": "^0.3.3",
     "http-browserify": "^1.7.0",
     "ignore": "^3.1.1",
     "immutable": "^3.7.6",
@@ -18,7 +19,8 @@
     "pad": "^1.0.0",
     "q": "1.4.1",
     "stream-combiner2": "^1.1.1",
-    "through2": "^2.0.1"
+    "through2": "^2.0.1",
+    "through2-filter": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^2.7.0",
