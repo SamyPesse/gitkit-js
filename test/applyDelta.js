@@ -6,7 +6,7 @@ var BASE = 'dHJlZSA0YWRlOTdjMTgxMjNjNTdhNTBlM2I5OTIzZDA1M2ZkMmRiNGY2MDVmCnBhcmVu
 var OUTPUT = 'dHJlZSA0YWRlOTdjMTgxMjNjNTdhNTBlM2I5OTIzZDA1M2ZkMmRiNGY2MDVmCnBhcmVudCBkMjVjYTI1YWFiZjk5M2U4NTI3ZDdiODRhYTYzMTg5MWYyZWVlZjQ4CmF1dGhvciBDaHJpcyBEaWNraW5zb24gPGNocmlzdG9waGVyLnMuZGlja2luc29uQGdtYWlsLmNvbT4gMTM1NjA2OTUzMyAtMDgwMApjb21taXR0ZXIgQ2hyaXMgRGlja2luc29uIDxjaHJpc3RvcGhlci5zLmRpY2tpbnNvbkBnbWFpbC5jb20+IDEzNTYwNjk1MzMgLTA4MDAKCmFkZCBhc3NlcnQuZW5kKCkgdG8gdXRpbHMgdGVzdHMK';
 
 
-describe.only('applyDelta', function() {
+describe('applyDelta', function() {
     it('should correctly apply delta', function() {
         var delta = new Buffer(DELTA, 'base64');
         var base = new Buffer(BASE, 'base64');
