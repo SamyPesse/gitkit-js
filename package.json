@@ -21,7 +21,8 @@
     "q": "1.4.1",
     "stream-combiner2": "^1.1.1",
     "through2": "^2.0.1",
-    "through2-filter": "^2.0.0"
+    "through2-filter": "^2.0.0",
+    "varint": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "^2.7.0",
