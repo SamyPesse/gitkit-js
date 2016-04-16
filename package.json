@@ -1,15 +1,20 @@
 {
   "name": "gitkit",
   "main": "./lib/index.js",
-  "description": "Pure javascript git implementation",
+  "description": "Pure javascript implementation of Git",
   "version": "0.0.0",
   "license": "Apache-2.0",
+  "author": "Samy Pesse <samypesse@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SamyPesse/gitkit.js.git"
+  },
   "dependencies": {
     "axios": "^0.9.1",
     "bash-color": "0.0.3",
     "binary": "^0.3.0",
     "commander": "2.9.0",
-    "dissolve": "^0.3.3",
+    "dissolve": "deoxxa/dissolve#4fd1556d0199a27dd0a6f9f22cb6648194301454",
     "http-browserify": "^1.7.0",
     "ignore": "^3.1.1",
     "immutable": "^3.7.6",

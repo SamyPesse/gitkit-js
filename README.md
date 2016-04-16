@@ -2,6 +2,8 @@
 
 Pure JavaScript implementation of Git backed by immutable models and promises.
 
+The goal is to provide both a low and high level API for manipulating Git repositories: read files, commit changes, edit working index, clone, push, fetch, etc.
+
 ## Installation
 
 ```
@@ -23,6 +25,12 @@ $ gitkit cat-file [sha]
 # List all files in working directory
 $ gitkit ls-files
 ```
+
+## Examples
+
+| Example | Description |
+| ------- | ----------- |
+| [Clone](./examples/clone.js) | Clone a remote git repository |
 
 ## Usage
 

@@ -11,6 +11,9 @@ describe('parsePack', function() {
         .on('data', function(line) {
             packCount++;
         })
+        .on('error', function(err) {
+            done(err);
+        })
         .on('finish', function() {
             packCount.should.equal(481);
 
@@ -21,18 +24,21 @@ describe('parsePack', function() {
 });
 
 describe('parseUploadPack', function() {
-    this.timeout(30000);
+    this.timeout(3000000);
 
     it('should output all lines', function(done) {
-        var packCount = 0;
+        var objectCount = 0;
 
         fixtures.createReadStream('pack-http-output')
         .pipe(parseUploadPack())
-        .on('data', function(line) {
-            packCount++;
+        .on('data', function() {
+            objectCount++;
+        })
+        .on('error', function(err) {
+            done(err);
         })
         .on('finish', function() {
-            packCount.should.equal(10);
+            objectCount.should.equal(12545);
 
             done();
         });
