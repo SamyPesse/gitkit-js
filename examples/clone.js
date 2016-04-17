@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 var path = require('path');
 
 var Git = require('../');
@@ -20,9 +21,20 @@ Git.RepoUtils.init(repo)
         return Git.TransferUtils.clone(repo, transport);
     })
 
-    .then(function() {
-        console.log('Clone succeed!');
-    }, function(err) {
-        console.log('Clone failed:');
-        console.log(err.stack || err);
-    });
+    .then(
+        // Success
+        function() {
+            console.log('Clone succeed!');
+        },
+
+        // Error
+        function(err) {
+            console.log('Clone failed:');
+            console.log(err.stack || err);
+        },
+
+        // Progress
+        function(progress) {
+            console.log(progress.type, progress.percent.toFixed(0)+'%');
+        }
+    );
