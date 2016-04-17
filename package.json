@@ -15,6 +15,7 @@
     "binary": "^0.3.0",
     "buffer-to-uint8array": "^1.1.0",
     "commander": "2.9.0",
+    "concentrate": "^0.2.3",
     "dissolve": "deoxxa/dissolve#4fd1556d0199a27dd0a6f9f22cb6648194301454",
     "http-browserify": "^1.7.0",
     "ignore": "^3.1.1",
