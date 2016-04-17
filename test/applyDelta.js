@@ -1,5 +1,5 @@
 var Buffer = require('buffer').Buffer;
-var applyDelta = require('../lib/utils/transfer/applyDelta');
+var applyDelta = require('../lib/TransferUtils/applyDelta');
 
 var DELTA = 'mwKaApA1KGQyNWNhMjVhYWJmOTkzZTg1MjdkN2I4NGFhNjMxODkxZjJlZWVmNDiRXUAFMDY5NTORokouMDY5NTMzIC0wODAwCgphZGQgYXNzZXJ0LmVuZCgpIHRvIHV0aWxzIHRlc3RzCg==';
 var BASE = 'dHJlZSA0YWRlOTdjMTgxMjNjNTdhNTBlM2I5OTIzZDA1M2ZkMmRiNGY2MDVmCnBhcmVudCA3N2ZlMTg0OTRiNGI3ZWJmMGVjY2E0ZDBjY2Y4NTA3M2ZiMjFiZGZiCmF1dGhvciBDaHJpcyBEaWNraW5zb24gPGNocmlzdG9waGVyLnMuZGlja2luc29uQGdtYWlsLmNvbT4gMTM1NjY1NDMwMyAtMDgwMApjb21taXR0ZXIgQ2hyaXMgRGlja2luc29uIDxjaHJpc3RvcGhlci5zLmRpY2tpbnNvbkBnbWFpbC5jb20+IDEzNTY2NTQzMDMgLTA4MDAKCmJ1bXAgdmVyc2lvbiBmb3IgY2kudGVzdGxpbmcuY29tCg==';

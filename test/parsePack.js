@@ -1,5 +1,5 @@
-var parseUploadPack = require('../lib/utils/transfer/parseUploadPack');
-var parsePack = require('../lib/utils/transfer/parsePack');
+var parseUploadPack = require('../lib/TransferUtils/parseUploadPack');
+var parsePack = require('../lib/TransferUtils/parsePack');
 var fixtures = require('./fixtures');
 
 describe('parsePack', function() {

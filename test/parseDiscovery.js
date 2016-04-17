@@ -1,4 +1,4 @@
-var parseDiscovery = require('../lib/utils/transfer/parseDiscovery');
+var parseDiscovery = require('../lib/TransferUtils/parseDiscovery');
 var fixtures = require('./fixtures');
 
 describe('parseDiscovery', function() {

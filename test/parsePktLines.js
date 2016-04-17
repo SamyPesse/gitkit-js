@@ -1,8 +1,8 @@
 var should = require('should');
 var intoStream = require('into-stream');
 
-var parsePktLines = require('../lib/utils/transfer/parsePktLines');
-var parsePktLineMeta = require('../lib/utils/transfer/parsePktLineMeta');
+var parsePktLines = require('../lib/TransferUtils/parsePktLines');
+var parsePktLineMeta = require('../lib/TransferUtils/parsePktLineMeta');
 var fixtures = require('./fixtures');
 
 var data = [

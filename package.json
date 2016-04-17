@@ -13,6 +13,7 @@
     "axios": "^0.9.1",
     "bash-color": "0.0.3",
     "binary": "^0.3.0",
+    "buffer-to-uint8array": "^1.1.0",
     "commander": "2.9.0",
     "dissolve": "deoxxa/dissolve#4fd1556d0199a27dd0a6f9f22cb6648194301454",
     "http-browserify": "^1.7.0",
@@ -27,6 +28,7 @@
     "stream-combiner2": "^1.1.1",
     "through2": "^2.0.1",
     "through2-filter": "^2.0.0",
+    "typedarray-to-buffer": "^3.1.2",
     "varint": "^4.0.0"
   },
   "devDependencies": {
