@@ -34,7 +34,7 @@ Git.RepoUtils.init(repo)
         },
 
         // Progress
-        function(progress) {
-            console.log(progress.type, progress.percent.toFixed(0)+'%');
+        function(line) {
+            console.log(line.getMessage());
         }
     );
