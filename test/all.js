@@ -1,7 +1,9 @@
 require('should');
 
 // Models
+require('./object');
 require('./blob');
+require('./tree');
 require('./workingIndex');
 
 // Transfer
