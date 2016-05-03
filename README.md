@@ -12,12 +12,6 @@ $ npm install gitkit
 
 ## Usage
 
-#### Examples
-
-| Example | Description |
-| ------- | ----------- |
-| [Clone](./examples/clone.js) | Clone a remote git repository |
-
 #### API
 
 ```js
@@ -31,21 +25,12 @@ var fs = NodeFS(process.cwd());
 var repo = Repository.createWithFS(fs, isBare);
 ```
 
-#### Command line Usage
+#### Examples
 
-```
-# List commits on the current branch
-$ gitkit log
+| Example | Description |
+| ------- | ----------- |
+| [Clone](./examples/clone.js) | Clone a remote git repository |
 
-# List entries in a tree
-$ gitkit ls-tree [sha]
-
-# Print an object (blob / tree / commit)
-$ gitkit cat-file [sha]
-
-# List all files in working directory
-$ gitkit ls-files
-```
 
 ## Thanks
 
