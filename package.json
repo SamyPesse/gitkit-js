@@ -42,6 +42,6 @@
     "lint": "eslint ."
   },
   "bin": {
-    "gitkit": "./bin/git.js"
+    "gitkit": "./bin/gitkit.js"
   }
 }
