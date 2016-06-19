@@ -13,7 +13,7 @@
     "env": {
         "node": true,
         "mocha": true,
-        "browser": false,
+        "browser": true,
         "jasmine": true
     },
     "globals": {

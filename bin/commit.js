@@ -12,6 +12,10 @@ module.exports = command('commit', function(repo, args, kwargs) {
                 return change.isTracked();
             });
 
+            // todo
+            var author = null;
+            var message = kwargs.message;
+
             return Git.CommitUtils.createForChanges(repo, author, message, changes);
         });
 }, [
