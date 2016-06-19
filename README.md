@@ -1,5 +1,9 @@
 # gitkit
 
+[![NPM version](https://badge.fury.io/js/gitkit.svg)](http://badge.fury.io/js/gitkit)
+[![Linux Build Status](https://travis-ci.org/SamyPesse/gitkit-js.png?branch=master)](https://travis-ci.org/SamyPesse/gitkit-js)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/63nlflxcwmb2pue6?svg=true)](https://ci.appveyor.com/project/SamyPesse/gitkit-js)
+
 Pure JavaScript implementation of Git backed by immutable models and promises.
 
 The goal is to provide both a low and high level API for manipulating Git repositories: read files, commit changes, edit working index, clone, push, fetch, etc.
