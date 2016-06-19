@@ -31,7 +31,7 @@ var fs = NodeFS(process.cwd());
 var repo = GitKit.Repository.createWithFS(fs, isBare);
 ```
 
-###### Clone a remote repository
+##### Clone a remote repository
 
 ```js
 // Create a transport instance for the GitHub repository
@@ -45,7 +45,7 @@ GitKit.TransferUtils.clone(repo, transport)
 })
 ```
 
-###### List branches
+##### List branches
 
 `GitKit.BranchUtils.list` returns a promise listing branches as a list of strings.
 
@@ -54,7 +54,7 @@ GitKit.BranchUtils.list(repo)
     .then(function(branches) { ... })
 ```
 
-###### Get current branch
+##### Get current branch
 
 `GitKit.BranchUtils.getCurrent` returns a promise resolved with the name of the current active branch.
 
