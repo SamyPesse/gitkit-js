@@ -45,12 +45,47 @@ GitKit.TransferUtils.clone(repo, transport)
 })
 ```
 
-#### Examples
+###### List branches
 
-| Example | Description |
-| ------- | ----------- |
-| [Clone](./examples/clone.js) | Clone a remote git repository |
+`GitKit.BranchUtils.list` returns a promise listing branches as a list of strings.
 
+```js
+GitKit.BranchUtils.list(repo)
+    .then(function(branches) { ... })
+```
+
+###### Get current branch
+
+`GitKit.BranchUtils.getCurrent` returns a promise resolved with the name of the current active branch.
+
+```js
+GitKit.BranchUtils.getCurrent(repo)
+    .then(function(branch) { ... })
+```
+
+##### List files in repository
+
+`GitKit.WorkingIndex` provides a set of methods to work with the working index.
+
+```js
+GitKit.WorkingIndex.readFromRepo(repo)
+    .then(function(workingIndex) {
+        var entries = workingIndex.getEntries();
+    });
+```
+
+##### List changes not staged for commit
+
+`GitKit.ChangesUtils` provides a set of methods to work with pending changes.
+
+```js
+GitKit.ChangesUtils.list(repo)
+    .then(function(changes) { ... });
+```
+
+##### More example and documentation coming soon!
+
+I'll publish a better documentation for this library soon.
 
 ## Thanks
 
