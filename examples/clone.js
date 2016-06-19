@@ -1,24 +1,24 @@
 /* eslint-disable no-console */
 var path = require('path');
 
-var Git = require('../');
+var GitKit = require('../');
 var NodeFS = require('../lib/fs/node');
 
 // Create a transport instance for the GitHub repository
-var transport = new Git.HTTPTransport('https://github.com/GitbookIO/gitbook.git');
+var transport = new GitKit.HTTPTransport('https://github.com/GitbookIO/gitbook.git');
 
 // Create an FS to write the output repository
 var fs = new NodeFS(path.resolve(__dirname, '../.tmp/test-clone'));
 
 // Create a repository instance
-var repo = Git.Repository.createWithFS(fs);
+var repo = GitKit.Repository.createWithFS(fs);
 
 // Initialize the repository
-Git.RepoUtils.init(repo)
+GitKit.RepoUtils.init(repo)
 
     // Clone using the HTTP transport
     .then(function() {
-        return Git.TransferUtils.clone(repo, transport);
+        return GitKit.TransferUtils.clone(repo, transport);
     })
 
     .then(

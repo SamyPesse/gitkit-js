@@ -1,4 +1,4 @@
-# gitkit
+# GitKit.js
 
 [![NPM version](https://badge.fury.io/js/gitkit.svg)](http://badge.fury.io/js/gitkit)
 [![Linux Build Status](https://travis-ci.org/SamyPesse/gitkit-js.png?branch=master)](https://travis-ci.org/SamyPesse/gitkit-js)
@@ -7,6 +7,8 @@
 Pure JavaScript implementation of Git backed by immutable models and promises.
 
 The goal is to provide both a low and high level API for manipulating Git repositories: read files, commit changes, edit working index, clone, push, fetch, etc.
+
+This library can work both in the browser and Node.js.
 
 ## Installation
 
@@ -19,14 +21,28 @@ $ npm install gitkit
 #### API
 
 ```js
-var Git = require('git-js');
-var NodeFS = require('git-js/lib/fs/node');
+var GitKit = require('gitkit');
+var NodeFS = require('gitkit/lib/fs/node');
 
 // Prepare the filesystem
 var fs = NodeFS(process.cwd());
 
 // Create a repository instance
-var repo = Repository.createWithFS(fs, isBare);
+var repo = GitKit.Repository.createWithFS(fs, isBare);
+```
+
+###### Clone a remote repository
+
+```js
+// Create a transport instance for the GitHub repository
+var transport = new GitKit.HTTPTransport('https://github.com/GitbookIO/gitbook.git');
+
+GitKit.TransferUtils.clone(repo, transport)
+.then(function() {
+    // Clone succeed!
+}, function(err) {
+    // Clone failed
+})
 ```
 
 #### Examples
