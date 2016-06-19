@@ -21,11 +21,10 @@
     "ignore": "^3.1.1",
     "immutable": "^3.7.6",
     "is": "^3.1.0",
-    "lodash": "3.10.1",
     "mkdir": "0.0.2",
     "pad": "^1.0.0",
     "pako": "^1.0.1",
-    "q": "1.4.1",
+    "q": "^1.4.1",
     "stream-combiner2": "^1.1.1",
     "through2": "^2.0.1",
     "through2-filter": "^2.0.0",
@@ -36,11 +35,10 @@
     "eslint": "^2.7.0",
     "expect": "^1.19.0",
     "into-stream": "^2.0.0",
-    "mocha": "2.3.4",
-    "should": "^8.0.1"
+    "mocha": "2.3.4"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha ./test/setup.js ./lib/**/*/__tests__/*.js --bail --reporter=list",
+    "test": "./node_modules/.bin/mocha ./testing/setup.js ./lib/**/*/__tests__/*.js --bail --reporter=list",
     "lint": "eslint ."
   },
   "bin": {
