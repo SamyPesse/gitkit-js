@@ -18,7 +18,9 @@ $ npm install gitkit
 
 ## Usage
 
-#### API
+#### API Basics
+
+State of the Git repository is represented as a single immutable `Repository` object. Read and write access to the repository is done using a `FS` driver, the implementation of the fs depends on the plaftrom (`NodeFS` for Node.js/Native, `LocalStorageFS` or `MemoryFS` for the browser).
 
 ```js
 var GitKit = require('gitkit');
@@ -38,7 +40,7 @@ var repo = GitKit.Repository.createWithFS(fs, isBare);
 var transport = new GitKit.HTTPTransport('https://github.com/GitbookIO/gitbook.git');
 
 GitKit.TransferUtils.clone(repo, transport)
-.then(function() {
+.then(function(newRepo) {
     // Clone succeed!
 }, function(err) {
     // Clone failed
@@ -81,6 +83,16 @@ GitKit.WorkingIndex.readFromRepo(repo)
 ```js
 GitKit.ChangesUtils.list(repo)
     .then(function(changes) { ... });
+```
+
+##### Commit changes
+
+```js
+var author = GitKit.Person.create('Bob', 'bob@gmail.com');
+var message = 'My First commit';
+
+GitKit.CommitUtils.createForChanges(repo, author, message, changes)
+    .then(function(newRepo) { ... });
 ```
 
 ##### More example and documentation coming soon!
