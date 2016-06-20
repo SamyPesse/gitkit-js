@@ -20,14 +20,14 @@ $ npm install gitkit
 
 #### API Basics
 
-State of the Git repository is represented as a single immutable `Repository` object. Read and write access to the repository is done using a `FS` driver, the implementation of the fs depends on the plaftrom (`NodeFS` for Node.js/Native, `LocalStorageFS` or `MemoryFS` for the browser).
+State of the Git repository is represented as a single immutable `Repository` object. Read and write access to the repository is done using a `FS` driver, the implementation of the fs depends on the plaftrom (`NativeFS` for Node.js/Native, `LocalStorageFS` or `MemoryFS` for the browser).
 
 ```js
 var GitKit = require('gitkit');
-var NodeFS = require('gitkit/lib/fs/node');
+var NativeFS = require('gitkit/lib/fs/native');
 
 // Prepare the filesystem
-var fs = NodeFS(process.cwd());
+var fs = NativeFS(process.cwd());
 
 // Create a repository instance
 var repo = GitKit.Repository.createWithFS(fs, isBare);
