@@ -108,4 +108,4 @@ To the people pointing me in the right directions like:
 
 ## License
 
-`GitKit.js` is [Apache-licensed](./LICENSE.md).
+`GitKit.js` is [Apache-licensed](./LICENSE).
