@@ -1,3 +1,5 @@
+// @flow
+
 var Promise = require('q');
 var http = require('http');
 var https = require('https');
@@ -6,6 +8,9 @@ var querystring = require('querystring');
 
 var pkg = require('../../package.json');
 var Transport = require('./base');
+
+const SERVICE_UPLOAD_PACK = 'git-upload-pack';
+// const SERVICE_RECEIVE_PACK = 'git-receive-pack';
 
 type Auth = {
     user:     string,
@@ -19,10 +24,12 @@ type Auth = {
  * @param {Object<user,password>} auth
  */
 class HTTPTransport extends Transport {
-    uri : string,
-    auth : Auth,
+    uri:  string;
+    auth: ?Auth;
 
-    constructor(uri, auth) {
+    constructor(uri: string, auth: ?Auth) {
+        super();
+
         this.uri = uri;
         this.auth = auth;
     }
@@ -34,7 +41,7 @@ class HTTPTransport extends Transport {
      * @param {Object<headers>} opts
      * @return {Promise<Stream>}
      */
-    request(method: string, uri: string, opts: mixed) : Promise<Stream> {
+    request(method: string, uri: string, opts: any) : Promise<stream$Readable> {
         var d = Promise.defer();
         opts = opts || {};
         opts.headers = opts.headers || {};
@@ -74,9 +81,9 @@ class HTTPTransport extends Transport {
     /**
      * Get a pack from the server using "git-upload-pack"
      * @param {String} resource
-     * @return {Promise<Buffer>}
+     * @return {Promise<Stream>}
      */
-    getWithUploadPack(resource) : Promise<Stream> {
+    getWithUploadPack(resource: string) : Promise<stream$Readable> {
         resource = resource + '?' + querystring.stringify({
             service: SERVICE_UPLOAD_PACK
         });
@@ -87,7 +94,7 @@ class HTTPTransport extends Transport {
             }
         })
         .then(function(res) {
-            if (res.headers['content-type'] != 'application/x-' + Transport.SERVICE_UPLOAD_PACK + '-advertisement') {
+            if (res.headers['content-type'] != 'application/x-' + SERVICE_UPLOAD_PACK + '-advertisement') {
                 throw new Error('Invalid content type when fetching pack');
             }
 
@@ -98,10 +105,10 @@ class HTTPTransport extends Transport {
     /**
      * Get a pack from the server using "git-upload-pack"
      * @param {Buffer} data
-     * @return {Promise<Buffer>}
+     * @return {Promise<Stream>}
      */
-    uploadPack(data) : Promise<Stream> {
-        return this.request('POST', Transport.SERVICE_UPLOAD_PACK, {
+    uploadPack(data: Buffer) : Promise<stream$Readable> {
+        return this.request('POST', SERVICE_UPLOAD_PACK, {
             body: data,
             headers: {
                 'Content-Type': 'application/x-git-upload-pack-request'

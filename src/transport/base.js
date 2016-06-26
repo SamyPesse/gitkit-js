@@ -1,14 +1,14 @@
+// @flow
+
 var Promise = require('q');
 
-var SERVICE_UPLOAD_PACK = 'git-upload-pack';
-var SERVICE_RECEIVE_PACK = 'git-receive-pack';
 
 class Transport {
     open() : Promise {
         return Promise();
     }
 
-    close() : Promise() {
+    close() : Promise {
         return Promise();
     }
 
@@ -17,7 +17,7 @@ class Transport {
      * @param {String} resource
      * @return {Promise<Buffer>}
      */
-    getWithUploadPack(resource: string) : Promise<Buffer> {
+    getWithUploadPack(resource: string) : Promise<stream$Readable> {
 
     }
 
@@ -26,11 +26,9 @@ class Transport {
      * @param {Buffer} data
      * @return {Promise<Buffer>}
      */
-    uploadPack(data: Buffer) : Promise<Stream> {
+    uploadPack(data: Buffer) : Promise<stream$Readable> {
 
     }
 }
 
 module.exports = Transport;
-module.exports.SERVICE_UPLOAD_PACK = SERVICE_UPLOAD_PACK;
-module.exports.SERVICE_RECEIVE_PACK = SERVICE_RECEIVE_PACK;
