@@ -55,7 +55,7 @@ class ProgressLine extends Immutable.Record(defaultRecord) {
         }
 
         if (is.number(progress)) {
-            message = '[' + (progress * 100).toFixed(0) + '%] ' + message;
+            message = '[' + (Number(progress) * 100).toFixed(0) + '%] ' + message;
         }
 
         return message;

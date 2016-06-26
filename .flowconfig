@@ -11,3 +11,4 @@
 [options]
 suppress_type=$FlowIssue
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+unsafe.enable_getters_and_setters=true

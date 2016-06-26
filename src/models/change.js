@@ -52,7 +52,9 @@ class Change extends Immutable.Record(defaultRecord) {
         });
     }
 
-    static TYPES = TYPES;
+    static get TYPES() {
+        return TYPES;
+    }
 }
 
 module.exports = Change;
