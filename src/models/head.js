@@ -60,7 +60,7 @@ class Head extends Immutable.Record(defaultRecord) {
      * @param {String} filename
      * @return {Promise<Head>}
      */
-    static readFromRepo(repo: Repository, filename: string) : Promise<Head> {
+    static readFromRepo(repo: Repository, filename: ?string) : Promise<Head> {
         filename = filename || 'HEAD';
 
         return repo.readGitFile(filename)

@@ -1,4 +1,9 @@
+// @flow
+
 var FileUtils = require('../FileUtils');
+
+import type {List} from 'immutable';
+import type Repository from '../models/repo';
 
 /**
  * List branches in a repository
@@ -6,7 +11,7 @@ var FileUtils = require('../FileUtils');
  * @param {Repository} repo
  * @return {Promise<List<String>>}
  */
-function listBranches(repo) {
+function listBranches(repo: Repository) : Promise<List<string>> {
     var fs = repo.getFS();
     var baseFolder = repo.getGitPath('refs/heads');
 

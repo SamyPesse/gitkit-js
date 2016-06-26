@@ -1,4 +1,7 @@
+// @flow
+
 var Head = require('../models/head');
+import type Repository from '../models/repo';
 
 /**
  * Get name of current branch
@@ -6,7 +9,7 @@ var Head = require('../models/head');
  * @param {Repository} repo
  * @return {Promise<String>}
  */
-function getCurrentBranch(repo) {
+function getCurrentBranch(repo: Repository) : Promise<string> {
     return Head.readFromRepo(repo)
         .then(function(head) {
             var refName = head.getRef();
