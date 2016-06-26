@@ -1,3 +1,5 @@
+// @flow
+
 var Immutable = require('immutable');
 var File = require('./file');
 var Blob = require('./blob');
@@ -9,41 +11,47 @@ var TYPES = {
     UNTRACKED:  'untracked'
 };
 
-var Change = Immutable.Record({
-    file:       File(),
-    type:       String(TYPES.MODIFIED),
-    blob:       Blob()
-});
-
-Change.prototype.getFile = function() {
-    return this.get('file');
+var defaultRecord: {
+    file: File,
+    type: string,
+    blob: Blob
+} = {
+    file: new File(),
+    type: TYPES.MODIFIED,
+    blob: new Blob()
 };
 
-Change.prototype.getBlob = function() {
-    return this.get('blob');
-};
+class Change extends Immutable.Record(defaultRecord) {
+    getFile() : File {
+        return this.get('file');
+    }
 
-Change.prototype.getType = function() {
-    return this.get('type');
-};
+    getBlob() : Blob {
+        return this.get('blob');
+    }
 
-Change.prototype.isTracked = function() {
-    return this.getType() !== TYPES.UNTRACKED;
-};
+    getType() : string {
+        return this.get('type');
+    }
 
-/**
- * Create a new change from a file and a type
- *
- * @param {String} type
- * @parsm {File} file
- * @return {Change}
- */
-Change.createForFile = function(type, file) {
-    return new Change({
-        type: type,
-        file: file
-    });
-};
+    isTracked() : boolean {
+        return this.getType() !== TYPES.UNTRACKED;
+    }
+
+    /**
+     * Create a new change from a file and a type
+     *
+     * @param {String} type
+     * @parsm {File} file
+     * @return {Change}
+     */
+    static createForFile(type: string, file: File) : Change {
+        return new Change({
+            type: type,
+            file: file
+        });
+    }
+}
 
 module.exports = Change;
 module.exports.TYPES = TYPES;

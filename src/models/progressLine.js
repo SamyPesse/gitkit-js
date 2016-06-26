@@ -1,12 +1,14 @@
+// @flow
+
 var is = require('is');
 var Immutable = require('immutable');
 
 /*
-    ProgressLine is an utility send to promise's progress
-    to normalize logging in the output.
-*/
+ * ProgressLine is an utility send to promise's progress
+ * to normalize logging in the output.
+ */
 
-var TYPES = {
+const TYPES = {
     // Is writing a file on the disk
     FILES_WRITE:        'files:write',
 
@@ -14,67 +16,64 @@ var TYPES = {
     FETCH_OBJECT:       'fetch:object'
 };
 
-
-var ProgressLine = Immutable.Record({
-    type: String(),
+const defaultRecord: {
+    type:  string,
+    props: Immutable.Map
+} = {
+    type:  '',
     props: Immutable.Map()
-});
-
-ProgressLine.prototype.getType = function() {
-    return this.get('type');
 };
 
-ProgressLine.prototype.getProps = function() {
-    return this.get('props');
-};
-
-ProgressLine.prototype.getMessage = function() {
-    var type = this.getType();
-    var props = this.getProps();
-
-    var message = 'Unknown';
-    var progress;
-
-    if (type === TYPES.FILES_WRITE) {
-        message = 'Writing file "' + props.get('filename') + '"';
-    } else if (type === TYPES.FETCH_OBJECT) {
-        message = 'Fetching object ' + props.get('index') + '/' + props.get('total');
-        progress = props.get('index') / props.get('total');
+class ProgressLine extends Immutable.Record(defaultRecord) {
+    constructor(type: string, props: Immutable.Map | mixed) {
+        super({
+            type:  type,
+            props: new Immutable.Map(props)
+        });
     }
 
-    if (is.number(progress)) {
-        message = '[' + (progress * 100).toFixed(0) + '%] ' + message;
+    getType() : string {
+        return this.get('type');
     }
 
-    return message;
-};
+    getProps() : Immutable.Map {
+        return this.get('props');
+    }
 
-/*
- * Create a progress line for a promise
- * @return {Object}
- */
-function createProgressLine(type, props) {
-    return new ProgressLine({
-        type: type,
-        props: new Immutable.Map(props)
-    });
+    getMessage() : string {
+        var type = this.getType();
+        var props = this.getProps();
+
+        var message = 'Unknown';
+        var progress : number;
+
+        if (type === TYPES.FILES_WRITE) {
+            message = 'Writing file "' + props.get('filename') + '"';
+        } else if (type === TYPES.FETCH_OBJECT) {
+            message = 'Fetching object ' + props.get('index') + '/' + props.get('total');
+            progress = props.get('index') / props.get('total');
+        }
+
+        if (is.number(progress)) {
+            message = '[' + (progress * 100).toFixed(0) + '%] ' + message;
+        }
+
+        return message;
+    }
+
+    static WriteFile(filename: string) {
+        return new ProgressLine(TYPES.FILES_WRITE, {
+            filename: filename
+        });
+    }
+
+    static FetchObject(objIndex: number, objTotal: number) {
+        return new ProgressLine(TYPES.FETCH_OBJECT, {
+            index: objIndex,
+            total: objTotal
+        });
+    }
 }
 
-function createFilesWrite(filename) {
-    return createProgressLine(TYPES.FILES_WRITE, {
-        filename: filename
-    });
-}
-
-function createFetchObject(objIndex, objTotal) {
-    return createProgressLine(TYPES.FETCH_OBJECT, {
-        index: objIndex,
-        total: objTotal
-    });
-}
-
-module.exports = createProgressLine;
+module.exports = ProgressLine;
 module.exports.TYPES = TYPES;
-
-module.exports.WriteFile = createFilesWrite;
-module.exports.FetchObject = createFetchObject;

@@ -19,5 +19,8 @@
     "globals": {
         "fixtures": true
     },
+    "plugins": [
+        "flowtype"
+    ],
     "extends": "eslint:recommended"
 }

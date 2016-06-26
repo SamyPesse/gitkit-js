@@ -1,126 +1,133 @@
 var Immutable = require('immutable');
 var path = require('path');
 
-var Repository = Immutable.Record({
-    bare: Boolean(false),
-    fs: null
-});
+import type File from './file';
 
-Repository.prototype.isBare = function() {
-    return this.get('bare');
+const defaultRecord: {
+    bare: boolean,
+    fs:   mixed
+} = {
+    bare: false,
+    fs:   null
 };
 
-Repository.prototype.getFS = function() {
-    return this.get('fs');
-};
+class Repository extends Immutable.Record(defaultRecord) {
+    isBare() : boolean {
+        return this.get('bare');
+    }
 
-/**
- * Read a file from the repository
- *
- * @param {String}
- * @return {Buffer}
- */
-Repository.prototype.readFile = function(filepath) {
-    return this.getFS().read(filepath);
-};
+    getFS() : mixed {
+        return this.get('fs');
+    }
 
-/**
- * Write a file from the repository
- *
- * @param {String}
- * @param {Buffer}
- * @return {Buffer}
- */
-Repository.prototype.writeFile = function(filepath, buf) {
-    return this.getFS().write(filepath, buf);
-};
+    /**
+     * Read a file from the repository
+     *
+     * @param {String}
+     * @return {Promise<Buffer>}
+     */
+    readFile(filepath: string) : Promise<Buffer> {
+        return this.getFS().read(filepath);
+    }
 
-/**
- * Get details about a file
- *
- * @param {String}
- * @return {File}
- */
-Repository.prototype.statFile = function(filepath) {
-    return this.getFS().statFile(filepath);
-};
+    /**
+     * Write a file from the repository
+     *
+     * @param {String}
+     * @param {Buffer}
+     * @return {Buffer}
+     */
+    writeFile(filepath: string, buf: Buffer) {
+        return this.getFS().write(filepath, buf);
+    }
 
-/**
- * Read a directory from the repository
- *
- * @param {String}
- * @return {List<String>}
- */
-Repository.prototype.readDir = function(filepath) {
-    return this.getFS().readDir(filepath);
-};
+    /**
+     * Get details about a file
+     *
+     * @param {String}
+     * @return {File}
+     */
+    statFile(filepath: string) : Promise<File> {
+        return this.getFS().statFile(filepath);
+    }
 
-/**
- * Get absolute path toa file related to the git content
- *
- * @param {String}
- * @return {String}
- */
-Repository.prototype.getGitPath = function(filepath) {
-    return this.isBare()? filepath : path.join('.git', filepath);
-};
+    /**
+     * Read a directory from the repository
+     *
+     * @param {String}
+     * @return {List<String>}
+     */
+    readDir(filepath: string) : Promise<Immutable.List<string>> {
+        return this.getFS().readDir(filepath);
+    }
 
-/**
- * Read a git file from the repository (file in the '.git' directory)
- *
- * @param {String}
- * @return {Buffer}
- */
-Repository.prototype.readGitFile = function(filepath) {
-    filepath = this.getGitPath(filepath);
-    return this.readFile(filepath);
-};
+    /**
+     * Get absolute path toa file related to the git content
+     *
+     * @param {String}
+     * @return {String}
+     */
+    getGitPath(filepath: string) : string {
+        return this.isBare()? filepath : path.join('.git', filepath);
+    }
 
-/**
- * Write a git file from the repository (file in the '.git' directory)
- *
- * @param {String}
- * @param {Buffer}
- * @return {Buffer}
- */
-Repository.prototype.writeGitFile = function(filepath, buf) {
-    filepath = this.getGitPath(filepath);
-    return this.writeFile(filepath, buf);
-};
+    /**
+     * Read a git file from the repository (file in the '.git' directory)
+     *
+     * @param {String}
+     * @return {Buffer}
+     */
+    readGitFile(filepath: string) : Promise<Buffer> {
+        filepath = this.getGitPath(filepath);
+        return this.readFile(filepath);
+    }
 
-/**
- * Stat a git file from the repository (file in the '.git' directory)
- *
- * @param {String}
- * @return {File}
- */
-Repository.prototype.statGitFile = function(filepath) {
-    filepath = this.getGitPath(filepath);
-    return this.statFile(filepath);
-};
+    /**
+     * Write a git file from the repository (file in the '.git' directory)
+     *
+     * @param {String}
+     * @param {Buffer}
+     * @return {Buffer}
+     */
+    writeGitFile(filepath: string, buf: Buffer) : Promise {
+        filepath = this.getGitPath(filepath);
+        return this.writeFile(filepath, buf);
+    }
 
-/**
- * List content of a directory (inside the .git)
- *
- * @param {String}
- * @return {List<String>}
- */
-Repository.prototype.readGitDir = function(filepath) {
-    filepath = this.getGitPath(filepath);
-    return this.readDir(filepath);
-};
+    /**
+     * Stat a git file from the repository (file in the '.git' directory)
+     *
+     * @param {String}
+     * @return {File}
+     */
+    statGitFile(filepath: string) : Promise<File> {
+        filepath = this.getGitPath(filepath);
+        return this.statFile(filepath);
+    }
 
-/**
- * Create a repository with an fs instance
- *
- * @param {String}
- * @return {Repository}
- */
-Repository.createWithFS = function(fs, isBare) {
-    return new Repository({
-        bare: isBare,
-        fs: fs
-    });
-};
+    /**
+     * List content of a directory (inside the .git)
+     *
+     * @param {String}
+     * @return {Promise<List<String>>}
+     */
+    readGitDir(filepath: string) : Promise<Immutable.List<string>> {
+        filepath = this.getGitPath(filepath);
+        return this.readDir(filepath);
+    }
+
+    /**
+     * Create a repository with an fs instance
+     *
+     * @param {String}
+     * @return {Repository}
+     */
+    static createWithFS(fs: mixed, isBare: boolean) {
+        return new Repository({
+            bare: isBare,
+            fs: fs
+        });
+    }
+}
 
 module.exports = Repository;

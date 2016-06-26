@@ -1,9 +1,12 @@
+// @flow
+
 var Immutable = require('immutable');
-var Buffer = require('buffer').Buffer;
 var path = require('path');
 
 var zlib = require('../utils/zlib');
 var sha1 = require('../utils/sha1');
+
+import type Repository from './repo';
 
 var TYPES = {
     TREE: 'tree',
@@ -11,145 +14,150 @@ var TYPES = {
     COMMIT: 'commit'
 };
 
-var GitObject = Immutable.Record({
-    type: String(),
-    content: Buffer('')
-});
-
-GitObject.prototype.getType = function() {
-    return this.get('type');
+var defaultRecord: {
+    type:    string,
+    content: Buffer
+} = {
+    type:    '',
+    content: new Buffer('')
 };
 
-GitObject.prototype.getContent = function() {
-    return this.get('content');
-};
+class GitObject extends Immutable.Record(defaultRecord) {
+    getType() : string {
+        return this.get('type');
+    }
 
-GitObject.prototype.isTree = function() {
-    return this.getType() === TYPES.TREE;
-};
+    getContent() : Buffer {
+        return this.get('content');
+    }
 
-GitObject.prototype.isBlob = function() {
-    return this.getType() === TYPES.BLOB;
-};
+    isTree() : boolean {
+        return this.getType() === TYPES.TREE;
+    }
 
-GitObject.prototype.isCommit = function() {
-    return this.getType() === TYPES.COMMIT;
-};
+    isBlob() : boolean {
+        return this.getType() === TYPES.BLOB;
+    }
 
+    isCommit() : boolean {
+        return this.getType() === TYPES.COMMIT;
+    }
 
-/**
- * Calcul the sha of this object
- * @return {String}
- */
-GitObject.prototype.getSha = function() {
-    return sha1.encode(this.getAsBuffer());
-};
+    /**
+     * Calcul the sha of this object
+     * @return {String}
+     */
+    getSha() : string {
+        return sha1.encode(this.getAsBuffer());
+    }
 
-/**
- * Return this git object as a buffer
- * @param {Buffer}
- */
-GitObject.prototype.getAsBuffer = function() {
-    var type = this.getType();
-    var content = this.getContent();
+    /**
+     * Return this git object as a buffer
+     * @param {Buffer}
+     */
+    getAsBuffer() : Buffer {
+        var type = this.getType();
+        var content = this.getContent();
 
-    var nullBuf = new Buffer(1);
-    nullBuf.fill(0);
+        var nullBuf = new Buffer(1);
+        nullBuf.fill(0);
 
-    return Buffer.concat([
-        (new Buffer(type + ' ' + content.length, 'utf8')),
-        nullBuf,
-        content
-    ]);
-};
+        return Buffer.concat([
+            (new Buffer(type + ' ' + content.length, 'utf8')),
+            nullBuf,
+            content
+        ]);
+    }
 
-/**
- * Return path to an object by its sha
- * @paran {String} sha
- * @return {String}
- */
-GitObject.getPath = function(sha) {
-    return path.join('objects', sha.slice(0, 2), sha.slice(2));
-};
+    /**
+     * Return path to an object by its sha
+     * @paran {String} sha
+     * @return {String}
+     */
+    static getPath(sha) : string {
+        return path.join('objects', sha.slice(0, 2), sha.slice(2));
+    }
 
-/**
- * Read an object from a repository using its SHA
- * @param {Repository} repo
- * @paran {String} sha
- * @return {Promise<GitObject>}
- */
-GitObject.readFromRepo = function(repo, sha) {
-    var objectPath = GitObject.getPath(sha);
+    /**
+     * Read an object from a repository using its SHA
+     * @param {Repository} repo
+     * @paran {String} sha
+     * @return {Promise<GitObject>}
+     */
+    static readFromRepo(repo: Repository, sha: string) : Promise<GitObject> {
+        var objectPath = GitObject.getPath(sha);
 
-    return repo.readGitFile(objectPath)
-        .then(GitObject.createFromZip);
-};
+        return repo.readGitFile(objectPath)
+            .then(GitObject.createFromZip);
+    }
 
-/**
- * Create a Git object from a zip content
- * @param {Buffer} content
- * @return {GitObject}
- */
-GitObject.createFromZip = function(content) {
-    return GitObject.createFromBuffer(
-        zlib.unzip(content)
-    );
-};
+    /**
+     * Create a Git object from a zip content
+     * @param {Buffer} content
+     * @return {GitObject}
+     */
+    static createFromZip(content: Buffer) : GitObject {
+        return GitObject.createFromBuffer(
+            zlib.unzip(content)
+        );
+    }
 
-/**
- * Create a Git object from a zip content
- * @param {Buffer} content
- * @return {GitObject}
- */
-GitObject.createFromBuffer = function(content) {
-    var nullChar = content.indexOf(0);
+    /**
+     * Create a Git object from a zip content
+     * @param {Buffer} content
+     * @return {GitObject}
+     */
+    static createFromBuffer(content: Buffer) : GitObject {
+        var nullChar = content.indexOf(0);
 
-    // Parse object header
-    var header = content.slice(0, nullChar).toString();
-    var type = header.split(' ')[0];
+        // Parse object header
+        var header = content.slice(0, nullChar).toString();
+        var type = header.split(' ')[0];
 
-    // Extract content
-    var innerContent = content.slice(nullChar + 1);
+        // Extract content
+        var innerContent = content.slice(nullChar + 1);
 
-    return new GitObject({
-        type: type,
-        content: innerContent
-    });
-};
+        return new GitObject({
+            type:    type,
+            content: innerContent
+        });
+    }
 
-/**
- * Write a git object in a repository.
- * It returns the new sha of this object.
- * @param {Repository} repo
- * @param {GitObject} obj
- * @return {Promise<String>}
- */
-GitObject.writeToRepo = function(repo, obj) {
-    // Output object as a buffer
-    var content = obj.getAsBuffer();
+    /**
+     * Write a git object in a repository.
+     * It returns the new sha of this object.
+     * @param {Repository} repo
+     * @param {GitObject} obj
+     * @return {Promise<String>}
+     */
+    static writeToRepo(repo: Repository, obj: GitObject) : Promise {
+        // Output object as a buffer
+        var content = obj.getAsBuffer();
 
-    // Calcul sha1 for the buffer
-    var sha = sha1.encode(content);
+        // Calcul sha1 for the buffer
+        var sha = sha1.encode(content);
 
-    // Calcul path for this sha
-    var objectPath = GitObject.getPath(sha);
+        // Calcul path for this sha
+        var objectPath = GitObject.getPath(sha);
 
-    // Zip and write the buffer
-    return repo.writeGitFile(objectPath, zlib.zip(content))
-        .thenResolve(sha);
-};
+        // Zip and write the buffer
+        return repo.writeGitFile(objectPath, zlib.zip(content))
+            .thenResolve(sha);
+    }
 
-/**
- * Create a Git object from a content and a type
- * @param {Buffer} content
- * @return {GitObject}
- */
-GitObject.create = function(type, content) {
-    return new GitObject({
-        type: type,
-        content: content
-    });
-};
+    /**
+     * Create a Git object from a content and a type
+     * @param {String} type
+     * @param {Buffer} content
+     * @return {GitObject}
+     */
+    static create(type: string, content: Buffer) : GitObject {
+        return new GitObject({
+            type:    type,
+            content: content
+        });
+    }
+}
 
 module.exports = GitObject;
 module.exports.TYPES = TYPES;

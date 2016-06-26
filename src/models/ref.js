@@ -1,99 +1,105 @@
 var Immutable = require('immutable');
 var path = require('path');
 
-var Ref = Immutable.Record({
-    commit: String()
-});
+import type Repository from './repo';
 
-Ref.prototype.getCommit = function() {
-    return this.get('commit');
+const defaultRecord: {
+    commit: string
+} = {
+    commit: ''
 };
 
-/**
- * Output the reference as a string
- * @return {String}
- */
-Ref.prototype.toString = function() {
-    return this.getCommit() + '\n';
-};
+class Ref extends Immutable.Record(defaultRecord) {
+    getCommit() : string {
+        return this.get('commit');
+    }
 
-/**
- * Output the reference as a buffer
- * @return {Buffer}
- */
-Ref.prototype.toBuffer = function() {
-    return new Buffer(this.toString(), 'utf8');
-};
+    /**
+     * Output the reference as a string
+     * @return {String}
+     */
+    toString() : string {
+        return this.getCommit() + '\n';
+    }
 
-/**
- * Return path to a ref by its sha
- * @paran {String} name
- * @return {String}
- */
-Ref.getPath = function(name) {
-    return path.join('refs', name);
-};
+    /**
+     * Output the reference as a buffer
+     * @return {Buffer}
+     */
+    toBuffer() : Buffer {
+        return new Buffer(this.toString(), 'utf8');
+    }
 
-/**
- * Parse a ref from a String
- * @param {String} content
- * @return {Ref}
- */
-Ref.createFromString = function(content) {
-    var sha = content.trim();
-    return Ref.createForCommit(sha);
-};
+    /**
+     * Return path to a ref by its sha
+     * @paran {String} name
+     * @return {String}
+     */
+    static getPath(name: string) : string {
+        return path.join('refs', name);
+    }
 
-/**
- * Parse a ref from a Buffer
- * @param {Buffer} content
- * @return {Ref}
- */
-Ref.createFromBuffer = function(content) {
-    return Ref.createFromString(content.toString('utf8'));
-};
+    /**
+     * Parse a ref from a String
+     * @param {String} content
+     * @return {Ref}
+     */
+    static createFromString(content: string) : Ref {
+        var sha = content.trim();
+        return Ref.createForCommit(sha);
+    }
 
-/**
- * Create ref using a commit sha
- * @param {String} sha
- * @return {Ref}
- */
-Ref.createForCommit = function(sha) {
-    return new Ref({
-        commit: sha
-    });
-};
+    /**
+     * Parse a ref from a Buffer
+     * @param {Buffer} content
+     * @return {Ref}
+     */
+    static createFromBuffer(content: Buffer) : Ref {
+        return Ref.createFromString(content.toString('utf8'));
+    }
 
-/**
- * Read a ref from a repository using its name
- * @param {Repository} repo
- * @paran {String} name
- * @return {Promise<Ref>}
- */
-Ref.readFromRepoByName = function(repo, name) {
-    var refPath = Ref.getPath(name);
-    return Ref.readFromRepo(repo, refPath);
-};
+    /**
+     * Create ref using a commit sha
+     * @param {String} sha
+     * @return {Ref}
+     */
+    static createForCommit(sha: string) : Ref {
+        return new Ref({
+            commit: sha
+        });
+    }
 
-/**
- * Read a ref from a repository using its filename
- * @param {Repository} repo
- * @paran {String} refPath
- * @return {Promise<Ref>}
- */
-Ref.readFromRepo = function(repo, refPath) {
-    return repo.readGitFile(refPath)
-        .then(Ref.createFromBuffer);
-};
+    /**
+     * Read a ref from a repository using its name
+     * @param {Repository} repo
+     * @paran {String} name
+     * @return {Promise<Ref>}
+     */
+    static readFromRepoByName(repo: Repository, name: string) : Promise<Ref> {
+        var refPath = Ref.getPath(name);
+        return Ref.readFromRepo(repo, refPath);
+    }
 
-/**
- * Read a ref from a repository using its filename
- * @param {Repository} repo
- * @paran {String} refPath
- * @return {Promise<Ref>}
- */
-Ref.writeToRepo = function(repo, refPath, ref) {
-    return repo.writeGitFile(refPath, ref.toBuffer());
-};
+    /**
+     * Read a ref from a repository using its filename
+     * @param {Repository} repo
+     * @paran {String} refPath
+     * @return {Promise<Ref>}
+     */
+    static readFromRepo(repo: Repository, refPath: string) : Promise<Ref> {
+        return repo.readGitFile(refPath)
+            .then(Ref.createFromBuffer);
+    }
+
+    /**
+     * Read a ref from a repository using its filename
+     * @param {Repository} repo
+     * @paran {String} refPath
+     * @return {Promise}
+     */
+    static writeToRepo(repo: Repository, refPath: string, ref: string) : Promise {
+        return repo.writeGitFile(refPath, ref.toBuffer());
+    }
+}
 
 module.exports = Ref;

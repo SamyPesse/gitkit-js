@@ -1,78 +1,86 @@
-var Immutable = require('immutable');
+// @flow
 
+var Immutable = require('immutable');
 var parseMap = require('../utils/parseMap');
 
-var Head = Immutable.Record({
-    ref: String()
-});
+import type Repository from './repo';
 
-Head.prototype.getRef = function() {
-    return this.get('ref');
+var defaultRecord: {
+    ref: string
+} = {
+    ref: ''
 };
 
-/**
- * Output the head as a string
- * @return {String}
- */
-Head.prototype.toString = function() {
-    return 'ref: ' + this.getRef() + '\n';
-};
+class Head extends Immutable.Record(defaultRecord) {
+    getRef() : string {
+        return this.get('ref');
+    }
 
-/**
- * Parse a ref from a String
- * @param {String} content
- * @return {Head}
- */
-Head.createFromString = function(content) {
-    var map = parseMap(content);
-    return Head.createForRef(map.get('ref'));
-};
+    /**
+     * Output the head as a string
+     * @return {String}
+     */
+    toString() : string {
+        return 'ref: ' + this.getRef() + '\n';
+    }
 
-/**
- * Create a head for a ref
- * @param {String} ref
- * @return {Head}
- */
-Head.createForRef = function(ref) {
-    return new Head({
-        ref: ref
-    });
-};
+    /**
+     * Parse a ref from a String
+     * @param {String} content
+     * @return {Head}
+     */
+    static createFromString(content: string) : Head {
+        var map = parseMap(content);
+        return Head.createForRef(map.get('ref'));
+    }
 
-/**
- * Parse a head from a Buffer
- * @param {Buffer} content
- * @return {Head}
- */
-Head.createFromBuffer = function(content) {
-    return Head.createFromString(content.toString('utf8'));
-};
+    /**
+     * Create a head for a ref
+     * @param {String} ref
+     * @return {Head}
+     */
+    static createForRef(ref: string) : Head {
+        return new Head({
+            ref: ref
+        });
+    }
 
-/**
- * Read a head from a repository using its path
- * @param {Repository} repo
- * @param {String} filename
- * @return {Promise<Head>}
- */
-Head.readFromRepo = function(repo, filename) {
-    filename = filename || 'HEAD';
+    /**
+     * Parse a head from a Buffer
+     * @param {Buffer} content
+     * @return {Head}
+     */
+    static createFromBuffer(content: Buffer) : Head {
+        return Head.createFromString(content.toString('utf8'));
+    }
 
-    return repo.readGitFile(filename)
-        .then(Head.createFromBuffer);
-};
+    /**
+     * Read a head from a repository using its path
+     * @param {Repository} repo
+     * @param {String} filename
+     * @return {Promise<Head>}
+     */
+    static readFromRepo(repo: Repository, filename: string) : Promise<Head> {
+        filename = filename || 'HEAD';
 
-/**
- * Write a head to a repository
- *
- * @param {Repository} repo
- * @param {String} filename
- * @return {Promise<Head>}
- */
-Head.writeToRepo = function(repo, head, filename) {
-    filename = filename || 'HEAD';
-    var headContent = head.toString();
+        return repo.readGitFile(filename)
+            .then(Head.createFromBuffer);
+    }
 
-    return repo.writeGitFile(filename, new Buffer(headContent, 'utf8'));
-};
+    /**
+     * Write a head to a repository
+     *
+     * @param {Repository} repo
+     * @param {Head} head
+     * @param {String} filename
+     * @return {Promise<Head>}
+     */
+    static writeToRepo(repo: Repository, head: Head, filename: string) : Promise<Head> {
+        filename = filename || 'HEAD';
+        var headContent = head.toString();
+
+        return repo.writeGitFile(filename, new Buffer(headContent, 'utf8'));
+    }
+}
 
 module.exports = Head;
