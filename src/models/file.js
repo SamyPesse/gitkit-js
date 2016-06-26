@@ -55,7 +55,10 @@ class File extends Immutable.Record(defaultRecord) {
             contentSize: entry.getEntrySize()
         });
     }
+
+    static get TYPES() {
+        return TYPES;
+    }
 }
 
 module.exports = File;
-module.exports.TYPES = TYPES;

@@ -73,7 +73,10 @@ class ProgressLine extends Immutable.Record(defaultRecord) {
             total: objTotal
         });
     }
+
+    static get TYPES() {
+        return TYPES;
+    }
 }
 
 module.exports = ProgressLine;
-module.exports.TYPES = TYPES;

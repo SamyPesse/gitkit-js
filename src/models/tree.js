@@ -8,7 +8,6 @@ var GitObject = require('./object');
 var scan = require('../utils/scan');
 
 import type Repository from './repo';
-import type GitObject from './object';
 type TreeEntries = OrderedMap<string, TreeEntry>;
 
 const defaultRecord: {

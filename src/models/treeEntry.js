@@ -59,7 +59,10 @@ class TreeEntry extends Immutable.Record(defaultRecord) {
             sha: blobSha
         });
     }
+
+    static get TYPES() {
+        return TYPES;
+    }
 }
 
 module.exports = TreeEntry;
-module.exports.TYPES = TYPES;

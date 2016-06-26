@@ -157,7 +157,10 @@ class GitObject extends Immutable.Record(defaultRecord) {
             content: content
         });
     }
+
+    static get TYPES() {
+        return TYPES;
+    }
 }
 
 module.exports = GitObject;
-module.exports.TYPES = TYPES;
