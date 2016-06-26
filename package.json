@@ -34,14 +34,29 @@
     "varint": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^2.13.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "classnames": "^2.2.5",
+    "eslint": "^2.13.1",
+    "eslint-plugin-react": "^4.2.1",
     "expect": "^1.19.0",
+    "gh-pages": "^0.11.0",
+    "http-server": "^0.9.0",
     "into-stream": "^2.0.0",
-    "mocha": "2.3.4"
+    "mocha": "2.3.4",
+    "parallelshell": "^2.0.0",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha ./testing/setup.js ./lib/**/*/__tests__/*.js --bail --reporter=list",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "browserify -t [ babelify --presets [ es2015 react ] ] ./example/main.js > ./example/dist.js",
+    "deploy": "npm run build; gh-pages -d ./example",
+    "serve": "http-server -p 9090 example/",
+    "start": "npm run build; npm run serve"
   },
   "bin": {
     "gitkit": "./bin/gitkit.js"

@@ -8,7 +8,10 @@
             "vars": "all",
             "args": "none"
         } ],
-        "spaced-comment": [ 2, "always" ]
+        "spaced-comment": [ 2, "always" ],
+        "react/jsx-uses-vars": 2,
+        "react/jsx-uses-react": 2,
+        "react/react-in-jsx-scope": 2
     },
     "env": {
         "node": true,
@@ -19,5 +22,8 @@
     "globals": {
         "fixtures": true
     },
+    "plugins": [
+        "react"
+    ],
     "extends": "eslint:recommended"
 }
