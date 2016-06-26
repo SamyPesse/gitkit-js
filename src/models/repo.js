@@ -1,14 +1,15 @@
 var Immutable = require('immutable');
 var path = require('path');
 
+var FS = require('../fs/base');
 import type File from './file';
 
 const defaultRecord: {
     bare: boolean,
-    fs:   mixed
+    fs:   FS
 } = {
     bare: false,
-    fs:   null
+    fs:   new FS()
 };
 
 class Repository extends Immutable.Record(defaultRecord) {

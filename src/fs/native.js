@@ -1,4 +1,12 @@
+// @flow
+
 var fs = require('fs');
 var NodeFS = require('./node');
 
-module.exports = NodeFS.bind(null, fs);
+class NativeFS extends NodeFS {
+    constructor(root: string) {
+        super(fs, root)
+    }
+}
+
+module.exports = NativeFS;
