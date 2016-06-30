@@ -2,7 +2,6 @@
 
 var Promise = require('q');
 
-
 class Transport {
     open() : Promise {
         return Promise();

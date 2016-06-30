@@ -1,4 +1,4 @@
-var Buffer = require('buffer').Buffer;
+// @flow
 var varint = require('varint');
 
 /*
@@ -11,7 +11,7 @@ var varint = require('varint');
  * @param {Buffer} delta
  * @return {Buffer}
  */
-function applyDelta(base, delta) {
+function applyDelta(base: Buffer, delta: Buffer) : Buffer {
     var baseSize;
     var outputSize;
     var command;

@@ -1,9 +1,12 @@
+// @flow
 var Promise = require('q');
 var Immutable = require('immutable');
 
 var Ref = require('../models/ref');
 var parsePktLines = require('./parsePktLines');
 var parsePktLineMeta = require('./parsePktLineMeta');
+
+import type Discovery from './types/discovery';
 
 /**
  * Parses the response to /info/refs?service=git-upload-pack, which contains ids for
@@ -13,11 +16,11 @@ var parsePktLineMeta = require('./parsePktLineMeta');
  * It also emit a "capabilities" event
  *
  * @param {Stream<Buffer>} input
- * @return {Promise<refs,capabilties>}
+ * @return {Promise<Discovery>}
  */
-function parseDiscovery(input) {
-    var d = Promise.defer();
+function parseDiscovery(input: stream$Readable) : Promise<Discovery> {
     var capabilities;
+    var d = Promise.defer();
     var lineIndex = 0;
     var refs = new Immutable.OrderedMap();
 

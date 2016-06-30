@@ -1,4 +1,6 @@
-var Q = require('q');
+// @flow
+
+var Promise = require('q');
 var Immutable = require('immutable');
 
 var RepoUtils = require('../RepoUtils');
@@ -6,13 +8,15 @@ var fetchDiscovery = require('./fetchDiscovery');
 var fetchRef = require('./fetchRef');
 var Ref = require('../models/ref');
 
-var HEAD_REFNAME = 'HEAD';
+import type Repository from '../models/repo';
+import type Transport from '../transport/base';
 
-var FetchOptions = Immutable.Record({
+const HEAD_REFNAME = 'HEAD';
+
+class FetchOptions extends Immutable.Record({
     // Name of the remote
     remoteName: String('origin')
-});
-
+}) {}
 
 /**
  * Fetch a repository
@@ -21,10 +25,10 @@ var FetchOptions = Immutable.Record({
  * @param {Transport}
  * @return {Promise}
  */
-function fetch(repo, transport, opts) {
+function fetch(repo: Repository, transport: Transport, opts: FetchOptions|Object = {}) : Promise {
     opts = FetchOptions(opts);
 
-    return Q.all([
+    return Promise.all([
         // Fetch the list of refs and capabilities of the server
         fetchDiscovery(transport),
 
@@ -56,3 +60,4 @@ function fetch(repo, transport, opts) {
 }
 
 module.exports = fetch;
+module.exports.Options = FetchOptions;
