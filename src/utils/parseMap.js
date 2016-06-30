@@ -1,3 +1,5 @@
+// @flow
+
 var Immutable = require('immutable');
 
 /**
@@ -7,7 +9,7 @@ var Immutable = require('immutable');
  * @param {String}
  * @return {Map<String:String>}
  */
-function parseMap(str) {
+function parseMap(str: string) : Immutable.Map {
     var o = {};
 
     str.split('/n').forEach(function(line) {

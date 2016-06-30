@@ -1,3 +1,5 @@
+// @flow
+
 var crypto = require('crypto');
 
 /**
@@ -5,7 +7,7 @@ var crypto = require('crypto');
  * @param {String},
  * @return {Boolean}
  */
-function validateSha(str) {
+function validateSha(str: string) : boolean {
     return (/[0-9a-f]{40}/).test(str);
 }
 
@@ -14,7 +16,7 @@ function validateSha(str) {
  * @param {String|Buffer} s
  * @return {String}
  */
-function encode(s) {
+function encode(s: string|Buffer) : string {
     var shasum = crypto.createHash('sha1');
     shasum.update(s);
     return shasum.digest('hex');

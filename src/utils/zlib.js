@@ -1,3 +1,5 @@
+// @flow
+
 var pako = require('pako');
 var uint8ToBuffer = require('typedarray-to-buffer');
 var bufferToUint8 = require('buffer-to-uint8array');
@@ -7,7 +9,7 @@ var bufferToUint8 = require('buffer-to-uint8array');
  * @param {Buffer}
  * @return {Buffer}
  */
-function unzip(buf) {
+function unzip(buf: Buffer) : Buffer {
     var input = bufferToUint8(buf);
     var output = pako.inflate(input);
 
@@ -19,7 +21,7 @@ function unzip(buf) {
  * @param {Buffer}
  * @return {Buffer}
  */
-function zip(buf) {
+function zip(buf: Buffer) : Buffer {
     var input = bufferToUint8(buf);
     var output = pako.deflate(input);
 

@@ -1,8 +1,13 @@
+// @flow
+
 var Promise = require('q');
 var Immutable = require('immutable');
 
 var WorkingIndex = require('../models/workingIndex');
 var createEntry = require('./createEntry');
+
+import type Repository from '../models/repo';
+import type File from '../models/file';
 
 /**
  * Add a file to the working index. It's equivalent to "git add"
@@ -11,7 +16,7 @@ var createEntry = require('./createEntry');
  * @param {File|String} file
  * @return {Promise}
  */
-function addToIndex(repo, file) {
+function addToIndex(repo: Repository, file: File|string) : Promise {
     return Promise.all([
         // Read current working index
         WorkingIndex.readFromRepo(repo),
