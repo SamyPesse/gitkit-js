@@ -2,3 +2,6 @@ sudo: false
 language: node_js
 node_js:
   - "stable"
+after_success:
+  - npm run lint
+  - npm run flow

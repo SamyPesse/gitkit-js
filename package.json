@@ -34,14 +34,24 @@
     "varint": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^2.13.0",
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.10.4",
+    "babel-eslint": "^6.1.0",
+    "babel-plugin-transform-flow-strip-types": "^6.8.0",
+    "babel-preset-es2015": "^6.9.0",
+    "eslint": "^2.13.1",
+    "eslint-plugin-flowtype": "^2.3.0",
     "expect": "^1.19.0",
+    "flow-bin": "^0.27.0",
     "into-stream": "^2.0.0",
     "mocha": "2.3.4"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha ./testing/setup.js ./lib/**/*/__tests__/*.js --bail --reporter=list",
-    "lint": "eslint ."
+    "test": "./node_modules/.bin/mocha ./testing/setup.js ./src/**/*/__tests__/*.js --bail --reporter=list --compilers js:babel-core/register",
+    "lint": "eslint .",
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "dist": "babel -d lib src",
+    "prepublish": "npm run dist"
   },
   "bin": {
     "gitkit": "./bin/gitkit.js"

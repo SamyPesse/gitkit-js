@@ -6,7 +6,7 @@ var is = require('is');
 var program = require('commander');
 
 var pkg = require('../package.json');
-var Git = require('../lib');
+var Git = require('../');
 var FS = require('../lib/fs/node');
 
 var COMMANDS = [

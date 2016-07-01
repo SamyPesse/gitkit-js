@@ -1,0 +1,14 @@
+[ignore]
+<PROJECT_ROOT>/.tmp/**/*
+<PROJECT_ROOT>/lib/**/*
+<PROJECT_ROOT>/node_modules/fbjs/**/*
+
+[include]
+
+[libs]
+../node_modules/fbjs/flow/lib
+
+[options]
+suppress_type=$FlowIssue
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+unsafe.enable_getters_and_setters=true
