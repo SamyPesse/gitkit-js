@@ -1,7 +1,8 @@
-var Q = require('q');
+var Promise = require('q');
 var path = require('path');
 
 var Head = require('../models/head');
+import type Repository from '../models/repo';
 
 /**
  * Initialize a repository as empty
@@ -9,7 +10,9 @@ var Head = require('../models/head');
  * @param {Repository}
  * @return {Promise<Repositroy>}
  */
-function init(repo) {
+function init(
+    repo: Repository
+): Promise<Repository> {
     var fs = repo.getFS();
     var isBare = repo.isBare();
     var base = isBare? '' : '.git';
@@ -20,14 +23,14 @@ function init(repo) {
     .then(function() {
         throw new Error('Directory is already a git repository');
     }, function() {
-        return Q();
+        return Promise();
     })
     .then(function() {
         return fs.mkdir(base)
 
         // Create directories
         .then(function() {
-            return Q.all([
+            return Promise.all([
                 fs.mkdir(path.join(base, 'objects')),
                 fs.mkdir(path.join(base, 'refs/heads')),
                 fs.mkdir(path.join(base, 'hooks'))
@@ -36,7 +39,7 @@ function init(repo) {
 
         // Write files
         .then(function() {
-            return Q.all([
+            return Promise.all([
                 Head.writeToRepo(repo, head)
             ]);
         });

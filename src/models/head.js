@@ -3,6 +3,7 @@
 var Immutable = require('immutable');
 var parseMap = require('../utils/parseMap');
 
+import type Promise from 'q';
 import type Repository from './repo';
 
 var defaultRecord: {
@@ -60,9 +61,7 @@ class Head extends Immutable.Record(defaultRecord) {
      * @param {String} filename
      * @return {Promise<Head>}
      */
-    static readFromRepo(repo: Repository, filename: ?string) : Promise<Head> {
-        filename = filename || 'HEAD';
-
+    static readFromRepo(repo: Repository, filename: string = 'HEAD') : Promise<Head> {
         return repo.readGitFile(filename)
             .then(Head.createFromBuffer);
     }
@@ -75,8 +74,7 @@ class Head extends Immutable.Record(defaultRecord) {
      * @param {String} filename
      * @return {Promise<Head>}
      */
-    static writeToRepo(repo: Repository, head: Head, filename: string) : Promise<Head> {
-        filename = filename || 'HEAD';
+    static writeToRepo(repo: Repository, head: Head, filename: string = 'HEAD') : Promise<Head> {
         var headContent = head.toString();
 
         return repo.writeGitFile(filename, new Buffer(headContent, 'utf8'));

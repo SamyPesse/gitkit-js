@@ -2,6 +2,8 @@ var Immutable = require('immutable');
 var path = require('path');
 
 var FS = require('../fs/base');
+
+import type Promise from 'q';
 import type File from './file';
 
 const defaultRecord: {
@@ -123,7 +125,7 @@ class Repository extends Immutable.Record(defaultRecord) {
      * @param {String}
      * @return {Repository}
      */
-    static createWithFS(fs: mixed, isBare: boolean) {
+    static createWithFS(fs: FS, isBare: boolean) {
         return new Repository({
             bare: isBare,
             fs: fs

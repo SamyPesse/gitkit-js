@@ -1,5 +1,9 @@
+// @flow
+
 var through = require('through2');
 var GitObject = require('../models/object');
+
+import type Repository from '../models/repo';
 
 /**
  * Write a stream of GitObject to a repository
@@ -7,7 +11,9 @@ var GitObject = require('../models/object');
  * @param {Repository}
  * @return {Stream}
  */
-function writeObjectStream(repo) {
+function writeObjectStream(
+    repo: Repository
+): stream$Writable {
     return through.obj(function(obj, enc, callback) {
         GitObject.writeToRepo(repo, obj)
         .nodeify(callback);

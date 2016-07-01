@@ -1,4 +1,6 @@
-var Q = require('q');
+// @flow
+
+var Promise = require('q');
 var TreeUtils = require('../TreeUtils');
 var Commit = require('../models/commit');
 var Ref = require('../models/ref');
@@ -6,15 +8,17 @@ var Blob = require('../models/blob');
 var Head = require('../models/head');
 var ProgressLine = require('../models/progressLine');
 
+import type Repository from '../models/repo';
+import type Sha from '../models/sha';
 
 /*
-    To do for checkout:
-
-    - Write all blob for the commit's tree to working dir
-        - Write content
-        - Update file's stat
-    - Recreate workingIndex
-*/
+ * To do for checkout:
+ *
+ * - Write all blob for the commit's tree to working dir
+ *     - Write content
+ *     - Update file's stat
+ * - Recreate workingIndex
+ */
 
 
 /**
@@ -24,12 +28,15 @@ var ProgressLine = require('../models/progressLine');
  * @param {String}
  * @return {Promise}
  */
-function checkoutTree(repo, treeSHA) {
+function checkoutTree(
+    repo: Repository,
+    treeSHA: Sha
+): Promise {
     if (repo.isBare()) {
-        return Q.reject(new Error('Can\'t checkout in a bare repository'));
+        return Promise.reject(new Error('Can\'t checkout in a bare repository'));
     }
 
-    var d = Q.defer();
+    var d = Promise.defer();
 
     TreeUtils.walk(repo, treeSHA, function(filename, entry) {
         var sha = entry.getSha();
@@ -70,9 +77,12 @@ function checkoutTree(repo, treeSHA) {
  * @param {String} refName
  * @return {Promise}
  */
-function checkout(repo, refName) {
+function checkout(
+    repo: Repository,
+    refName: string
+): Promise {
     if (repo.isBare()) {
-        return Q.reject(new Error('Can\'t checkout in a bare repository'));
+        return Promise.reject(new Error('Can\'t checkout in a bare repository'));
     }
 
     // Read ref
