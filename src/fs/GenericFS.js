@@ -12,7 +12,6 @@ export type FileStat = {
 };
 
 class GenericFS {
-
     /*
      * List files in a folder.
      */

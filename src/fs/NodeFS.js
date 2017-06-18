@@ -14,10 +14,7 @@ class NodeFS extends GenericFS {
     fs: *;
     root: string;
 
-    constructor(
-        fs: *,
-        root: string
-    ) {
+    constructor(fs: *, root: string) {
         super();
         this.fs = fs;
         this.root = root;
@@ -45,9 +42,7 @@ class NodeFS extends GenericFS {
     /*
      * Get infos about a file.
      */
-    stat(
-        file: string
-    ): Promise<FileStat> {
+    stat(file: string): Promise<FileStat> {
         return new Promise((resolve, reject) => {
             this.fs.stat(this.resolve(file), (err, stat) => {
                 if (err) {
@@ -57,7 +52,7 @@ class NodeFS extends GenericFS {
                         path: file,
                         length: stat.size,
                         mode: String(stat.mode),
-                        type:  stat.isDirectory()? 'dir' : 'file',
+                        type: stat.isDirectory() ? 'dir' : 'file',
                     });
                 }
             });
@@ -82,12 +77,9 @@ class NodeFS extends GenericFS {
     /*
      * Write a file.
      */
-    write(
-        file: string,
-        content: Buffer
-    ): Promise<*> {
+    write(file: string, content: Buffer): Promise<*> {
         return new Promise((resolve, reject) => {
-            this.fs.writeFile(this.resolve(file), content, (err) => {
+            this.fs.writeFile(this.resolve(file), content, err => {
                 if (err) {
                     reject(err);
                 } else {
@@ -100,11 +92,9 @@ class NodeFS extends GenericFS {
     /*
      * Delete a file.
      */
-    unlink(
-        file: string
-    ): Promise<*> {
+    unlink(file: string): Promise<*> {
         return new Promise((resolve, reject) => {
-            this.fs.unlink(this.resolve(file), (err) => {
+            this.fs.unlink(this.resolve(file), err => {
                 if (err) {
                     reject(err);
                 } else {

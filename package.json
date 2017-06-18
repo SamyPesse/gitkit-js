@@ -10,8 +10,13 @@
     "url": "https://github.com/SamyPesse/gitkit.js.git"
   },
   "dependencies": {
+    "buffer-to-uint8array": "^1.1.0",
+    "commander": "^2.9.0",
+    "dissolve": "^0.3.3",
     "immutable": "^3.8.1",
-    "pad": "^1.1.0"
+    "pad": "^1.1.0",
+    "pako": "^1.0.5",
+    "typedarray-to-buffer": "^3.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -36,6 +41,6 @@
     "prettier": "prettier --tab-width 4 --single-quote --trailing-comma es5 --write \"./src/**/*.js\""
   },
   "bin": {
-    "gitkit": "./lib/bin/gitkit.js"
+    "gitkit": "./lib/cli/gitkit.js"
   }
 }

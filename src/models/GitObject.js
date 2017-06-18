@@ -2,7 +2,9 @@
 
 import path from 'path';
 import { Record } from 'immutable';
+
 import sha1 from '../utils/sha1';
+import zlib from '../utils/zlib';
 
 export type GitObjectType = 'blob' | 'tree' | 'commit';
 
@@ -57,14 +59,40 @@ class GitObject extends Record(DEFAULTS) {
     static getPath(sha: string): string {
         return path.join('objects', sha.slice(0, 2), sha.slice(2));
     }
+
+    /*
+     * Create a git object from a buffer (dezipped).
+     */
+    static createFromBuffer(buffer: Buffer): GitObject {
+        const nullChar = buffer.indexOf(0);
+
+        // Parse object header
+        const header = buffer.slice(0, nullChar).toString();
+        const type = header.split(' ')[0];
+
+        // Extract content
+        const content = buffer.slice(nullChar + 1);
+
+        return new GitObject({
+            type,
+            content,
+        });
+    }
+
+    /*
+     * The Git object is zipped on the disk.
+     */
+    static createFromZip(buffer: Buffer): GitObject {
+        return GitObject.createFromBuffer(zlib.unzip(buffer));
+    }
 }
 
 /*
  * An interface for class which are serializable as Git objects.
  */
 export interface GitObjectSerializable<T> {
-    static createFromObject(o: GitObject): T;
-    toGitObject(): GitObject;
+    static createFromObject(o: GitObject): T,
+    toGitObject(): GitObject,
 }
 
 export default GitObject;
