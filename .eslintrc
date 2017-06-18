@@ -8,5 +8,8 @@
   "plugins": [
     "flowtype",
     "prettier"
-  ]
+  ],
+  "env": {
+    "jest": true
+  }
 }

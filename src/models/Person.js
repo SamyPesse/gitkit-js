@@ -10,8 +10,6 @@ const DEFAULTS: {
     email: '',
 };
 
-class Person extends Record(DEFAULTS) {
-
-}
+class Person extends Record(DEFAULTS) {}
 
 export default Person;

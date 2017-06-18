@@ -18,18 +18,19 @@ const DEFAULTS: {
 };
 
 class Author extends Record(DEFAULTS) {
-
     static createFromPerson(person: Person): Author {
-        let offset = new Date().getTimezoneOffset();
-        offset = ((offset<0? '+':'-') +
-              pad('' + parseInt(Math.abs(offset/60)), 2) +
-              pad('' + Math.abs(offset%60), 2));
+        const date = new Date();
+        const offset = date.getTimezoneOffset();
+        const timezone =
+            (offset < 0 ? '+' : '-') +
+            pad('' + parseInt(Math.abs(offset / 60), 10), 2) +
+            pad('' + Math.abs(offset % 60), 2);
 
         return new Author({
-            name: person.getName(),
-            email: person.getEmail(),
-            timezone: offset,
-            timestamp: Number(date.getTime()/1000)
+            name: person.name,
+            email: person.email,
+            timezone,
+            timestamp: Number(date.getTime() / 1000),
         });
     }
 
