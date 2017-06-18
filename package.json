@@ -10,7 +10,8 @@
     "url": "https://github.com/SamyPesse/gitkit.js.git"
   },
   "dependencies": {
-    "immutable": "^3.8.1"
+    "immutable": "^3.8.1",
+    "pad": "^1.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

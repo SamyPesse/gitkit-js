@@ -1,5 +1,6 @@
 /** @flow */
 
+import path from 'path';
 import { Record } from 'immutable';
 import sha1 from '../utils/sha1';
 
@@ -16,6 +17,10 @@ const DEFAULTS: {
 class GitObject extends Record(DEFAULTS) {
     get sha(): string {
         return sha1.encode(this.getAsBuffer());
+    }
+
+    get path(): string {
+        return GitObject.getPath(this.sha);
     }
 
     get isTree(): boolean {
@@ -44,6 +49,13 @@ class GitObject extends Record(DEFAULTS) {
             nullBuf,
             content,
         ]);
+    }
+
+    /*
+     * Get path in a git repository for an object.
+     */
+    static getPath(sha: string): string {
+        return path.join('objects', sha.slice(0, 2), sha.slice(2));
     }
 }
 
