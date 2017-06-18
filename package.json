@@ -33,7 +33,7 @@
     "build": "babel src/ -d lib/",
     "prepublish": "yarn run build",
     "lint": "eslint ./src",
-    "prettier": "prettier --tab-width 4 --single-quote --trailing-comma es5 --write ./src/**/*.js"
+    "prettier": "prettier --tab-width 4 --single-quote --trailing-comma es5 --write \"./src/**/*.js\""
   },
   "bin": {
     "gitkit": "./lib/bin/gitkit.js"

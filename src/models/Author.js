@@ -5,6 +5,8 @@ import { Record } from 'immutable';
 
 import type Person from './Person';
 
+const AUTHOR_RE = /(.*) <([^>]+)> (\d+) ([+-]{1}\d{4})/;
+
 const DEFAULTS: {
     name: string,
     email: string,
@@ -18,6 +20,20 @@ const DEFAULTS: {
 };
 
 class Author extends Record(DEFAULTS) {
+    static createFromString(str): ?Author {
+        const match = AUTHOR_RE.exec(str);
+        if (!match) {
+            return null;
+        }
+
+        return new Author({
+            name: match[1].replace(/(^\s+|\s+$)/, ''),
+            email: match[2],
+            timestamp: parseInt(match[3], 10),
+            timezone: match[4]
+        });
+    }
+
     static createFromPerson(person: Person): Author {
         const date = new Date();
         const offset = date.getTimezoneOffset();

@@ -1,6 +1,7 @@
 /** @flow */
 
 import path from 'path';
+import { Buffer } from 'buffer';
 import { Record } from 'immutable';
 import sha1 from '../utils/sha1';
 

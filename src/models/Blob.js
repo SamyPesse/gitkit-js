@@ -1,15 +1,31 @@
 /** @flow */
 
 import { Record } from 'immutable';
+import { Buffer } from 'buffer';
+import GitObject from './GitObject';
 
 const DEFAULTS: {
-    name: string,
-    email: string,
+    content: Buffer,
 } = {
-    name: '',
-    email: '',
+    content: new Buffer(''),
 };
 
-class Blob extends Record(DEFAULTS) {}
+class Blob extends Record(DEFAULTS) {
+    toGitObject(): GitObject {
+        return new GitObject({
+            type: 'buffer',
+            content: this.content,
+        });
+    }
+
+    /*
+     * Create a blob from a git object.
+     */
+    static createFromObject(o: GitObject): Blob {
+        return new GitObject({
+            content: o.content,
+        });
+    }
+}
 
 export default Blob;
