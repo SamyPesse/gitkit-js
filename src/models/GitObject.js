@@ -1,7 +1,6 @@
 /** @flow */
 
 import path from 'path';
-import { Buffer } from 'buffer';
 import { Record } from 'immutable';
 import sha1 from '../utils/sha1';
 
@@ -58,6 +57,14 @@ class GitObject extends Record(DEFAULTS) {
     static getPath(sha: string): string {
         return path.join('objects', sha.slice(0, 2), sha.slice(2));
     }
+}
+
+/*
+ * An interface for class which are serializable as Git objects.
+ */
+export interface GitObjectSerializable<T> {
+    static createFromObject(o: GitObject): T;
+    toGitObject(): GitObject;
 }
 
 export default GitObject;

@@ -1,7 +1,9 @@
 /** @flow */
 
-import path from './path';
+import path from 'path';
+import { List } from 'immutable';
 import GenericFS from './GenericFS';
+
 import type { FileStat } from './GenericFS';
 
 /*
@@ -10,7 +12,7 @@ import type { FileStat } from './GenericFS';
 
 class NodeFS extends GenericFS {
     fs: *;
-    base: string;
+    root: string;
 
     constructor(
         fs: *,
@@ -21,19 +23,23 @@ class NodeFS extends GenericFS {
         this.root = root;
     }
 
-    resolve(
-        file: string
-    ): string {
+    resolve(file: string): string {
         return path.resolve(this.root, file);
     }
 
     /*
      * List files in a folder.
      */
-    readDir(
-        file: string
-    ): Promise<List<string>> {
-
+    readDir(file: string): Promise<List<string>> {
+        return new Promise((resolve, reject) => {
+            this.fs.readdir(this.resolve(file), (err, files) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(List(files));
+                }
+            });
+        });
     }
 
     /*
@@ -42,15 +48,26 @@ class NodeFS extends GenericFS {
     stat(
         file: string
     ): Promise<FileStat> {
-        return Promise.reject(new Error('Not implemented'));
+        return new Promise((resolve, reject) => {
+            this.fs.stat(this.resolve(file), (err, stat) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve({
+                        path: file,
+                        length: stat.size,
+                        mode: String(stat.mode),
+                        type:  stat.isDirectory()? 'dir' : 'file',
+                    });
+                }
+            });
+        });
     }
 
     /*
      * Read a file.
      */
-    read(
-        file: string
-    ): Promise<Buffer> {
+    read(file: string): Promise<Buffer> {
         return new Promise((resolve, reject) => {
             this.fs.readFile(this.resolve(file), (err, content) => {
                 if (err) {
@@ -69,7 +86,15 @@ class NodeFS extends GenericFS {
         file: string,
         content: Buffer
     ): Promise<*> {
-        return Promise.reject(new Error('Not implemented'));
+        return new Promise((resolve, reject) => {
+            this.fs.writeFile(this.resolve(file), content, (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 
     /*
@@ -78,7 +103,15 @@ class NodeFS extends GenericFS {
     unlink(
         file: string
     ): Promise<*> {
-        return Promise.reject(new Error('Not implemented'));
+        return new Promise((resolve, reject) => {
+            this.fs.unlink(this.resolve(file), (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 }
 

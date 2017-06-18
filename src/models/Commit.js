@@ -3,11 +3,13 @@
 import { Record, List } from 'immutable';
 import Author from './Author';
 
+import type GitObject, { GitObjectSerializable } from './GitObject';
+
 const DEFAULTS: {
     author: Author,
     committer: Author,
     tree: string,
-    parents: List,
+    parents: List<string>,
     message: string,
 } = {
     author: new Author(),
@@ -17,7 +19,7 @@ const DEFAULTS: {
     message: '',
 };
 
-class Commit extends Record(DEFAULTS) {
+class Commit extends Record(DEFAULTS) implements GitObjectSerializable<Commit> {
     static createFromString(content: string): Commit {}
 
     static createFromBuffer(content: Buffer): Commit {

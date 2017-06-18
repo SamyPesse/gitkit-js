@@ -1,8 +1,9 @@
 /** @flow */
 
 import { Record } from 'immutable';
-import { Buffer } from 'buffer';
 import GitObject from './GitObject';
+
+import type { GitObjectSerializable } from './GitObject';
 
 const DEFAULTS: {
     content: Buffer,
@@ -10,7 +11,7 @@ const DEFAULTS: {
     content: new Buffer(''),
 };
 
-class Blob extends Record(DEFAULTS) {
+class Blob extends Record(DEFAULTS) implements GitObjectSerializable<Blob> {
     toGitObject(): GitObject {
         return new GitObject({
             type: 'buffer',
