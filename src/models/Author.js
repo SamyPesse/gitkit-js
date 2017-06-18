@@ -30,7 +30,7 @@ class Author extends Record(DEFAULTS) {
             name: match[1].replace(/(^\s+|\s+$)/, ''),
             email: match[2],
             timestamp: parseInt(match[3], 10),
-            timezone: match[4]
+            timezone: match[4],
         });
     }
 
