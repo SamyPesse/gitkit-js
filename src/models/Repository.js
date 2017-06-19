@@ -8,8 +8,9 @@ import GitObject from './GitObject';
 import Tree from './Tree';
 import Blob from './Blob';
 import Commit from './Commit';
-import Head from './Head';
+import Ref from './Ref';
 
+import type { List } from 'immutable';
 import type TreeEntry from './TreeEntry';
 import type { SHA } from '../types/SHA';
 
@@ -80,24 +81,41 @@ class Repository extends Record(DEFAULTS) {
         const { fs } = this;
 
         return fs
-            .read(this.resolveGitFile(Ref.getPath(name)))
+            .read(this.resolveGitFile(name))
             .then(buffer => Ref.createFromBuffer(buffer));
     }
 
-    readHEAD(name: string = 'HEAD'): Promise<Head> {
-        const { fs } = this;
-
-        return fs
-            .read(this.resolveGitFile(name))
-            .then(buffer => Head.createFromBuffer(buffer));
+    /*
+     * Resolve a ref to the last in the chained list.
+     */
+    resolveRefToLast(name: string): Promise<Ref> {
+        return this.readRef(name)
+        .then(ref => (
+            ref.isDetached ? ref : this.resolveRefToLast(ref.ref)
+        ));
     }
 
     /*
      * Resolve a ref to a commit.
      */
     resolveRef(name: string): Promise<Commit> {
-        return this.readRef(name)
+        return this.resolveRefToLast(name)
         .then(ref => this.readCommit(ref.commit));
+    }
+
+    /*
+     * List all refs in the repository. It only list the name of the refs.
+     */
+    listRefs(prefix?: string): Promise<List<string>> {
+        const { fs } = this;
+        const refspath = this.resolveGitFile(
+            prefix ? path.join('refs', prefix) : 'refs'
+        );
+
+        return fs.readTree(refspath, {
+            prefix: this.resolveGitFile('./')
+        })
+        .then(files => files.keySeq());
     }
 
     /*
@@ -145,6 +163,13 @@ class Repository extends Record(DEFAULTS) {
                 Promise.resolve()
             );
         });
+    }
+
+    /*
+     * List all local branches in the repository
+     */
+    listBranches(): Promise<List<string>> {
+        return this.listRefs('heads');
     }
 }
 

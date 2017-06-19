@@ -1,20 +1,35 @@
 /** @flow */
 
-import path from 'path';
 import { Record } from 'immutable';
 
 import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
-    commit: SHA,
+    ref: ?string,
+    commit: ?SHA,
 } = {
-    commit: '',
+    ref: null,
+    commit: null
 };
 
 class Ref extends Record(DEFAULTS) {
 
+    /*
+     * A detached head is when the HEAD is pointing to a commit
+     * instead of a ref.
+     *
+     * https://git-scm.com/docs/git-checkout#_detached_head
+     */
+    get isDetached(): boolean {
+        return !!this.commit;
+    }
+
     toString(): string {
-        return `${this.commit}\n`;
+        if (this.isDetached) {
+            return `${this.commit}\n`;
+        } else {
+            return `ref: ${this.ref}\n`;
+        }
     }
 
     toBuffer(): Buffer {
@@ -29,16 +44,19 @@ class Ref extends Record(DEFAULTS) {
     }
 
     static createFromString(content: string): Ref {
-        return new Ref({
-            commit: content.trim()
-        });
-    }
+        content = content.trim()
 
-    /*
-     * Get path in a git repository for a ref.
-     */
-    static getPath(name: string): string {
-        return path.join('refs', name);
+        // Are we matching a ref ?
+        const match = content.match(/ref:\s+(\S+)/);
+        if (match) {
+            return new Ref({
+                ref: match[1]
+            });
+        }
+
+        return new Ref({
+            commit: content
+        });
     }
 }
 

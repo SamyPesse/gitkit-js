@@ -43,13 +43,14 @@ function logCommits(
 
 export default {
     name: 'log [sha]',
+    description: 'Show commit logs',
     exec: logCommits,
     options: [
         {
             type: 'number',
             name: 'max',
             shortcut: 'm',
-            description: 'Max number of commits to log (default is 100).',
+            describe: 'Max number of commits to log (default is 100).',
             default: 100,
         },
     ],

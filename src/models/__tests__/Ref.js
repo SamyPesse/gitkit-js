@@ -1,8 +1,8 @@
-import Head from '../Head';
+import Ref from '../Head';
 
 describe('createFromString', () => {
     test('it should parse ref HEAD', () => {
-        const head = Head.createFromString(
+        const head = Ref.createFromString(
             'ref: refs/heads/master\n'
         );
 
@@ -11,7 +11,7 @@ describe('createFromString', () => {
     });
 
     test('it should parse detached HEAD', () => {
-        const head = Head.createFromString(
+        const head = Ref.createFromString(
             '8a3493eea604510d7ba532cce73bf0fb68c6db8f\n'
         );
 
@@ -22,7 +22,7 @@ describe('createFromString', () => {
 
 describe('isDetached', () => {
     test('it should be true when pointing to a commit', () => {
-        const head = new Head({
+        const head = new Ref({
             commit: '8a3493eea604510d7ba532cce73bf0fb68c6db8f'
         });
 
@@ -30,7 +30,7 @@ describe('isDetached', () => {
     });
 
     test('it should be false when pointing to a ref', () => {
-        const head = new Head({
+        const head = new Ref({
             ref: 'refs/heads/master'
         });
 

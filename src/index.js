@@ -1,14 +1,14 @@
 /** @flow */
 
-import { Author, Blob, Commit, GitObject, Head, Person, Ref, Repository, Tree, TreeEntry } from './models';
+import { Author, Blob, Branch, Commit, GitObject, Person, Ref, Repository, Tree, TreeEntry } from './models';
 
 const GitKit = {
     // Models
     Author,
     Blob,
+    Branch,
     Commit,
     GitObject,
-    Head,
     Person,
     Ref,
     Repository,

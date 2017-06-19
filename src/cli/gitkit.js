@@ -9,11 +9,15 @@ import pkg from '../../package.json';
 
 import lsTree from './ls-tree';
 import logCommits from './log';
+import branch from './branch';
+import showRef from './show-ref';
 
 program.version(pkg.version).option('--debug', 'Enable error debugging');
 
-[logCommits, lsTree].forEach(({ name, description, exec, options = [] }) => {
-    let command = program.command(name);
+[branch, logCommits, lsTree, showRef].forEach(({ name, description, exec, options = [] }) => {
+    let command = program
+        .command(name)
+        .description(description);
 
     options.forEach(opt => {
         command = command.option(
@@ -55,6 +59,8 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
     });
 });
 
-if (program.parse(process.argv).args.length == 0 && process.argv.length === 2) {
+program.parse(process.argv);
+
+if (program.args.length == 0) {
     program.help();
 }

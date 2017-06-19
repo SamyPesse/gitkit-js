@@ -34,6 +34,7 @@ function lsTree(
 
 export default {
     name: 'ls-tree [sha]',
+    description: 'List the contents of a tree object',
     exec: lsTree,
     options: [
         {
