@@ -1,6 +1,7 @@
 /** @flow */
 
 import path from 'path';
+import mkdirp from 'mkdirp';
 import { List } from 'immutable';
 import GenericFS from './GenericFS';
 
@@ -78,13 +79,29 @@ class NodeFS extends GenericFS {
      * Write a file.
      */
     write(file: string, content: Buffer): Promise<*> {
-        return new Promise((resolve, reject) => {
-            this.fs.writeFile(this.resolve(file), content, err => {
+        const filepath = this.resolve(file);
+        const dirpath = path.dirname(filepath);
+
+        return (new Promise((resolve, reject) => {
+            mkdirp(dirpath, {
+                fs: this.fs
+            }, (err) => {
                 if (err) {
                     reject(err);
                 } else {
                     resolve();
                 }
+            })
+        }))
+        .then(() => {
+            return new Promise((resolve, reject) => {
+                this.fs.writeFile(filepath, content, err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
             });
         });
     }

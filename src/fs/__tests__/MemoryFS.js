@@ -16,6 +16,16 @@ describe('.write', () => {
             ).resolves.toBe('Hello world');
         });
     });
+
+    test('it should create a file in a directory', () => {
+        return fs.write('folder/README.md', new Buffer('Hello world 2', 'utf8'))
+        .then(() => {
+            return expect(
+                fs.read('folder/README.md')
+                .then(buf => buf.toString('utf8'))
+            ).resolves.toBe('Hello world 2');
+        });
+    });
 });
 
 describe('.read', () => {
