@@ -8,6 +8,7 @@ import GitObject from './GitObject';
 import Tree from './Tree';
 import Blob from './Blob';
 import Commit from './Commit';
+import Head from './Head';
 
 import type TreeEntry from './TreeEntry';
 import type { SHA } from '../types/SHA';
@@ -38,7 +39,7 @@ class Repository extends Record(DEFAULTS) {
 
         return fs
             .read(this.resolveGitFile(GitObject.getPath(sha)))
-            .then(buf => GitObject.createFromZip(buf));
+            .then(buffer => GitObject.createFromZip(buffer));
     }
 
     /*
@@ -73,6 +74,30 @@ class Repository extends Record(DEFAULTS) {
 
             return Commit.createFromObject(obj);
         });
+    }
+
+    readRef(name: string): Promise<Ref> {
+        const { fs } = this;
+
+        return fs
+            .read(this.resolveGitFile(Ref.getPath(name)))
+            .then(buffer => Ref.createFromBuffer(buffer));
+    }
+
+    readHEAD(name: string = 'HEAD'): Promise<Head> {
+        const { fs } = this;
+
+        return fs
+            .read(this.resolveGitFile(name))
+            .then(buffer => Head.createFromBuffer(buffer));
+    }
+
+    /*
+     * Resolve a ref to a commit.
+     */
+    resolveRef(name: string): Promise<Commit> {
+        return this.readRef(name)
+        .then(ref => this.readCommit(ref.commit));
     }
 
     /*

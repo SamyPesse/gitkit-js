@@ -1,6 +1,6 @@
 /** @flow */
 
-import { Author, Blob, Commit, GitObject, Person, Repository } from './models';
+import { Author, Blob, Commit, GitObject, Head, Person, Ref, Repository, Tree, TreeEntry } from './models';
 
 const GitKit = {
     // Models
@@ -8,8 +8,12 @@ const GitKit = {
     Blob,
     Commit,
     GitObject,
+    Head,
     Person,
+    Ref,
     Repository,
+    Tree,
+    TreeEntry,
 };
 
 export default GitKit;
