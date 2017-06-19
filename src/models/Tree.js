@@ -15,7 +15,6 @@ const DEFAULTS: {
 };
 
 class Tree extends Record(DEFAULTS) implements GitObjectSerializable<Tree> {
-
     /*
      * Parse a tree listing from a buffer.
      */

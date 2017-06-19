@@ -2,12 +2,14 @@
 
 import { Record } from 'immutable';
 
+import type { SHA } from '../types/SHA';
+
 type TreeEntryType = 'blob' | 'tree';
 
 const DEFAULTS: {
     path: string,
     mode: number,
-    sha: string,
+    sha: SHA,
 } = {
     path: '',
     mode: 0,

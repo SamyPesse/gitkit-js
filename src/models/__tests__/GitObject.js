@@ -29,11 +29,29 @@ describe('.path', () => {
 });
 
 describe('.createFromZip', () => {
-    const dataPath = path.join(__dirname, 'data/tree-2bd3640faa3f7e0c7a644c9ca475b30b62e9e62c')
-    const buf = fs.readFileSync(dataPath);
+    it('should detect type "tree"', () => {
+        const dataPath = path.join(
+            __dirname,
+            'data/tree-2bd3640faa3f7e0c7a644c9ca475b30b62e9e62c'
+        );
+        const buf = fs.readFileSync(dataPath);
 
-    const obj = GitObject.createFromZip(buf);
+        const obj = GitObject.createFromZip(buf);
 
-    expect(obj.type).toBe('tree');
-    expect(obj.length).toBe(446);
+        expect(obj.type).toBe('tree');
+        expect(obj.length).toBe(446);
+    });
+
+    it('should detect type "commit"', () => {
+        const dataPath = path.join(
+            __dirname,
+            'data/commit-bbe781d8f1cdffd26e504af8c66e097ad7dc8003'
+        );
+        const buf = fs.readFileSync(dataPath);
+
+        const obj = GitObject.createFromZip(buf);
+
+        expect(obj.type).toBe('commit');
+        expect(obj.length).toBe(239);
+    });
 });

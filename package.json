@@ -34,7 +34,7 @@
     "prettier": "^1.4.4"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest ./src/",
     "build": "babel src/ -d lib/",
     "prepublish": "yarn run build",
     "lint": "eslint ./src",

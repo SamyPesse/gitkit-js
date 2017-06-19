@@ -6,6 +6,8 @@ import { Record } from 'immutable';
 import sha1 from '../utils/sha1';
 import zlib from '../utils/zlib';
 
+import type { SHA } from '../types/SHA';
+
 export type GitObjectType = 'blob' | 'tree' | 'commit';
 
 const DEFAULTS: {
@@ -17,11 +19,11 @@ const DEFAULTS: {
 };
 
 class GitObject extends Record(DEFAULTS) {
-    get sha(): string {
+    get sha(): SHA {
         return sha1.encode(this.getAsBuffer());
     }
 
-    get length() {
+    get length(): number {
         return this.content.length;
     }
 

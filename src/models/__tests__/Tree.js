@@ -8,7 +8,10 @@ describe('.createFromObject', () => {
     let tree;
 
     beforeAll(() => {
-        const dataPath = path.join(__dirname, 'data/tree-2bd3640faa3f7e0c7a644c9ca475b30b62e9e62c')
+        const dataPath = path.join(
+            __dirname,
+            'data/tree-2bd3640faa3f7e0c7a644c9ca475b30b62e9e62c'
+        );
         const buf = fs.readFileSync(dataPath);
         const obj = GitObject.createFromZip(buf);
 
@@ -34,5 +37,4 @@ describe('.createFromObject', () => {
         expect(blobs.size).toBe(11);
         expect(trees.size).toBe(1);
     });
-
 });

@@ -10,6 +10,7 @@ import Blob from './Blob';
 import Commit from './Commit';
 
 import type TreeEntry from './TreeEntry';
+import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
     isBare: boolean,
@@ -20,7 +21,6 @@ const DEFAULTS: {
 };
 
 class Repository extends Record(DEFAULTS) {
-
     /*
      * Resolve a file from the .git folder.
      */
@@ -32,7 +32,7 @@ class Repository extends Record(DEFAULTS) {
     /*
      * Read a Git object by its sha.
      */
-    readObject(sha: string): Promise<Tree> {
+    readObject(sha: SHA): Promise<Tree> {
         const { fs } = this;
 
         return fs
@@ -44,7 +44,7 @@ class Repository extends Record(DEFAULTS) {
      * Read a blob/commit/tree objects by their sha.
      */
 
-    readTree(sha: string): Promise<Tree> {
+    readTree(sha: SHA): Promise<Tree> {
         return this.readObject(sha).then(obj => {
             if (!obj.isTree) {
                 throw new Error(`"${sha}" is not a tree`);
@@ -54,7 +54,7 @@ class Repository extends Record(DEFAULTS) {
         });
     }
 
-    readBlob(sha: string): Promise<Blob> {
+    readBlob(sha: SHA): Promise<Blob> {
         return this.readObject(sha).then(obj => {
             if (!obj.isTree) {
                 throw new Error(`"${sha}" is not a blob`);
@@ -64,7 +64,7 @@ class Repository extends Record(DEFAULTS) {
         });
     }
 
-    readCommit(sha: string): Promise<Commit> {
+    readCommit(sha: SHA): Promise<Commit> {
         return this.readObject(sha).then(obj => {
             if (!obj.isTree) {
                 throw new Error(`"${sha}" is not a commit`);
@@ -78,9 +78,9 @@ class Repository extends Record(DEFAULTS) {
      * Recursively walk a tree. The iterator is called for each tree entry.
      */
     walkTree(
-        sha: string,
+        sha: SHA,
         iter: (entry: TreeEntry, filepath: string) => *,
-        baseName: ?string = ''
+        baseName: string = ''
     ): Promise<*> {
         return this.readTree(sha).then(tree => {
             const { entries } = tree;
