@@ -16,19 +16,34 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
 
     options.forEach(opt => {
         command = command.option(
-            `--${opt.name} [${opt.name}]`,
+            `${opt.shortcut ? '-' + opt.shortcut +', ' : ''}--${opt.name}${opt.type != 'boolean' ? '[' + opt.name + ']' : ''}`,
             opt.description
         );
     });
 
     command.action((...args) => {
-        args = args.slice(0, -1);
+        Promise.resolve()
+        .then(() => {
+            const repo = new Repository({
+                fs: new NativeFS(process.cwd()),
+            });
 
-        const repo = new Repository({
-            fs: new NativeFS(process.cwd()),
-        });
+            args = args.slice(0, -1);
+            const kwargs = options.reduce((out, opt) => {
+                const value = command[opt.name];
+                const isDefined = typeof value !== 'undefined'
+                out[opt.name] = isDefined ? value : opt.default;
 
-        Promise.resolve().then(() => exec(repo, args)).catch(err => {
+                if (isDefined && opt.isRequired) {
+                    throw new Error(`Parameter "${opt.name}" is required`);
+                }
+
+                return out;
+            }, {});
+
+            return exec(repo, args, kwargs);
+        })
+        .catch(err => {
             console.error(program.debug ? err.stack : err.message);
             process.exit(1);
         });

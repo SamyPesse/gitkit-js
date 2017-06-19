@@ -20,6 +20,7 @@ const DEFAULTS: {
 };
 
 class Repository extends Record(DEFAULTS) {
+
     /*
      * Resolve a file from the .git folder.
      */
@@ -78,7 +79,7 @@ class Repository extends Record(DEFAULTS) {
      */
     walkTree(
         sha: string,
-        iter: (filepath: string, entry: TreeEntry) => *,
+        iter: (entry: TreeEntry, filepath: string) => *,
         baseName: ?string = ''
     ): Promise<*> {
         return this.readTree(sha).then(tree => {
@@ -86,7 +87,7 @@ class Repository extends Record(DEFAULTS) {
             return entries.reduce((prev, entry) => {
                 const filepath = path.join(baseName, entry.path);
                 if (!entry.isTree) {
-                    return iter(filepath, entry);
+                    return iter(entry, filepath);
                 } else {
                     return this.walkTree(entry.sha, iter, filepath);
                 }
