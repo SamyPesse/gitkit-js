@@ -2,8 +2,6 @@
 
 import { Record } from 'immutable';
 
-import type Commit from './Commit';
-import type Ref from './Ref';
 import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
@@ -22,7 +20,7 @@ class Head extends Record(DEFAULTS) {
      *
      * https://git-scm.com/docs/git-checkout#_detached_head
      */
-    isDetached(): boolean {
+    get isDetached(): boolean {
         return !!this.commit;
     }
 
@@ -42,7 +40,7 @@ class Head extends Record(DEFAULTS) {
      * Create a Head instance from the content of a HEAD file.
      */
     static createFromBuffer(buffer: Buffer): Head {
-        return Ref.createFromString(buffer.toString('utf8'));
+        return Head.createFromString(buffer.toString('utf8'));
     }
 
     static createFromString(content: string): Head {
