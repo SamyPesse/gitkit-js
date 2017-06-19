@@ -16,7 +16,7 @@ const DEFAULTS: {
 
 class TreeEntry extends Record(DEFAULTS) {
     get type(): TreeEntryType {
-        if (this.isTree) {
+        if (this.mode == 40000) {
             return 'tree';
         } else {
             return 'blob';
@@ -24,7 +24,11 @@ class TreeEntry extends Record(DEFAULTS) {
     }
 
     get isTree(): boolean {
-        return this.mode == 40000;
+        return this.type == 'tree';
+    }
+
+    get isBlob(): boolean {
+        return this.type == 'blob';
     }
 }
 

@@ -15,6 +15,7 @@ const DEFAULTS: {
 };
 
 class Tree extends Record(DEFAULTS) implements GitObjectSerializable<Tree> {
+
     /*
      * Parse a tree listing from a buffer.
      */
@@ -28,11 +29,13 @@ class Tree extends Record(DEFAULTS) implements GitObjectSerializable<Tree> {
                 this.buffer('sha', 20);
 
                 this.tap(function() {
+                    const entryPath = this.vars.path.toString('utf8');
+
                     entries = entries.set(
-                        this.vars.path,
+                        entryPath,
                         new TreeEntry({
-                            path: this.vars.path.toString('utf8'),
-                            mode: this.vars.mode,
+                            path: entryPath,
+                            mode: parseInt(this.vars.mode.toString('utf8'), 10),
                             sha: this.vars.sha.toString('hex'),
                         })
                     );

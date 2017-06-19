@@ -21,6 +21,10 @@ class GitObject extends Record(DEFAULTS) {
         return sha1.encode(this.getAsBuffer());
     }
 
+    get length() {
+        return this.content.length;
+    }
+
     get path(): string {
         return GitObject.getPath(this.sha);
     }
