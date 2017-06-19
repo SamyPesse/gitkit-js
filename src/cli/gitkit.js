@@ -28,10 +28,7 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
             fs: new NativeFS(process.cwd()),
         });
 
-        Promise
-        .resolve()
-        .then(() => exec(repo, args))
-        .catch(err => {
+        Promise.resolve().then(() => exec(repo, args)).catch(err => {
             console.error(program.debug ? err.stack : err.message);
             process.exit(1);
         });

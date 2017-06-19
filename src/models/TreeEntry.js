@@ -2,6 +2,8 @@
 
 import { Record } from 'immutable';
 
+type TreeEntryType = 'blob' | 'tree';
+
 const DEFAULTS: {
     path: string,
     mode: number,
@@ -13,8 +15,16 @@ const DEFAULTS: {
 };
 
 class TreeEntry extends Record(DEFAULTS) {
+    get type(): TreeEntryType {
+        if (this.isTree) {
+            return 'tree';
+        } else {
+            return 'blob';
+        }
+    }
+
     get isTree(): boolean {
-        return this.mode == 16384;
+        return this.mode == 40000;
     }
 }
 

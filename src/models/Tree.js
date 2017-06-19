@@ -22,16 +22,16 @@ class Tree extends Record(DEFAULTS) implements GitObjectSerializable<Tree> {
         let entries = new OrderedMap();
 
         Dissolve()
-            .loop(() => {
+            .loop(function() {
                 scan(this, 'mode', ' ');
                 scan(this, 'path', new Buffer([0]));
                 this.buffer('sha', 20);
 
-                this.tap(() => {
+                this.tap(function() {
                     entries = entries.set(
                         this.vars.path,
                         new TreeEntry({
-                            path: this.vars.path,
+                            path: this.vars.path.toString('utf8'),
                             mode: this.vars.mode,
                             sha: this.vars.sha.toString('hex'),
                         })
