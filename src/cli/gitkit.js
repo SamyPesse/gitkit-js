@@ -8,10 +8,11 @@ import NativeFS from '../fs/NativeFS';
 import pkg from '../../package.json';
 
 import lsTree from './ls-tree';
+import logCommits from './log';
 
 program.version(pkg.version).option('--debug', 'Enable error debugging');
 
-[lsTree].forEach(({ name, description, exec, options = [] }) => {
+[logCommits, lsTree].forEach(({ name, description, exec, options = [] }) => {
     let command = program.command(name);
 
     options.forEach(opt => {
@@ -19,7 +20,7 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
             `${opt.shortcut
                 ? '-' + opt.shortcut + ', '
                 : ''}--${opt.name}${opt.type != 'boolean'
-                ? '[' + opt.name + ']'
+                ? ' [' + opt.name + ']'
                 : ''}`,
             opt.description
         );

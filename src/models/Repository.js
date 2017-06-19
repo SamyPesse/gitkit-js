@@ -21,6 +21,7 @@ const DEFAULTS: {
 };
 
 class Repository extends Record(DEFAULTS) {
+
     /*
      * Resolve a file from the .git folder.
      */
@@ -56,7 +57,7 @@ class Repository extends Record(DEFAULTS) {
 
     readBlob(sha: SHA): Promise<Blob> {
         return this.readObject(sha).then(obj => {
-            if (!obj.isTree) {
+            if (!obj.isBlob) {
                 throw new Error(`"${sha}" is not a blob`);
             }
 
@@ -66,7 +67,7 @@ class Repository extends Record(DEFAULTS) {
 
     readCommit(sha: SHA): Promise<Commit> {
         return this.readObject(sha).then(obj => {
-            if (!obj.isTree) {
+            if (!obj.isCommit) {
                 throw new Error(`"${sha}" is not a commit`);
             }
 
@@ -92,6 +93,32 @@ class Repository extends Record(DEFAULTS) {
                     return this.walkTree(entry.sha, iter, filepath);
                 }
             }, Promise.resolve());
+        });
+    }
+
+    /*
+     * Recursively walk the commit history. The iterator can return "false" to stop.
+     */
+    walkCommits(
+        sha: SHA,
+        iter: (commit: Commit, sha: SHA) => ?boolean
+    ): Promise<boolean> {
+        return this.readCommit(sha).then(commit => {
+            if (iter(commit, sha) == false) {
+                return true;
+            }
+
+            return commit.parents.reduce(
+                (prev, parent) =>
+                    prev.then(stopped => {
+                        if (stopped) {
+                            return true;
+                        }
+
+                        return this.walkCommits(parent, iter);
+                    }),
+                Promise.resolve()
+            );
         });
     }
 }
