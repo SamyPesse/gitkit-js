@@ -1,9 +1,9 @@
 import RefsIndex from '../RefsIndex';
 
-describe('createFromPack', () => {
-    let index;
+let index;
 
-    test('it should parse withotu error', () => {
+describe('createFromPack', () => {
+    test('it should parse without error', () => {
         index = RefsIndex.createFromPack(`# pack-refs with: peeled fully-peeled
 931e905e0d5d250f4a8129600c390800cde77c08 refs/heads/es6-flow
 277a149659ce5caa44db4da52ffca7332f31316a refs/heads/master
@@ -24,5 +24,15 @@ aae050d2042be9115d2545dfa9ee3e8be65c9974 refs/tags/0.1.0
         expect(ref).toBeDefined();
         expect(ref.commit).toBe('277a149659ce5caa44db4da52ffca7332f31316a');
     });
-
 });
+
+describe('branches', () => {
+    test('it should only list local branches', () => {
+        const { branches } = index;
+
+        expect(branches.size).toBe(2);
+        expect(branches.keySeq().toArray()).toEqual([
+            'es6-flow', 'master'
+        ]);
+    });
+})

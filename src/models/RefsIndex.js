@@ -7,6 +7,9 @@ import type Repository from './Repository';
 
 const PACKED_FILE = 'packed-refs';
 
+// Prefix for local branches.
+const BRANCH_PREFIX = 'refs/heads/';
+
 /*
  * A listing of refs that can be created from:
  *  1. Read the .git/refs folder
@@ -20,6 +23,17 @@ const DEFAULTS: {
 };
 
 class RefsIndex extends Record(DEFAULTS) {
+
+    /*
+     * Filter refs to only return local branches.
+     */
+    get branches(): OrderedMap<string,Ref> {
+        const { refs } = this;
+
+        return refs
+        .filter((ref, refName) => refName.indexOf(BRANCH_PREFIX) === 0)
+        .mapKeys(refName => refName.slice(BRANCH_PREFIX.length));
+    }
 
     /*
      * Read the index of refs from the repository.

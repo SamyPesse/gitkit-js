@@ -8,7 +8,6 @@ import GitObject from './GitObject';
 import Tree from './Tree';
 import Blob from './Blob';
 import Commit from './Commit';
-import Ref from './Ref';
 
 import type { List } from 'immutable';
 import type TreeEntry from './TreeEntry';
