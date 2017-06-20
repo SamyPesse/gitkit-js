@@ -19,7 +19,7 @@ const BRANCH_PREFIX = 'refs/heads/';
 const DEFAULTS: {
     refs: OrderedMap<string,Ref>,
 } = {
-    refs: OrderedMap(),
+    refs: new OrderedMap(),
 };
 
 class RefsIndex extends Record(DEFAULTS) {
