@@ -7,13 +7,10 @@ import { RefsIndex } from '../';
 /*
  * Log the list of branches.
  */
-function logBranches(
-    repo: Repository
-): Promise<*> {
-    return RefsIndex.readFromRepository(repo)
-    .then(({ branches }) => {
+function logBranches(repo: Repository): Promise<*> {
+    return RefsIndex.readFromRepository(repo).then(({ branches }) => {
         branches.forEach((ref, branchName) => {
-            console.log(`  ${branchName}`)
+            console.log(`  ${branchName}`);
         });
     });
 }

@@ -37,7 +37,7 @@ function logCommits(
     return repo.walkCommits(sha, (commit, commitSHA) => {
         printCommit(commit, commitSHA);
 
-        return (++count) < max;
+        return ++count < max;
     });
 }
 

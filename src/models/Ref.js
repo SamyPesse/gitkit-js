@@ -9,11 +9,10 @@ const DEFAULTS: {
     commit: ?SHA,
 } = {
     ref: null,
-    commit: null
+    commit: null,
 };
 
 class Ref extends Record(DEFAULTS) {
-
     /*
      * A detached head is when the HEAD is pointing to a commit
      * instead of a ref.
@@ -44,18 +43,18 @@ class Ref extends Record(DEFAULTS) {
     }
 
     static createFromString(content: string): Ref {
-        content = content.trim()
+        content = content.trim();
 
         // Are we matching a ref ?
         const match = content.match(/ref:\s+(\S+)/);
         if (match) {
             return new Ref({
-                ref: match[1]
+                ref: match[1],
             });
         }
 
         return new Ref({
-            commit: content
+            commit: content,
         });
     }
 }

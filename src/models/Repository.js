@@ -22,7 +22,6 @@ const DEFAULTS: {
 };
 
 class Repository extends Record(DEFAULTS) {
-
     /*
      * Resolve a file from the .git folder.
      */

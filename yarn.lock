@@ -890,6 +890,12 @@ bl@^0.7.0:
   dependencies:
     readable-stream "~1.0.2"
 
+bl@^1.0.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/bl/-/bl-1.2.1.tgz#cac328f7bee45730d404b692203fcb590e172d5e"
+  dependencies:
+    readable-stream "^2.0.5"
+
 block-stream@*:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/block-stream/-/block-stream-0.0.9.tgz#13ebfe778a03205cfe03751481ebb4b3300c126a"
@@ -1186,6 +1192,13 @@ dissolve@^0.3.3:
   dependencies:
     bl "^0.7.0"
     readable-stream "^1.0.26"
+
+dissolve@deoxxa/dissolve#4fd1556d0199a27dd0a6f9f22cb6648194301454:
+  version "0.3.3"
+  resolved "https://codeload.github.com/deoxxa/dissolve/tar.gz/4fd1556d0199a27dd0a6f9f22cb6648194301454"
+  dependencies:
+    bl "^1.0.0"
+    readable-stream "^2.0.0"
 
 doctrine@^1.2.2:
   version "1.5.0"
@@ -2805,7 +2818,7 @@ readable-stream@^1.0.26:
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
-readable-stream@^2.0.1, readable-stream@^2.0.2, readable-stream@^2.0.6, readable-stream@^2.1.4, readable-stream@^2.2.2:
+readable-stream@^2.0.0, readable-stream@^2.0.1, readable-stream@^2.0.2, readable-stream@^2.0.5, readable-stream@^2.0.6, readable-stream@^2.1.4, readable-stream@^2.2.2:
   version "2.2.11"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.2.11.tgz#0796b31f8d7688007ff0b93a8088d34aa17c0f72"
   dependencies:
@@ -3315,6 +3328,10 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
+
+varint@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/varint/-/varint-5.0.0.tgz#d826b89f7490732fabc0c0ed693ed475dcb29ebf"
 
 verror@1.3.6:
   version "1.3.6"

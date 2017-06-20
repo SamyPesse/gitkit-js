@@ -31,8 +31,6 @@ describe('branches', () => {
         const { branches } = index;
 
         expect(branches.size).toBe(2);
-        expect(branches.keySeq().toArray()).toEqual([
-            'es6-flow', 'master'
-        ]);
+        expect(branches.keySeq().toArray()).toEqual(['es6-flow', 'master']);
     });
-})
+});

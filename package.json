@@ -12,13 +12,14 @@
   "dependencies": {
     "buffer-to-uint8array": "^1.1.0",
     "commander": "^2.9.0",
-    "dissolve": "^0.3.3",
+    "dissolve": "deoxxa/dissolve#4fd1556d0199a27dd0a6f9f22cb6648194301454",
     "immutable": "^3.8.1",
     "memory-fs": "^0.4.1",
     "mkdirp": "^0.5.1",
     "pad": "^1.1.0",
     "pako": "^1.0.5",
-    "typedarray-to-buffer": "^3.1.2"
+    "typedarray-to-buffer": "^3.1.2",
+    "varint": "^5.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

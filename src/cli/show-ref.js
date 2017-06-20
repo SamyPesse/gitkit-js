@@ -7,13 +7,10 @@ import { RefsIndex } from '../';
 /*
  * Log the list of refs in the repository
  */
-function showRef(
-    repo: Repository
-): Promise<*> {
-    return RefsIndex.readFromRepository(repo)
-    .then(index => {
+function showRef(repo: Repository): Promise<*> {
+    return RefsIndex.readFromRepository(repo).then(index => {
         index.refs.forEach((ref, refName) => {
-            console.log(`${ref.commit || ref.ref}  ${refName}`)
+            console.log(`${ref.commit || ref.ref}  ${refName}`);
         });
     });
 }

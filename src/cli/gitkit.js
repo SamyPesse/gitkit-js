@@ -14,10 +14,13 @@ import showRef from './show-ref';
 
 program.version(pkg.version).option('--debug', 'Enable error debugging');
 
-[branch, logCommits, lsTree, showRef].forEach(({ name, description, exec, options = [] }) => {
-    let command = program
-        .command(name)
-        .description(description);
+[
+    branch,
+    logCommits,
+    lsTree,
+    showRef,
+].forEach(({ name, description, exec, options = [] }) => {
+    let command = program.command(name).description(description);
 
     options.forEach(opt => {
         command = command.option(

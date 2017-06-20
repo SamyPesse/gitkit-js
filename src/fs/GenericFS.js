@@ -14,7 +14,6 @@ export type FileStat = {
 };
 
 class GenericFS {
-
     /*
      * List files in a folder.
      */
@@ -54,11 +53,7 @@ class GenericFS {
      * Check if a file exists
      */
     exists(file: string): Promise<boolean> {
-        return this.stat(file)
-        .then(
-            () => true,
-            (err) => Promise.resolve(false)
-        );
+        return this.stat(file).then(() => true, err => Promise.resolve(false));
     }
 
     /*
@@ -66,33 +61,28 @@ class GenericFS {
      */
     readTree(
         dirpath: string = '',
-        { prefix = dirpath }: {
-            prefix?: string
+        {
+            prefix = dirpath,
+        }: {
+            prefix?: string,
         } = {}
-    ): Promise<OrderedMap<string,FileStat>> {
-        return this.readDir(dirpath)
-        .then(files => {
-            return files.reduce(
-                (prev, file) => {
-                    return prev.then((accu: OrderedMap<string,FileStat>) => {
-                        const filepath = path.join(dirpath, file);
+    ): Promise<OrderedMap<string, FileStat>> {
+        return this.readDir(dirpath).then(files => {
+            return files.reduce((prev, file) => {
+                return prev.then((accu: OrderedMap<string, FileStat>) => {
+                    const filepath = path.join(dirpath, file);
 
-                        return this.stat(filepath)
-                        .then(stat => {
-                            if (stat.type == 'dir') {
-                                return this.readTree(filepath, { prefix })
-                                .then(out => accu.merge(out))
-                            }
+                    return this.stat(filepath).then(stat => {
+                        if (stat.type == 'dir') {
+                            return this.readTree(filepath, {
+                                prefix,
+                            }).then(out => accu.merge(out));
+                        }
 
-                            return accu.set(
-                                path.relative(prefix, filepath),
-                                stat
-                            );
-                        })
+                        return accu.set(path.relative(prefix, filepath), stat);
                     });
-                },
-                Promise.resolve(new OrderedMap())
-            );
+                });
+            }, Promise.resolve(new OrderedMap()));
         });
     }
 }

@@ -1,9 +1,18 @@
 /** @flow */
 
 import {
-    Author, Blob, Branch, Commit, GitObject,
-    PackFile, PackFileEntry, Person,
-    Ref, RefsIndex, Repository, Tree, TreeEntry
+    Author,
+    Blob,
+    Branch,
+    Commit,
+    GitObject,
+    PackFile,
+    Person,
+    Ref,
+    RefsIndex,
+    Repository,
+    Tree,
+    TreeEntry,
 } from './models';
 
 const GitKit = {
@@ -14,7 +23,6 @@ const GitKit = {
     Commit,
     GitObject,
     PackFile,
-    PackFileEntry,
     Person,
     Ref,
     RefsIndex,
@@ -32,7 +40,6 @@ export {
     Commit,
     GitObject,
     PackFile,
-    PackFileEntry,
     Person,
     Ref,
     RefsIndex,

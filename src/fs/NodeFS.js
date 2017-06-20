@@ -82,18 +82,21 @@ class NodeFS extends GenericFS {
         const filepath = this.resolve(file);
         const dirpath = path.dirname(filepath);
 
-        return (new Promise((resolve, reject) => {
-            mkdirp(dirpath, {
-                fs: this.fs
-            }, (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
+        return new Promise((resolve, reject) => {
+            mkdirp(
+                dirpath,
+                {
+                    fs: this.fs,
+                },
+                err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
                 }
-            })
-        }))
-        .then(() => {
+            );
+        }).then(() => {
             return new Promise((resolve, reject) => {
                 this.fs.writeFile(filepath, content, err => {
                     if (err) {
