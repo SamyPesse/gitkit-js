@@ -1,4 +1,4 @@
-import Ref from '../Head';
+import Ref from '../Ref';
 
 describe('createFromString', () => {
     test('it should parse ref HEAD', () => {
@@ -36,4 +36,4 @@ describe('isDetached', () => {
 
         expect(head.isDetached).toBe(false);
     });
-})
+});

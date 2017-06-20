@@ -77,47 +77,6 @@ class Repository extends Record(DEFAULTS) {
         });
     }
 
-    readRef(name: string): Promise<Ref> {
-        const { fs } = this;
-
-        return fs
-            .read(this.resolveGitFile(name))
-            .then(buffer => Ref.createFromBuffer(buffer));
-    }
-
-    /*
-     * Resolve a ref to the last in the chained list.
-     */
-    resolveRefToLast(name: string): Promise<Ref> {
-        return this.readRef(name)
-        .then(ref => (
-            ref.isDetached ? ref : this.resolveRefToLast(ref.ref)
-        ));
-    }
-
-    /*
-     * Resolve a ref to a commit.
-     */
-    resolveRef(name: string): Promise<Commit> {
-        return this.resolveRefToLast(name)
-        .then(ref => this.readCommit(ref.commit));
-    }
-
-    /*
-     * List all refs in the repository. It only list the name of the refs.
-     */
-    listRefs(prefix?: string): Promise<List<string>> {
-        const { fs } = this;
-        const refspath = this.resolveGitFile(
-            prefix ? path.join('refs', prefix) : 'refs'
-        );
-
-        return fs.readTree(refspath, {
-            prefix: this.resolveGitFile('./')
-        })
-        .then(files => files.keySeq());
-    }
-
     /*
      * Recursively walk a tree. The iterator is called for each tree entry.
      */

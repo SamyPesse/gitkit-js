@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 
 import type Repository from '../models/Repository';
+import { RefsIndex } from '../';
 
 /*
  * Log the list of refs in the repository
@@ -9,17 +10,11 @@ import type Repository from '../models/Repository';
 function showRef(
     repo: Repository
 ): Promise<*> {
-    return repo.listRefs()
-    .then((refs) => {
-        console.log(refs);
-        return refs.reduce(
-            (prev, refName) => (
-                prev
-                .then(() => repo.resolveRefToLast(refName))
-                .then((ref) => console.log(`${ref.commit}  ${refName}`))
-            ),
-            Promise.resolve()
-        )
+    return RefsIndex.readFromRepository(repo)
+    .then(index => {
+        index.refs.forEach((ref, refName) => {
+            console.log(`${ref.commit || ref.ref}  ${refName}`)
+        });
     });
 }
 

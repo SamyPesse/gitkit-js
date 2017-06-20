@@ -51,6 +51,17 @@ class GenericFS {
     }
 
     /*
+     * Check if a file exists
+     */
+    exists(file: string): Promise<boolean> {
+        return this.stat(file)
+        .then(
+            () => true,
+            (err) => Promise.resolve(false)
+        );
+    }
+
+    /*
      * List all files in a tree.
      */
     readTree(
