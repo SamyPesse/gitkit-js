@@ -3,6 +3,7 @@
 import { Record } from 'immutable';
 
 import type { SHA } from '../types/SHA';
+import type Repository from './Repository';
 
 const DEFAULTS: {
     ref: ?string,
@@ -23,6 +24,13 @@ class Ref extends Record(DEFAULTS) {
         return !!this.commit;
     }
 
+    /*
+     * Check if this ref points to a branch name "branch".
+     */
+    pointToBranch(branch: string): boolean {
+        return this.ref == `refs/heads/${branch}`;
+    }
+
     toString(): string {
         if (this.isDetached) {
             return `${this.commit}\n`;
@@ -32,6 +40,17 @@ class Ref extends Record(DEFAULTS) {
 
     toBuffer(): Buffer {
         return new Buffer(this.toString(), 'utf8');
+    }
+
+    /*
+     * Read the HEAD from the repository.
+     * The HEAD reference is not stored in the packed-refs
+     */
+    static readHEADFromRepository(repo: Repository): Promise<Ref> {
+        const { fs } = repo;
+        const indexpath = repo.resolveGitFile('HEAD');
+
+        return fs.read(indexpath).then(buffer => Ref.createFromBuffer(buffer));
     }
 
     /*

@@ -2,15 +2,20 @@
 /* eslint-disable no-console */
 
 import type Repository from '../models/Repository';
-import { RefsIndex } from '../';
+import { Ref, RefsIndex } from '../';
 
 /*
  * Log the list of branches.
  */
 function logBranches(repo: Repository): Promise<*> {
-    return RefsIndex.readFromRepository(repo).then(({ branches }) => {
+    return Promise.all([
+        Ref.readHEADFromRepository(repo),
+        RefsIndex.readFromRepository(repo)
+    ]).then(([head, { branches }]) => {
         branches.forEach((ref, branchName) => {
-            console.log(`  ${branchName}`);
+            console.log(
+                `${head.pointToBranch(branchName) ? '*' : ' '} ${branchName}`
+            );
         });
     });
 }
