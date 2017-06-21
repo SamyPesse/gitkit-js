@@ -11,12 +11,14 @@ import lsTree from './ls-tree';
 import lsFiles from './ls-files';
 import logCommits from './log';
 import branch from './branch';
+import tag from './tag';
 import showRef from './show-ref';
 
 program.version(pkg.version).option('--debug', 'Enable error debugging');
 
 [
     branch,
+    tag,
     logCommits,
     lsTree,
     lsFiles,
