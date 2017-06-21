@@ -8,6 +8,7 @@ import NativeFS from '../fs/NativeFS';
 import pkg from '../../package.json';
 
 import lsTree from './ls-tree';
+import lsFiles from './ls-files';
 import logCommits from './log';
 import branch from './branch';
 import showRef from './show-ref';
@@ -18,6 +19,7 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
     branch,
     logCommits,
     lsTree,
+    lsFiles,
     showRef
 ].forEach(({ name, description, exec, options = [] }) => {
     let command = program.command(name).description(description);

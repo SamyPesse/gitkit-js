@@ -5,6 +5,8 @@ import Dissolve from 'dissolve';
 import Concentrate from 'concentrate';
 import IndexEntry from './IndexEntry';
 
+import type Repository from './Repository';
+
 /*
  * Model to represent the index of the git repository
  *
@@ -38,6 +40,18 @@ class WorkingIndex extends Record(DEFAULTS) {
         });
 
         return output.result;
+    }
+
+    /*
+     * Read from the repositpry.
+     */
+    static readFromRepository(repo: Repository): Promise<WorkingIndex> {
+        const { fs } = repo;
+        const indexpath = repo.resolveGitFile('index');
+
+        return fs
+            .read(indexpath)
+            .then(buffer => WorkingIndex.createFromBuffer(buffer));
     }
 
     /*

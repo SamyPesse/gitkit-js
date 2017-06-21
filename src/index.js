@@ -51,5 +51,6 @@ export {
     RefsIndex,
     Repository,
     Tree,
-    TreeEntry
+    TreeEntry,
+    WorkingIndex
 };
