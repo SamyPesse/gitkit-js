@@ -1070,6 +1070,10 @@ concat-stream@^1.6.0:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
+concentrate@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/concentrate/-/concentrate-0.2.3.tgz#f97a0206521c2d7c45171b64cfc4d6f8b6302542"
+
 console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"

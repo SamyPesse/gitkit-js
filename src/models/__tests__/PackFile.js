@@ -3,14 +3,14 @@ import fs from 'fs';
 
 import PackFile from '../PackFile';
 
-describe('.parseFromBuffer', () => {
+describe('.createFromBuffer', () => {
     let pack;
 
     beforeAll(() => {
         const dataPath = path.join(__dirname, 'data/pack-version2.pack');
         const buf = fs.readFileSync(dataPath);
 
-        pack = PackFile.parseFromBuffer(buf);
+        pack = PackFile.createFromBuffer(buf);
     });
 
     it('should parse correct version', () => {

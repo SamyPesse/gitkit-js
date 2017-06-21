@@ -6,13 +6,16 @@ import {
     Branch,
     Commit,
     GitObject,
+    IndexEntry,
+    ObjectsIndex,
     PackFile,
     Person,
     Ref,
     RefsIndex,
     Repository,
     Tree,
-    TreeEntry
+    TreeEntry,
+    WorkingIndex
 } from './models';
 
 const GitKit = {
@@ -22,13 +25,16 @@ const GitKit = {
     Branch,
     Commit,
     GitObject,
+    IndexEntry,
+    ObjectsIndex,
     PackFile,
     Person,
     Ref,
     RefsIndex,
     Repository,
     Tree,
-    TreeEntry
+    TreeEntry,
+    WorkingIndex
 };
 
 export default GitKit;

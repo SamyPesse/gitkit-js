@@ -1,6 +1,7 @@
 /** @flow */
 
 import { Record } from 'immutable';
+import Dissolve from 'dissolve';
 
 /*
  * Model to represent the index of a packfile.
@@ -10,7 +11,11 @@ import { Record } from 'immutable';
  * https://github.com/git/git/blob/master/Documentation/technical/pack-format.txt
  */
 
-const DEFAULTS: {} = {};
+const DEFAULTS: {
+    version: string
+} = {
+    version: ''
+};
 
 class PackFileIndex extends Record(DEFAULTS) {}
 

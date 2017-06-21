@@ -43,7 +43,7 @@ class PackFile extends Record(DEFAULTS) {
     /*
      * Read an entire pack file from a buffer.
      */
-    static parseFromBuffer(buffer: Buffer): ?PackFile {
+    static createFromBuffer(buffer: Buffer): ?PackFile {
         const parser = PackFile.createStreamReader();
         let result;
 
