@@ -7,9 +7,10 @@ import varint from 'varint';
 import uint8ToBuffer from 'typedarray-to-buffer';
 import GitObject from './GitObject';
 
+import type { SHA } from '../types/SHA';
+
 /*
- * Model to represent the header of a packfile.
- * Pack file headers can be used to read a specific object.
+ * Model to represent the content of a packfile.
  *
  * https://github.com/git/git/blob/master/Documentation/technical/pack-format.txt
  */
@@ -32,7 +33,7 @@ const TYPES_FOROBJECT = {
 
 const DEFAULTS: {
     version: string,
-    objects: Map<string,GitObject>,
+    objects: Map<SHA,GitObject>,
 } = {
     version: '',
     objects: new Map(),
