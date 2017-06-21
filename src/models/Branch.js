@@ -4,10 +4,10 @@ import { Record } from 'immutable';
 
 const DEFAULTS: {
     name: string,
-    ref: string,
+    ref: string
 } = {
     name: '',
-    ref: '',
+    ref: ''
 };
 
 class Branch extends Record(DEFAULTS) {}

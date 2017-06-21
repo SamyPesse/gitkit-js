@@ -6,10 +6,10 @@ import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
     ref: ?string,
-    commit: ?SHA,
+    commit: ?SHA
 } = {
     ref: null,
-    commit: null,
+    commit: null
 };
 
 class Ref extends Record(DEFAULTS) {
@@ -26,9 +26,8 @@ class Ref extends Record(DEFAULTS) {
     toString(): string {
         if (this.isDetached) {
             return `${this.commit}\n`;
-        } else {
-            return `ref: ${this.ref}\n`;
         }
+        return `ref: ${this.ref}\n`;
     }
 
     toBuffer(): Buffer {
@@ -43,18 +42,18 @@ class Ref extends Record(DEFAULTS) {
     }
 
     static createFromString(content: string): Ref {
-        content = content.trim();
+        const trimmed = content.trim();
 
         // Are we matching a ref ?
-        const match = content.match(/ref:\s+(\S+)/);
+        const match = trimmed.match(/ref:\s+(\S+)/);
         if (match) {
             return new Ref({
-                ref: match[1],
+                ref: match[1]
             });
         }
 
         return new Ref({
-            commit: content,
+            commit: trimmed
         });
     }
 }

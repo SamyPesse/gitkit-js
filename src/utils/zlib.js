@@ -25,5 +25,5 @@ function zip(buf: Buffer): Buffer {
 
 export default {
     zip,
-    unzip,
+    unzip
 };

@@ -21,7 +21,7 @@ const ENTRY_TYPES = {
     BLOB: 3,
     TAG: 4,
     OFS_DELTA: 6,
-    REF_DELTA: 7,
+    REF_DELTA: 7
 };
 
 const TYPES_FOROBJECT = {
@@ -33,14 +33,13 @@ const TYPES_FOROBJECT = {
 
 const DEFAULTS: {
     version: string,
-    objects: Map<SHA,GitObject>,
+    objects: Map<SHA, GitObject>
 } = {
     version: '',
-    objects: new Map(),
+    objects: new Map()
 };
 
 class PackFile extends Record(DEFAULTS) {
-
     /*
      * Read an entire pack file from a buffer.
      */
@@ -64,48 +63,17 @@ class PackFile extends Record(DEFAULTS) {
      * It emits an event "pack" with the complete PackFile at the end.
      */
     static createStreamReader(): WritableStream {
-        return Dissolve({
-            objectMode: true,
-        })
-            .string('signature', 4)
-            .uint32be('version')
-            .uint32be('count')
-            .tap(function() {
-                const { signature, version, count } = this.vars;
+        const parser = Dissolve({
+            objectMode: true
+        });
 
-                // Check header
-                if (signature !== 'PACK') {
-                    this.emit('error', new Error('Invalid pack signature'));
-                    return;
-                }
-
-                let objectIndex = 0;
-                const objects: { [string]: GitObject } = {};
-
-                this
-                .loop((stopLoop) => {
-                    parseObject(this)
-                    .tap(() => {
-                        const { object } = this.vars;
-                        objects[object.sha] = object;
-
-                        this.emit('object', object);
-
-                        objectIndex++;
-                        if (objectIndex == count) {
-                            stopLoop();
-                        }
-                    });
-                })
-                .tap(() => {
-                    const pack = new PackFile({
-                        version,
-                        objects: new Map(objects),
-                    });
-
-                    this.emit('pack', pack);
-                });
+        return parsePack(parser).tap(() => {
+            const pack = new PackFile({
+                version: parser.vars.version,
+                objects: new Map(parser.vars.objects)
             });
+            parser.emit('pack', pack);
+        });
     }
 }
 
@@ -113,28 +81,29 @@ class PackFile extends Record(DEFAULTS) {
  * Parse header of an object in the pack.
  * It sets the vars: size and type.
  */
-function parseObjectHeader(
-    parser: Dissolve
-): Dissolve {
-    return parser.uint8be('byte').tap(function() {
-        const byte = this.vars.byte;
+function parseObjectHeader(parser: Dissolve): Dissolve {
+    return parser.uint8be('byte').tap(() => {
+        const byte = parser.vars.byte;
         let left = 4;
 
-        this.vars.type = (byte >> 4) & 7;
-        this.vars.size = byte & 0xf;
+        parser.vars.type = (byte >> 4) & 7;
+        parser.vars.size = byte & 0xf;
 
-        this.loop(function(end) {
-            if (!(this.vars.byte & 0x80)) {
-                return end();
-            }
+        parser
+            .loop(end => {
+                if (!(parser.vars.byte & 0x80)) {
+                    end();
+                    return;
+                }
 
-            this.uint8be('byte').tap(function() {
-                this.vars.size |= (this.vars.byte & 0x7f) << left;
-                left += 7;
+                parser.uint8be('byte').tap(() => {
+                    parser.vars.size |= (parser.vars.byte & 0x7f) << left;
+                    left += 7;
+                });
+            })
+            .tap(() => {
+                parser.vars.size >>>= 0;
             });
-        }).tap(function() {
-            this.vars.size = this.vars.size >>> 0;
-        });
     });
 }
 
@@ -144,16 +113,13 @@ function parseObjectHeader(
  *
  * It sets the vars: content.
  */
-function parseInflateContent(
-    parser: Dissolve
-): Dissolve {
+function parseInflateContent(parser: Dissolve): Dissolve {
     const inflator = new Inflate();
 
     // Iterate while we found end of zip content
-    return parser
-    .loop(function(end) {
-        this.buffer('byte', 1).tap(function() {
-            const byte = this.vars.byte;
+    return parser.loop(end => {
+        parser.buffer('byte', 1).tap(() => {
+            const byte = parser.vars.byte;
 
             const ab = new Uint8Array(1);
             ab.fill(byte[0]);
@@ -162,10 +128,10 @@ function parseInflateContent(
 
             if (inflator.ended) {
                 if (inflator.err) {
-                    this.emit('error', new Error(inflator.msg));
+                    parser.emit('error', new Error(inflator.msg));
                 }
 
-                this.vars.content = uint8ToBuffer(inflator.result);
+                parser.vars.content = uint8ToBuffer(inflator.result);
 
                 end();
             }
@@ -176,9 +142,7 @@ function parseInflateContent(
 /*
  * Parse a REF delta.
  */
-function parseRefDelta(
-    parser: Dissolve
-): Dissolve {
+function parseRefDelta(parser: Dissolve): Dissolve {
     return parser.string('ref', 20).then(() => {
         throw new Error('Not yet implemented');
     });
@@ -187,23 +151,22 @@ function parseRefDelta(
 /*
  * Parse OFS delta's header.
  */
-function parseOFSDeltaHeader(
-    parser: Dissolve
-): Dissolve {
-    return parser.uint8be('byte').tap(function() {
-        const byte = this.vars.byte;
+function parseOFSDeltaHeader(parser: Dissolve): Dissolve {
+    return parser.uint8be('byte').tap(() => {
+        const byte = parser.vars.byte;
 
-        this.vars.rv = byte & 0x7f;
+        parser.vars.rv = byte & 0x7f;
 
-        this.loop(function(end) {
-            if (!(this.vars.byte & 0x80)) {
-                return end();
+        parser.loop(end => {
+            if (!(parser.vars.byte & 0x80)) {
+                end();
+                return;
             }
 
-            this.uint8be('byte').tap(function() {
-                this.vars.rv++;
-                this.vars.rv <<= 7;
-                this.vars.rv |= this.vars.byte & 0x7f;
+            parser.uint8be('byte').tap(() => {
+                parser.vars.rv += 1;
+                parser.vars.rv <<= 7;
+                parser.vars.rv |= parser.vars.byte & 0x7f;
             });
         });
     });
@@ -212,33 +175,35 @@ function parseOFSDeltaHeader(
 /*
  * Parse OFS delta, apply delta and return with vars "type" and "content".
  */
-function parseOFSDelta(
-    parser: Dissolve
-): Dissolve {
+function parseOFSDelta(parser: Dissolve): Dissolve {
     return (
         parseOFSDeltaHeader(parser)
             // Extract delta content
-            .tap(function() {
-                parseInflateContent(this);
+            .tap(() => {
+                parseInflateContent(parser);
             })
             // Apply delta to content
-            .tap(function() {
-                const { objectOffset, rv } = this.vars;
+            .tap(() => {
+                const { objectOffset, rv } = parser.vars;
                 const offset = objectOffset - rv;
 
                 // Get referenced type/content
-                const origin = this.packObjects[offset];
+                const origin = parser.packObjects[offset];
 
                 if (origin) {
                     // Apply delta on content
-                    const delta = this.vars.content;
+                    const delta = parser.vars.content;
                     const output = applyDelta(origin.content, delta);
 
                     // Export as variables
-                    this.vars.content = output;
-                    this.vars.type = origin.type;
+                    parser.vars.content = output;
+                    parser.vars.type = origin.type;
                 } else {
-                    throw new Error(`Content for OFS_DELTA is not indexed: ${offset} - ${JSON.stringify(Object.keys(this.packObjects))} `);
+                    throw new Error(
+                        `Content for OFS_DELTA is not indexed: ${offset} - ${JSON.stringify(
+                            Object.keys(parser.packObjects)
+                        )} `
+                    );
                 }
             })
     );
@@ -249,27 +214,25 @@ function parseOFSDelta(
  *
  * It sets the vars: object.
  */
-function parseObject(
-    parser: Dissolve
-): Dissolve {
+function parseObject(parser: Dissolve): Dissolve {
     return (
         parser
-            .tap(function() {
-                this.vars = {
-                    objectOffset: this.offset,
+            .tap(() => {
+                parser.vars = {
+                    objectOffset: parser.offset
                 };
 
                 parseObjectHeader(parser);
             })
-            .tap(function() {
-                if (this.vars.type < 5) {
-                    parseInflateContent(this);
-                } else if (this.vars.type === ENTRY_TYPES.OFS_DELTA) {
-                    parseOFSDelta(this);
-                } else if (this.vars.type === ENTRY_TYPES.REF_DELTA) {
-                    parseRefDelta(this);
+            .tap(() => {
+                if (parser.vars.type < 5) {
+                    parseInflateContent(parser);
+                } else if (parser.vars.type === ENTRY_TYPES.OFS_DELTA) {
+                    parseOFSDelta(parser);
+                } else if (parser.vars.type === ENTRY_TYPES.REF_DELTA) {
+                    parseRefDelta(parser);
                 } else {
-                    return this.emit(
+                    parser.emit(
                         'error',
                         new Error('Invalid entry type in pack')
                     );
@@ -277,8 +240,8 @@ function parseObject(
             })
             // Index content for this offset
             // TODO: index content by sha for REF_DELTA
-            .tap(function() {
-                const { content, type, objectOffset } = this.vars;
+            .tap(() => {
+                const { content, type, objectOffset } = parser.vars;
 
                 if (!type || !content) {
                     return;
@@ -286,11 +249,11 @@ function parseObject(
 
                 // Index the object for this offset so that it can be accessed
                 // for delta.
-                this.packObjects = this.packObjects || {};
-                this.packObjects[objectOffset] = { type, content };
+                parser.packObjects = parser.packObjects || {};
+                parser.packObjects[objectOffset] = { type, content };
 
                 if (!TYPES_FOROBJECT[type]) {
-                    throw new Error('Unknow type: ' + type);
+                    throw new Error(`Unknow type: ${type}`);
                 }
 
                 const object = new GitObject({
@@ -298,21 +261,66 @@ function parseObject(
                     content
                 });
 
-                this.vars.object = object;
+                parser.vars.object = object;
             })
     );
+}
+
+/*
+ * Parse an entire packfile.
+ *
+ * it sets the vars "version" and "objects"
+ */
+function parsePack(parser: Dissolve): Dissolve {
+    return parser
+        .string('signature', 4)
+        .uint32be('version')
+        .uint32be('count')
+        .tap(() => {
+            const { signature, version, count } = parser.vars;
+
+            // Check header
+            if (signature !== 'PACK') {
+                parser.emit('error', new Error('Invalid pack signature'));
+                return;
+            }
+
+            let objectIndex = 0;
+            const objects: { [string]: GitObject } = {};
+
+            parser
+                .loop(stopLoop => {
+                    parseObject(parser).tap(() => {
+                        const { object } = parser.vars;
+                        objects[object.sha] = object;
+
+                        parser.emit('object', object);
+
+                        objectIndex += 1;
+                        if (objectIndex == count) {
+                            stopLoop();
+                        }
+                    });
+                })
+                .tap(() => {
+                    parser.vars = {
+                        version,
+                        objects
+                    };
+                });
+        });
 }
 
 /*
  * Apply delta from packfile to a buffer.
  * This code is mostly based on https://github.com/chrisdickinson/git-apply-delta
  */
-function applyDelta(
-    base: Buffer,
-    delta: Buffer
-): Buffer {
+function applyDelta(base: Buffer, deltaContent: Buffer): Buffer {
     let command;
-    let idx = 0, len = 0, outIdx = 0;
+    let idx = 0;
+    let len = 0;
+    let outIdx = 0;
+    let delta = deltaContent;
 
     const OFFSET_BUFFER = new Buffer(4);
     const LENGTH_BUFFER = new Buffer(4);
@@ -321,7 +329,9 @@ function applyDelta(
     delta = delta.slice(varint.decode.bytes);
 
     if (baseSize !== base.length) {
-        throw new Error('Base doesn\'t match expected size: ' + baseSize + ' != '+base.length);
+        throw new Error(
+            `Base doesn't match expected size: ${baseSize} != ${base.length}`
+        );
     }
 
     const outputSize = varint.decode(delta);
@@ -332,8 +342,10 @@ function applyDelta(
     // Apply deltas
     len = delta.length;
 
-    while(idx < len) {
-        command = delta[idx++];
+    while (idx < len) {
+        command = delta[idx];
+        idx += 1;
+
         if (command & 0x80) {
             copy();
         } else {
@@ -345,18 +357,21 @@ function applyDelta(
         OFFSET_BUFFER.writeUInt32LE(0, 0);
         LENGTH_BUFFER.writeUInt32LE(0, 0);
 
-        let check = 1, x;
+        let check = 1;
+        let x;
 
-        for (x = 0; x < 4; ++x) {
+        for (x = 0; x < 4; x += 1) {
             if (command & check) {
-                OFFSET_BUFFER[3 - x] = delta[idx++];
+                OFFSET_BUFFER[3 - x] = delta[idx];
+                idx += 1;
             }
             check <<= 1;
         }
 
-        for (x = 0; x < 3; ++x) {
+        for (x = 0; x < 3; x += 1) {
             if (command & check) {
-                LENGTH_BUFFER[3 - x] = delta[idx++];
+                LENGTH_BUFFER[3 - x] = delta[idx];
+                idx += 1;
             }
             check <<= 1;
         }

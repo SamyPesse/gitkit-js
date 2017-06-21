@@ -5,7 +5,7 @@ import type Repository from '../models/Repository';
 import type Commit from '../models/Commit';
 
 type Kwargs = {
-    max: number,
+    max: number
 };
 
 /*
@@ -37,7 +37,8 @@ function logCommits(
     return repo.walkCommits(sha, (commit, commitSHA) => {
         printCommit(commit, commitSHA);
 
-        return ++count < max;
+        count += 1;
+        return count < max;
     });
 }
 
@@ -51,7 +52,7 @@ export default {
             name: 'max',
             shortcut: 'm',
             describe: 'Max number of commits to log (default is 100).',
-            default: 100,
-        },
-    ],
+            default: 100
+        }
+    ]
 };

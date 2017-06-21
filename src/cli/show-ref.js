@@ -19,5 +19,5 @@ export default {
     name: 'show-ref',
     description: 'List references in a local repository',
     exec: showRef,
-    options: [],
+    options: []
 };

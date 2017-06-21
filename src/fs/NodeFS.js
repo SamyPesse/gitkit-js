@@ -53,7 +53,7 @@ class NodeFS extends GenericFS {
                         path: file,
                         length: stat.size,
                         mode: String(stat.mode),
-                        type: stat.isDirectory() ? 'dir' : 'file',
+                        type: stat.isDirectory() ? 'dir' : 'file'
                     });
                 }
             });
@@ -86,7 +86,7 @@ class NodeFS extends GenericFS {
             mkdirp(
                 dirpath,
                 {
-                    fs: this.fs,
+                    fs: this.fs
                 },
                 err => {
                     if (err) {
@@ -96,17 +96,18 @@ class NodeFS extends GenericFS {
                     }
                 }
             );
-        }).then(() => {
-            return new Promise((resolve, reject) => {
-                this.fs.writeFile(filepath, content, err => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                });
-            });
-        });
+        }).then(
+            () =>
+                new Promise((resolve, reject) => {
+                    this.fs.writeFile(filepath, content, err => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
+                })
+        );
     }
 
     /*

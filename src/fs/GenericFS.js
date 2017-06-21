@@ -10,7 +10,7 @@ export type FileStat = {
     path: string,
     length: number,
     mode: string,
-    type: FileType,
+    type: FileType
 };
 
 class GenericFS {
@@ -62,28 +62,33 @@ class GenericFS {
     readTree(
         dirpath: string = '',
         {
-            prefix = dirpath,
+            prefix = dirpath
         }: {
-            prefix?: string,
+            prefix?: string
         } = {}
     ): Promise<OrderedMap<string, FileStat>> {
-        return this.readDir(dirpath).then(files => {
-            return files.reduce((prev, file) => {
-                return prev.then((accu: OrderedMap<string, FileStat>) => {
-                    const filepath = path.join(dirpath, file);
+        return this.readDir(dirpath).then(files =>
+            files.reduce(
+                (prev, file) =>
+                    prev.then((accu: OrderedMap<string, FileStat>) => {
+                        const filepath = path.join(dirpath, file);
 
-                    return this.stat(filepath).then(stat => {
-                        if (stat.type == 'dir') {
-                            return this.readTree(filepath, {
-                                prefix,
-                            }).then(out => accu.merge(out));
-                        }
+                        return this.stat(filepath).then(stat => {
+                            if (stat.type == 'dir') {
+                                return this.readTree(filepath, {
+                                    prefix
+                                }).then(out => accu.merge(out));
+                            }
 
-                        return accu.set(path.relative(prefix, filepath), stat);
-                    });
-                });
-            }, Promise.resolve(new OrderedMap()));
-        });
+                            return accu.set(
+                                path.relative(prefix, filepath),
+                                stat
+                            );
+                        });
+                    }),
+                Promise.resolve(new OrderedMap())
+            )
+        );
     }
 }
 

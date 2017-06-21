@@ -19,5 +19,5 @@ export default {
     name: 'branch',
     description: 'List, create, or delete branches',
     exec: logBranches,
-    options: [],
+    options: []
 };

@@ -4,10 +4,10 @@ import { Record } from 'immutable';
 
 const DEFAULTS: {
     name: string,
-    email: string,
+    email: string
 } = {
     name: '',
-    email: '',
+    email: ''
 };
 
 class Person extends Record(DEFAULTS) {}

@@ -1,6 +1,6 @@
 {
   "extends": [
-    "gitbook",
+    "airbnb-base",
     "plugin:flowtype/recommended",
     "prettier",
     "prettier/flowtype"
@@ -11,5 +11,22 @@
   ],
   "env": {
     "jest": true
+  },
+  "rules": {
+    "eqeqeq": ["off"],
+    "no-bitwise": ["off"],
+    "class-methods-use-this": ["off"],
+    "import/prefer-default-export": ["off"],
+    "arrow-body-style": ["error", "as-needed"],
+    "no-use-before-define": ["error", { "functions": false }],
+    "no-param-reassign": ["error", { "props": false }],
+    "no-unused-vars": ["error", {
+        "args": "none"
+    }],
+    "prettier/prettier": ["error", {
+        "singleQuote": true,
+        "parser": "flow",
+        "tabWidth": 4
+    }]
   }
 }

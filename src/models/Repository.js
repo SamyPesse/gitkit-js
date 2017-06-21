@@ -2,23 +2,22 @@
 
 import path from 'path';
 import { Record } from 'immutable';
+import type { List } from 'immutable';
 import GenericFS from '../fs/GenericFS';
 import GitObject from './GitObject';
 
 import Tree from './Tree';
 import Blob from './Blob';
 import Commit from './Commit';
-
-import type { List } from 'immutable';
 import type TreeEntry from './TreeEntry';
 import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
     isBare: boolean,
-    fs: GenericFS,
+    fs: GenericFS
 } = {
     isBare: false,
-    fs: new GenericFS(),
+    fs: new GenericFS()
 };
 
 class Repository extends Record(DEFAULTS) {
@@ -89,9 +88,8 @@ class Repository extends Record(DEFAULTS) {
                 const filepath = path.join(baseName, entry.path);
                 if (!entry.isTree) {
                     return iter(entry, filepath);
-                } else {
-                    return this.walkTree(entry.sha, iter, filepath);
                 }
+                return this.walkTree(entry.sha, iter, filepath);
             }, Promise.resolve());
         });
     }

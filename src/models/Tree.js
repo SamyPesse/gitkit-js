@@ -9,9 +9,9 @@ import { scan } from '../utils/buffer';
 import type { GitObjectSerializable } from './GitObject';
 
 const DEFAULTS: {
-    entries: OrderedMap<string, TreeEntry>,
+    entries: OrderedMap<string, TreeEntry>
 } = {
-    entries: new OrderedMap(),
+    entries: new OrderedMap()
 };
 
 class Tree extends Record(DEFAULTS) implements GitObjectSerializable<Tree> {
@@ -21,29 +21,31 @@ class Tree extends Record(DEFAULTS) implements GitObjectSerializable<Tree> {
     static createFromBuffer(buffer: Buffer): Tree {
         let entries = new OrderedMap();
 
-        Dissolve()
-            .loop(function() {
-                scan(this, 'mode', ' ');
-                scan(this, 'path', new Buffer([0]));
-                this.buffer('sha', 20);
+        const parser = Dissolve();
 
-                this.tap(function() {
-                    const entryPath = this.vars.path.toString('utf8');
+        parser.loop(() => {
+            scan(parser, 'mode', ' ');
+            scan(parser, 'path', new Buffer([0]));
+            parser.buffer('sha', 20);
 
-                    entries = entries.set(
-                        entryPath,
-                        new TreeEntry({
-                            path: entryPath,
-                            mode: parseInt(this.vars.mode.toString('utf8'), 10),
-                            sha: this.vars.sha.toString('hex'),
-                        })
-                    );
-                });
-            })
-            .write(buffer);
+            parser.tap(() => {
+                const entryPath = parser.vars.path.toString('utf8');
+
+                entries = entries.set(
+                    entryPath,
+                    new TreeEntry({
+                        path: entryPath,
+                        mode: parseInt(parser.vars.mode.toString('utf8'), 10),
+                        sha: parser.vars.sha.toString('hex')
+                    })
+                );
+            });
+        });
+
+        parser.write(buffer);
 
         return new Tree({
-            entries,
+            entries
         });
     }
 

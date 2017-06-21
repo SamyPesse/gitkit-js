@@ -29,7 +29,7 @@ describe('.createFromObject', () => {
 
     it('should parse parents list', () => {
         expect(commit.parents.toJS()).toEqual([
-            'f38b2026ad9ef2c9bbd7041d4feaf97bf6632b7f',
+            'f38b2026ad9ef2c9bbd7041d4feaf97bf6632b7f'
         ]);
     });
 

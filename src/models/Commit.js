@@ -11,13 +11,13 @@ const DEFAULTS: {
     committer: Author,
     tree: SHA,
     parents: List<string>,
-    message: string,
+    message: string
 } = {
     author: new Author(),
     committer: new Author(),
     tree: '',
     parents: new List(),
-    message: '',
+    message: ''
 };
 
 class Commit extends Record(DEFAULTS) implements GitObjectSerializable<Commit> {
@@ -37,9 +37,10 @@ class Commit extends Record(DEFAULTS) implements GitObjectSerializable<Commit> {
             const key = match[1];
             const value = match[2];
 
-            accu[key] = (accu[key] || []).concat([value]);
-
-            return accu;
+            return {
+                ...accu,
+                [key]: (accu[key] || []).concat([value])
+            };
         }, {});
 
         // Extract message
@@ -51,7 +52,7 @@ class Commit extends Record(DEFAULTS) implements GitObjectSerializable<Commit> {
             tree: meta.tree[0],
             parents: List(meta.parent),
             author: Author.createFromString(meta.author),
-            committer: Author.createFromString(meta.committer),
+            committer: Author.createFromString(meta.committer)
         });
     }
 

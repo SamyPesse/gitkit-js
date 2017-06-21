@@ -17,9 +17,9 @@ const BRANCH_PREFIX = 'refs/heads/';
  */
 
 const DEFAULTS: {
-    refs: OrderedMap<string, Ref>,
+    refs: OrderedMap<string, Ref>
 } = {
-    refs: new OrderedMap(),
+    refs: new OrderedMap()
 };
 
 class RefsIndex extends Record(DEFAULTS) {
@@ -57,10 +57,10 @@ class RefsIndex extends Record(DEFAULTS) {
 
         return fs
             .readTree(refspath, {
-                prefix: repo.resolveGitFile('./'),
+                prefix: repo.resolveGitFile('./')
             })
-            .then(files => {
-                return files.reduce(
+            .then(files =>
+                files.reduce(
                     (prev, stat, filepath) =>
                         prev.then(accu =>
                             fs
@@ -73,8 +73,8 @@ class RefsIndex extends Record(DEFAULTS) {
                                 )
                         ),
                     Promise.resolve(new OrderedMap())
-                );
-            })
+                )
+            )
             .then(refs => new RefsIndex({ refs }));
     }
 
@@ -108,9 +108,10 @@ class RefsIndex extends Record(DEFAULTS) {
         let matches;
         let refs = new OrderedMap();
 
+        // eslint-disable-next-line no-cond-assign
         while ((matches = regex.exec(content)) !== null) {
             if (matches.index === regex.lastIndex) {
-                regex.lastIndex++;
+                regex.lastIndex += 1;
             }
 
             const commit = matches[1];
@@ -120,7 +121,7 @@ class RefsIndex extends Record(DEFAULTS) {
         }
 
         return new RefsIndex({
-            refs,
+            refs
         });
     }
 }

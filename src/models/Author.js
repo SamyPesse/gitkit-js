@@ -11,12 +11,12 @@ const DEFAULTS: {
     name: string,
     email: string,
     timezone: string,
-    timestamp: number,
+    timestamp: number
 } = {
     name: '',
     email: '',
     timezone: '',
-    timestamp: 0,
+    timestamp: 0
 };
 
 class Author extends Record(DEFAULTS) {
@@ -30,7 +30,7 @@ class Author extends Record(DEFAULTS) {
             name: match[1].replace(/(^\s+|\s+$)/, ''),
             email: match[2],
             timestamp: parseInt(match[3], 10),
-            timezone: match[4],
+            timezone: match[4]
         });
     }
 
@@ -39,14 +39,14 @@ class Author extends Record(DEFAULTS) {
         const offset = date.getTimezoneOffset();
         const timezone =
             (offset < 0 ? '+' : '-') +
-            pad('' + parseInt(Math.abs(offset / 60), 10), 2) +
-            pad('' + Math.abs(offset % 60), 2);
+            pad(`${parseInt(Math.abs(offset / 60), 10)}`, 2) +
+            pad(`${Math.abs(offset % 60)}`, 2);
 
         return new Author({
             name: person.name,
             email: person.email,
             timezone,
-            timestamp: Number(date.getTime() / 1000),
+            timestamp: Number(date.getTime() / 1000)
         });
     }
 

@@ -28,9 +28,10 @@
     "babel-preset-flow": "^6.23.0",
     "babel-preset-stage-0": "^6.24.1",
     "eslint": "^4.0.0",
-    "eslint-config-gitbook": "^1.5.0",
+    "eslint-config-airbnb-base": "^11.2.0",
     "eslint-config-prettier": "^2.2.0",
     "eslint-plugin-flowtype": "^2.34.0",
+    "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-prettier": "^2.1.2",
     "flow-bin": "^0.48.0",
     "jest": "^20.0.4",
@@ -41,7 +42,7 @@
     "build": "babel src/ -d lib/",
     "prepublish": "yarn run build",
     "lint": "eslint ./src",
-    "prettier": "prettier --tab-width 4 --single-quote --trailing-comma es5 --write \"./src/**/*.js\""
+    "fix": "eslint --fix ./src"
   },
   "bin": {
     "gitkit": "./lib/cli/gitkit.js"

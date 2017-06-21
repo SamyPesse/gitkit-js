@@ -10,11 +10,7 @@ import { Record } from 'immutable';
  * https://github.com/git/git/blob/master/Documentation/technical/pack-format.txt
  */
 
-const DEFAULTS: {
-
-} = {
-
-};
+const DEFAULTS: {} = {};
 
 class PackFileIndex extends Record(DEFAULTS) {}
 

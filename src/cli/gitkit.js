@@ -18,39 +18,41 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
     branch,
     logCommits,
     lsTree,
-    showRef,
+    showRef
 ].forEach(({ name, description, exec, options = [] }) => {
     let command = program.command(name).description(description);
 
     options.forEach(opt => {
         command = command.option(
             `${opt.shortcut
-                ? '-' + opt.shortcut + ', '
+                ? `-${opt.shortcut}, `
                 : ''}--${opt.name}${opt.type != 'boolean'
-                ? ' [' + opt.name + ']'
+                ? ` [${opt.name}]`
                 : ''}`,
             opt.description
         );
     });
 
-    command.action((...args) => {
+    command.action((...fnargs) => {
         Promise.resolve()
             .then(() => {
                 const repo = new Repository({
-                    fs: new NativeFS(process.cwd()),
+                    fs: new NativeFS(process.cwd())
                 });
 
-                args = args.slice(0, -1);
+                const args = fnargs.slice(0, -1);
                 const kwargs = options.reduce((out, opt) => {
                     const value = command[opt.name];
                     const isDefined = typeof value !== 'undefined';
-                    out[opt.name] = isDefined ? value : opt.default;
 
                     if (isDefined && opt.isRequired) {
                         throw new Error(`Parameter "${opt.name}" is required`);
                     }
 
-                    return out;
+                    return {
+                        ...out,
+                        [opt.name]: isDefined ? value : opt.default
+                    };
                 }, {});
 
                 return exec(repo, args, kwargs);

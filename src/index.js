@@ -12,7 +12,7 @@ import {
     RefsIndex,
     Repository,
     Tree,
-    TreeEntry,
+    TreeEntry
 } from './models';
 
 const GitKit = {
@@ -28,7 +28,7 @@ const GitKit = {
     RefsIndex,
     Repository,
     Tree,
-    TreeEntry,
+    TreeEntry
 };
 
 export default GitKit;
@@ -45,5 +45,5 @@ export {
     RefsIndex,
     Repository,
     Tree,
-    TreeEntry,
+    TreeEntry
 };

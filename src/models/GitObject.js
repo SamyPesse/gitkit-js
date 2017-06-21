@@ -12,10 +12,10 @@ export type GitObjectType = 'blob' | 'tree' | 'commit';
 
 const DEFAULTS: {
     type: GitObjectType,
-    content: Buffer,
+    content: Buffer
 } = {
     type: 'blob',
-    content: new Buffer(''),
+    content: new Buffer('')
 };
 
 class GitObject extends Record(DEFAULTS) {
@@ -53,9 +53,9 @@ class GitObject extends Record(DEFAULTS) {
         nullBuf.fill(0);
 
         return Buffer.concat([
-            new Buffer(type + ' ' + content.length, 'utf8'),
+            new Buffer(`${type} ${content.length}`, 'utf8'),
             nullBuf,
-            content,
+            content
         ]);
     }
 
@@ -81,7 +81,7 @@ class GitObject extends Record(DEFAULTS) {
 
         return new GitObject({
             type,
-            content,
+            content
         });
     }
 
@@ -98,7 +98,7 @@ class GitObject extends Record(DEFAULTS) {
  */
 export interface GitObjectSerializable<T> {
     static createFromObject(o: GitObject): T,
-    toGitObject(): GitObject,
+    toGitObject(): GitObject
 }
 
 export default GitObject;

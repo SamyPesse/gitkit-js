@@ -9,20 +9,19 @@ type TreeEntryType = 'blob' | 'tree';
 const DEFAULTS: {
     path: string,
     mode: number,
-    sha: SHA,
+    sha: SHA
 } = {
     path: '',
     mode: 0,
-    sha: '',
+    sha: ''
 };
 
 class TreeEntry extends Record(DEFAULTS) {
     get type(): TreeEntryType {
         if (this.mode == 40000) {
             return 'tree';
-        } else {
-            return 'blob';
         }
+        return 'blob';
     }
 
     get isTree(): boolean {

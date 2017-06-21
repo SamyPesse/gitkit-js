@@ -4,7 +4,7 @@ const crypto = require('crypto');
 
 const sha1 = {
     is: validateSha,
-    encode,
+    encode
 };
 
 /*

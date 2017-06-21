@@ -4,7 +4,7 @@ import GenericTransport from './GenericTransport';
 
 export type HTTPAuth = {
     user: string,
-    password: ?string,
+    password: ?string
 };
 
 class HTTP extends GenericTransport {

@@ -16,31 +16,21 @@ import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
     // Map from object sha to the packfile path
-    packfiles: Map<SHA,string>
+    packfiles: Map<SHA, string>
 } = {
     packfiles: Map()
 };
 
 class ObjectsIndex extends Record(DEFAULTS) {
-
     /*
      * Read a git object from a repository.
      */
-    readObject(
-        repo: Repository,
-        sha: SHA
-    ): Promise<GitObject> {
-
-    }
+    readObject(repo: Repository, sha: SHA): Promise<GitObject> {}
 
     /*
      * Index packfiles from repository.
      */
-    static indexFromRepository(
-        repo: Repository
-    ): Promise<ObjectsIndex> {
-
-    }
+    static indexFromRepository(repo: Repository): Promise<ObjectsIndex> {}
 }
 
 export default ObjectsIndex;

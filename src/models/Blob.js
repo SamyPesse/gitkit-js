@@ -6,16 +6,16 @@ import GitObject from './GitObject';
 import type { GitObjectSerializable } from './GitObject';
 
 const DEFAULTS: {
-    content: Buffer,
+    content: Buffer
 } = {
-    content: new Buffer(''),
+    content: new Buffer('')
 };
 
 class Blob extends Record(DEFAULTS) implements GitObjectSerializable<Blob> {
     toGitObject(): GitObject {
         return new GitObject({
             type: 'buffer',
-            content: this.content,
+            content: this.content
         });
     }
 
@@ -24,7 +24,7 @@ class Blob extends Record(DEFAULTS) implements GitObjectSerializable<Blob> {
      */
     static createFromObject(o: GitObject): Blob {
         return new GitObject({
-            content: o.content,
+            content: o.content
         });
     }
 }

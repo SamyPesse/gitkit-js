@@ -5,7 +5,7 @@ import type Repository from '../models/Repository';
 import type TreeEntry from '../models/TreeEntry';
 
 type Kwargs = {
-    recursive: boolean,
+    recursive: boolean
 };
 
 /*
@@ -25,11 +25,10 @@ function lsTree(
 ): Promise<*> {
     if (recursive) {
         return repo.walkTree(sha, printEntry);
-    } else {
-        return repo.readTree(sha).then(tree => {
-            tree.entries.forEach(printEntry);
-        });
     }
+    return repo.readTree(sha).then(tree => {
+        tree.entries.forEach(printEntry);
+    });
 }
 
 export default {
@@ -42,7 +41,7 @@ export default {
             name: 'recursive',
             shortcut: 'r',
             description: 'Recurse into sub-trees.',
-            default: false,
-        },
-    ],
+            default: false
+        }
+    ]
 };
