@@ -6,7 +6,7 @@
 
 GitKit is a pure JavaScript implementation of Git backed by immutable models and promises.
 
-The goal of this project is not to be used in real-world projects, but instead to provides a readable (the code is typed using flow) JS implementation of the Git-backend with a high-level API for manipulating repositories: read files, commit changes, clone, push, etc.
+The goal of this project is not to be used in real-world projects, but instead to provides a readable (the code is typed using flow) JS implementation of the Git-backend with a high-level API for manipulating repositories: read files, commit changes, clone, push, etc. See [Support](#support) for details about supported operations.
 
 This library can work both in the browser and Node.js.
 
@@ -31,6 +31,39 @@ const fs = new NativeFS(process.cwd());
 // Create a repository:
 const repo = new Repository({ fs });
 ```
+
+## Support
+
+| Description | Status |
+| --------- |:-----------:|
+| Initialize a new repository | ❌ |
+| **References** | |
+| Listing refs (branches, tags), both from packed-refs or refs folder |  ✅ |
+| Create a new reference | ❌ |
+| **Branches** | |
+| Read current HEAD | ✅ |
+| Checkout a branch (update HEAD and working files) | ❌ |
+| **Index** | |
+| Listing files in the `.git/index` |  ✅ |
+| Add new file in the index | ❌ |
+| Update the index from the file in the repository | ❌ |
+| **Trees** | |
+| List all entries in a tree | ✅ |
+| Create a new tree | ❌ |
+| **Blobs** | |
+| Read a blob by its sha | ✅ |
+| Create a new blob | ❌ |
+| **Commits** | |
+| Read a commit by its sha | ✅ |
+| Walk the commits history | ✅ |
+| Create a new commit | ❌ |
+| **Clone / Fetch** | |
+| Discovery with the remote repository | ❌ |
+| Fetch a reference | ❌ |
+| Clone a new repository | ❌ |
+| **Transports** | |
+| HTTP / HTTPS | ❌ |
+| SSH | ❌ |
 
 ## Thanks
 
