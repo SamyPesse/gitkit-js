@@ -13,6 +13,7 @@
     "buffer-to-uint8array": "^1.1.0",
     "commander": "^2.9.0",
     "concentrate": "^0.2.3",
+    "debug": "^2.6.8",
     "dissolve": "deoxxa/dissolve#4fd1556d0199a27dd0a6f9f22cb6648194301454",
     "immutable": "^3.8.1",
     "memory-fs": "^0.4.1",

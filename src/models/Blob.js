@@ -23,9 +23,25 @@ class Blob extends Record(DEFAULTS) implements GitObjectSerializable<Blob> {
      * Create a blob from a git object.
      */
     static createFromObject(o: GitObject): Blob {
-        return new GitObject({
+        return new Blob({
             content: o.content
         });
+    }
+
+    /*
+     * Create a blob from a buffer.
+     */
+    static createFromBuffer(content: Buffer): Blob {
+        return new Blob({
+            content
+        });
+    }
+
+    /*
+     * Create a blob from a string.
+     */
+    static createFromString(content: string): Blob {
+        return Blob.createFromBuffer(new Buffer(content, 'utf8'));
     }
 }
 

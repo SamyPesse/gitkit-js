@@ -1,13 +1,13 @@
 /** @flow */
 
-import GenericTransport from './GenericTransport';
+import Transport from './Transport';
 
 export type HTTPAuth = {
     user: string,
     password: ?string
 };
 
-class HTTP extends GenericTransport {
+class HTTPTransport extends Transport {
     url: string;
     auth: ?HTTPAuth;
 
@@ -19,4 +19,4 @@ class HTTP extends GenericTransport {
     }
 }
 
-export default HTTP;
+export default HTTPTransport;

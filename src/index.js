@@ -13,6 +13,7 @@ import {
     Ref,
     RefsIndex,
     Repository,
+    Transform,
     Tree,
     TreeEntry,
     WorkingIndex
@@ -32,6 +33,7 @@ const GitKit = {
     Ref,
     RefsIndex,
     Repository,
+    Transform,
     Tree,
     TreeEntry,
     WorkingIndex
@@ -50,6 +52,7 @@ export {
     Ref,
     RefsIndex,
     Repository,
+    Transform,
     Tree,
     TreeEntry,
     WorkingIndex

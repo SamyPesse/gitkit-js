@@ -2,25 +2,37 @@
 
 import path from 'path';
 import { Record } from 'immutable';
-import type { List } from 'immutable';
 import GenericFS from '../fs/GenericFS';
-import GitObject from './GitObject';
 
-import Tree from './Tree';
-import Blob from './Blob';
-import Commit from './Commit';
+import WorkingIndex from './WorkingIndex';
+import ObjectsIndex from './ObjectsIndex';
+import RefsIndex from './RefsIndex';
+import Transform from './Transform';
 import type TreeEntry from './TreeEntry';
 import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
     isBare: boolean,
-    fs: GenericFS
+    fs: GenericFS,
+    workingIndex: WorkingIndex,
+    objects: ObjectsIndex,
+    refs: RefsIndex
 } = {
     isBare: false,
-    fs: new GenericFS()
+    fs: new GenericFS(),
+    workingIndex: new WorkingIndex(),
+    objects: new ObjectsIndex(),
+    refs: new RefsIndex()
 };
 
 class Repository extends Record(DEFAULTS) {
+    /*
+     * Start a transformation.
+     */
+    transform(): Transform {
+        return new Transform(this);
+    }
+
     /*
      * Resolve a file from the .git folder.
      */
@@ -32,46 +44,12 @@ class Repository extends Record(DEFAULTS) {
     /*
      * Read a Git object by its sha.
      */
-    readObject(sha: SHA): Promise<Tree> {
-        const { fs } = this;
-
-        return fs
-            .read(this.resolveGitFile(GitObject.getPath(sha)))
-            .then(buffer => GitObject.createFromZip(buffer));
-    }
-
-    /*
-     * Read a blob/commit/tree objects by their sha.
-     */
-
-    readTree(sha: SHA): Promise<Tree> {
-        return this.readObject(sha).then(obj => {
-            if (!obj.isTree) {
-                throw new Error(`"${sha}" is not a tree`);
-            }
-
-            return Tree.createFromObject(obj);
-        });
-    }
-
-    readBlob(sha: SHA): Promise<Blob> {
-        return this.readObject(sha).then(obj => {
-            if (!obj.isBlob) {
-                throw new Error(`"${sha}" is not a blob`);
-            }
-
-            return Blob.createFromObject(obj);
-        });
-    }
-
-    readCommit(sha: SHA): Promise<Commit> {
-        return this.readObject(sha).then(obj => {
-            if (!obj.isCommit) {
-                throw new Error(`"${sha}" is not a commit`);
-            }
-
-            return Commit.createFromObject(obj);
-        });
+    readObject(sha: SHA): Promise<Repository> {
+        return this.objects.readObject(this, sha).then(objects =>
+            this.merge({
+                objects
+            })
+        );
     }
 
     /*
@@ -118,13 +96,6 @@ class Repository extends Record(DEFAULTS) {
                 Promise.resolve()
             );
         });
-    }
-
-    /*
-     * List all local branches in the repository
-     */
-    listBranches(): Promise<List<string>> {
-        return this.listRefs('heads');
     }
 }
 

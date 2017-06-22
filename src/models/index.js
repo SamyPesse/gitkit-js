@@ -12,6 +12,7 @@ import Person from './Person';
 import Ref from './Ref';
 import RefsIndex from './RefsIndex';
 import Repository from './Repository';
+import Transform from './Transform';
 import Tree from './Tree';
 import TreeEntry from './TreeEntry';
 import WorkingIndex from './WorkingIndex';
@@ -29,6 +30,7 @@ export {
     Ref,
     RefsIndex,
     Repository,
+    Transform,
     Tree,
     TreeEntry,
     WorkingIndex

@@ -28,6 +28,17 @@ class RefsIndex extends Record(DEFAULTS) {
     }
 
     /*
+     * Update a reference.
+     */
+    setRef(name: string, ref: Ref): RefsIndex {
+        const { refs } = this;
+
+        return this.merge({
+            refs: refs.set(name, ref)
+        });
+    }
+
+    /*
      * Filter refs by a prefix, it removes the prefix from the key.
      */
     prefixWith(prefix: string): OrderedMap<string, Ref> {

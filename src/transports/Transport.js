@@ -1,6 +1,6 @@
 /** @flow */
 
-class GenericTransport {
+class Transport {
     open(): Promise<*> {
         return Promise.resolve();
     }
@@ -10,4 +10,4 @@ class GenericTransport {
     }
 }
 
-export default GenericTransport;
+export default Transport;

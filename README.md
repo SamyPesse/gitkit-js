@@ -32,6 +32,26 @@ const fs = new NativeFS(process.cwd());
 const repo = new Repository({ fs });
 ```
 
+#### Transforms
+
+GitKit uses a transform API.
+
+```js
+repo.transform()
+    .writeFile('README.md', 'Hello world')
+    .addFile('README.md')
+    .commit({
+        message: 'Update README',
+        author: Author.createFromPerson(
+            Person.create({
+                name: 'John Doe',
+                email: 'john.doe@gmail.com'
+            })
+        )
+    })
+    .apply();
+```
+
 ## Support
 
 | Description | Status |
