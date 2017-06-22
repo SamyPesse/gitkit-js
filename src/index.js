@@ -3,9 +3,9 @@
 import {
     Author,
     Blob,
-    Branch,
     Commit,
     GitObject,
+    Head,
     IndexEntry,
     ObjectsIndex,
     PackFile,
@@ -23,9 +23,9 @@ const GitKit = {
     // Models
     Author,
     Blob,
-    Branch,
     Commit,
     GitObject,
+    Head,
     IndexEntry,
     ObjectsIndex,
     PackFile,
@@ -44,9 +44,9 @@ export {
     // Models
     Author,
     Blob,
-    Branch,
     Commit,
     GitObject,
+    Head,
     PackFile,
     Person,
     Ref,

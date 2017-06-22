@@ -59,9 +59,9 @@ class WorkingIndex extends Record(DEFAULTS) {
      */
     static createFromBuffer(buffer: Buffer): WorkingIndex {
         const parser = WorkingIndex.createParser();
-        let result;
+        let result = new WorkingIndex();
 
-        parser.on('index', index => {
+        parser.on('index', (index: WorkingIndex) => {
             result = index;
         });
 

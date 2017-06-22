@@ -8,18 +8,25 @@ import WorkingIndex from './WorkingIndex';
 import ObjectsIndex from './ObjectsIndex';
 import RefsIndex from './RefsIndex';
 import Transform from './Transform';
+import Head from './Head';
 import type TreeEntry from './TreeEntry';
 import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
     isBare: boolean,
     fs: GenericFS,
+    // Head reference
+    head: Head,
+    // Index of working files (only for non-bare repos)
     workingIndex: WorkingIndex,
+    // Index to read/edit git objects
     objects: ObjectsIndex,
+    // Index to read/edit references
     refs: RefsIndex
 } = {
     isBare: false,
     fs: new GenericFS(),
+    head: new Head(),
     workingIndex: new WorkingIndex(),
     objects: new ObjectsIndex(),
     refs: new RefsIndex()

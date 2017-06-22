@@ -18,6 +18,17 @@ describe('createFromString', () => {
     });
 });
 
+describe('createFromBuffer', () => {
+    test('it should parse ref HEAD', () => {
+        const head = Ref.createFromBuffer(
+            new Buffer('ref: refs/heads/master\n', 'utf8')
+        );
+
+        expect(head.ref).toBe('refs/heads/master');
+        expect(head.commit).toBe(null);
+    });
+});
+
 describe('isDetached', () => {
     test('it should be true when pointing to a commit', () => {
         const head = new Ref({

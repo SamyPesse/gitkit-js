@@ -3,7 +3,6 @@
 import { Record } from 'immutable';
 
 import type { SHA } from '../types/SHA';
-import type Repository from './Repository';
 
 const DEFAULTS: {
     ref: ?string,
@@ -43,21 +42,10 @@ class Ref extends Record(DEFAULTS) {
     }
 
     /*
-     * Read the HEAD from the repository.
-     * The HEAD reference is not stored in the packed-refs
-     */
-    static readHEADFromRepository(repo: Repository): Promise<Ref> {
-        const { fs } = repo;
-        const indexpath = repo.resolveGitFile('HEAD');
-
-        return fs.read(indexpath).then(buffer => Ref.createFromBuffer(buffer));
-    }
-
-    /*
      * Create a Ref instance from the content of a ref file.
      */
     static createFromBuffer(buffer: Buffer): Ref {
-        return Ref.createFromString(buffer.toString('utf8'));
+        return this.createFromString(buffer.toString('utf8'));
     }
 
     static createFromString(content: string): Ref {

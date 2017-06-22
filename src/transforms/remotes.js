@@ -12,9 +12,6 @@ const Transforms = {};
 /*
  * Clone a remote repository.
  */
-Transforms.clone = (
-    transform: Transforms,
-    transport: Transport
-): Transform => {};
+Transforms.clone = (transform: Transform, transport: Transport) => {};
 
 export default Transforms;

@@ -2,8 +2,12 @@
 
 import RefsTransforms from './refs';
 import RemotesTransforms from './remotes';
+import FilesTransforms from './files';
 
-export default {
+const Transforms = {
     ...RefsTransforms,
-    ...RemotesTransforms
+    ...RemotesTransforms,
+    ...FilesTransforms
 };
+
+export default Transforms;

@@ -104,7 +104,9 @@ class ObjectsIndex extends Record(DEFAULTS) {
     /*
      * Index packfiles from repository.
      */
-    static indexFromRepository(repo: Repository): Promise<ObjectsIndex> {}
+    static readFromRepository(repo: Repository): Promise<ObjectsIndex> {
+        return new ObjectsIndex();
+    }
 }
 
 export default ObjectsIndex;

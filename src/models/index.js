@@ -2,9 +2,9 @@
 
 import Author from './Author';
 import Blob from './Blob';
-import Branch from './Branch';
 import Commit from './Commit';
 import GitObject from './GitObject';
+import Head from './Head';
 import IndexEntry from './IndexEntry';
 import ObjectsIndex from './ObjectsIndex';
 import PackFile from './PackFile';
@@ -20,9 +20,9 @@ import WorkingIndex from './WorkingIndex';
 export {
     Author,
     Blob,
-    Branch,
     Commit,
     GitObject,
+    Head,
     IndexEntry,
     ObjectsIndex,
     PackFile,
