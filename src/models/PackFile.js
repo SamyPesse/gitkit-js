@@ -41,6 +41,14 @@ const DEFAULTS: {
 
 class PackFile extends Record(DEFAULTS) {
     /*
+     * Get an object.
+     */
+    getObject(sha: SHA): ?GitObject {
+        const { objects } = this;
+        return objects.get(sha);
+    }
+
+    /*
      * Read an entire pack file from a buffer.
      */
     static createFromBuffer(buffer: Buffer): ?PackFile {
@@ -57,7 +65,7 @@ class PackFile extends Record(DEFAULTS) {
     }
 
     /*
-     * Read a packfile header from a stream of data.
+     * Read a packfile from a stream of data.
      *
      * It emits an event "object" for each GitObject found.
      * It emits an event "pack" with the complete PackFile at the end.

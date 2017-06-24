@@ -1,10 +1,13 @@
 /** @flow */
 
+import path from 'path';
 import { Record, Map } from 'immutable';
 import GitObject from './GitObject';
 import Tree from './Tree';
 import Blob from './Blob';
 import Commit from './Commit';
+import PackFileIndex from './PackFileIndex';
+import PackFile from './PackFile';
 
 import type { GitObjectType, GitObjectSerializable } from './GitObject';
 import type Repository from './Repository';
@@ -13,7 +16,7 @@ import type { SHA } from '../types/SHA';
 /*
  * Utility model to lookup an object in the repository.
  *
- * Git obejcts can be stored:
+ * Git objects can be stored:
  * - In a packfile, we need to index all packfiles to lookup the object
  * - In a .git/objects/... file
  */
@@ -25,8 +28,8 @@ const TYPES: { [GitObjectType]: GitObjectSerializable } = {
 };
 
 const DEFAULTS: {
-    // Map from object sha to the packfile path
-    packfiles: Map<SHA, string>,
+    // Map from packfile path to its index
+    packfiles: Map<string, PackFileIndex>,
     // Objects cache from packfile/files/new
     objects: Map<SHA, GitObject>
 } = {
@@ -86,14 +89,38 @@ class ObjectsIndex extends Record(DEFAULTS) {
     }
 
     /*
+     * Get packfile containing a git object.
+     */
+    getPackFor(sha: SHA): ?string {
+        const { packfiles } = this;
+        return packfiles.findKey(index => index.hasObject(sha));
+    }
+
+    /*
+     * Return true if object is in a packfile.
+     */
+    isPacked(sha: SHA): boolean {
+        return !!this.getPackFor(sha);
+    }
+
+    /*
      * Read a git object from a repository, and stores it in the index.
      */
     readObject(repo: Repository, sha: SHA): Promise<GitObject> {
-        const { fs } = repo;
-
         if (this.hasObject(sha)) {
             return Promise.resolve(this);
         }
+
+        return this.isPacked(sha)
+            ? this.readObjectFromPack(repo, sha)
+            : this.readObjectFromFiles(repo, sha);
+    }
+
+    /*
+     * Read a git object from the files in .git/objects
+     */
+    readObjectFromFiles(repo: Repository, sha: SHA): Promise<GitObject> {
+        const { fs } = repo;
 
         return fs
             .read(repo.resolveGitFile(GitObject.getPath(sha)))
@@ -102,10 +129,63 @@ class ObjectsIndex extends Record(DEFAULTS) {
     }
 
     /*
+     * Read a git object from a packfile.
+     */
+    readObjectFromPack(repo: Repository, sha: SHA): Promise<GitObject> {
+        const { fs } = repo;
+        const packFilename = this.getPackFor(sha);
+
+        if (!packFilename) {
+            return Promise.reject(new Error(`No packfile contains ${sha}`));
+        }
+
+        // TODO: avoid reading the whole packfile each time.
+        return fs
+            .readFile(packFilename)
+            .then(buffer => PackFile.createFromBuffer(buffer))
+            .then(packfile => packfile.getObject(sha))
+            .then(object => {
+                if (!object) {
+                    throw new Error('Error while reading object from packfile');
+                }
+
+                return this.addObject(object);
+            });
+    }
+
+    /*
      * Index packfiles from repository.
+     * It list all packfile index, read them, and index them.
      */
     static readFromRepository(repo: Repository): Promise<ObjectsIndex> {
-        return new ObjectsIndex();
+        const { fs } = repo;
+
+        return fs
+            .readTree(repo.resolveGitFile('objects/pack/'))
+            .then(files =>
+                files.reduce((prev, file) => {
+                    if (path.extname(file) !== '.idx') {
+                        return prev;
+                    }
+
+                    const baseName = path.basename(file, '.idx');
+                    const packFilename = files.find(
+                        packfile =>
+                            path.extname(packfile) == '.pack' &&
+                            path.basename(packfile, '.pack') == baseName
+                    );
+
+                    return prev.then(packfiles =>
+                        fs
+                            .readFile(file)
+                            .then(buffer =>
+                                PackFileIndex.createFromBuffer(buffer)
+                            )
+                            .then(index => packfiles.set(packFilename, index))
+                    );
+                }, Map())
+            )
+            .then(packfiles => new ObjectsIndex({ packfiles }));
     }
 }
 
