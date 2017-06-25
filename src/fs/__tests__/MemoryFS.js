@@ -32,3 +32,11 @@ describe('.read', () => {
     test('it should throw for a non existing file', () =>
         expect(fs.read('README_NOTEXIST.md')).rejects.toBeDefined());
 });
+
+describe('.readAt', () => {
+    test('it should return the right buffer', () => {
+        expect(
+            fs.readAt('README.md', 6, 5).then(buf => buf.toString('utf8'))
+        ).resolves.toBe('world');
+    });
+});
