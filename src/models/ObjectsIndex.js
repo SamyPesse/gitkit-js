@@ -88,7 +88,12 @@ class ObjectsIndex extends Record(DEFAULTS) {
      */
     addObject(object: GitObject): ?GitObject {
         const { objects } = this;
-        return objects.set(object.sha, object);
+        const { sha } = object;
+
+        debug(`index object ${sha}`);
+        return this.merge({
+            objects: objects.set(sha, object)
+        });
     }
 
     /*
@@ -146,7 +151,7 @@ class ObjectsIndex extends Record(DEFAULTS) {
         // TODO: avoid reading the whole packfile each time.
         debug(`read object ${sha} from packfile ${packFilename}`);
         return fs
-            .readFile(packFilename)
+            .read(packFilename)
             .then(buffer => PackFile.createFromBuffer(buffer))
             .then(packfile => packfile.getObject(sha))
             .then(object => {
@@ -174,33 +179,39 @@ class ObjectsIndex extends Record(DEFAULTS) {
      * Index packfiles from repository.
      * It list all packfile index, read them, and index them.
      */
-    static readFromRepository(repo: Repository): Promise<ObjectsIndex> {
+    static indexFromRepository(repo: Repository): Promise<ObjectsIndex> {
         const { fs } = repo;
 
         return fs
             .readTree(repo.resolveGitFile('objects/pack/'))
             .then(files =>
                 files.reduce((prev, file) => {
-                    if (path.extname(file) !== '.idx') {
+                    const filepath = file.path;
+
+                    if (path.extname(filepath) !== '.idx') {
                         return prev;
                     }
 
-                    const baseName = path.basename(file, '.idx');
-                    const packFilename = files.find(
+                    const baseName = path.basename(filepath, '.idx');
+                    const pack = files.find(
                         packfile =>
-                            path.extname(packfile) == '.pack' &&
-                            path.basename(packfile, '.pack') == baseName
+                            path.extname(packfile.path) == '.pack' &&
+                            path.basename(packfile.path, '.pack') == baseName
                     );
+
+                    if (!pack) {
+                        return prev;
+                    }
 
                     return prev.then(packfiles =>
                         fs
-                            .readFile(file)
+                            .read(filepath)
                             .then(buffer =>
                                 PackFileIndex.createFromBuffer(buffer)
                             )
-                            .then(index => packfiles.set(packFilename, index))
+                            .then(index => packfiles.set(pack.path, index))
                     );
-                }, Map())
+                }, Promise.resolve(Map()))
             )
             .then(packfiles => new ObjectsIndex({ packfiles }));
     }

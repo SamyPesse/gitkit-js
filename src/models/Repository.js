@@ -60,6 +60,15 @@ class Repository extends Record(DEFAULTS) {
     }
 
     /*
+     * Index all objects
+     */
+    indexObjects(): Promise<Repository> {
+        return ObjectsIndex.indexFromRepository(this).then(objects =>
+            this.merge({ objects })
+        );
+    }
+
+    /*
      * Recursively walk a tree. The iterator is called for each tree entry.
      */
     walkTree(
@@ -86,7 +95,7 @@ class Repository extends Record(DEFAULTS) {
         sha: SHA,
         iter: (commit: Commit, sha: SHA) => ?boolean
     ): Promise<boolean> {
-        return this.readCommit(sha).then(commit => {
+        return this.readObject(sha).then(commit => {
             if (iter(commit, sha) == false) {
                 return true;
             }

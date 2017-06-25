@@ -29,7 +29,8 @@ class PackFileIndex extends Record(DEFAULTS) {
      * Check if an object is in this packfile.
      */
     hasObject(sha: SHA): boolean {
-        return false;
+        const { objects } = this;
+        return objects.has(sha);
     }
 
     /*

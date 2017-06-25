@@ -13,10 +13,12 @@ import logCommits from './log';
 import branch from './branch';
 import tag from './tag';
 import showRef from './show-ref';
+import catFile from './cat-file';
 
 program.version(pkg.version).option('--debug', 'Enable error debugging');
 
 [
+    catFile,
     branch,
     tag,
     logCommits,
@@ -62,7 +64,11 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
                 return exec(repo, args, kwargs);
             })
             .catch(err => {
-                console.error(program.debug ? err.stack : err.message);
+                console.error(
+                    process.env.NODE_ENV == 'development'
+                        ? err.stack
+                        : err.message
+                );
                 process.exit(1);
             });
     });
