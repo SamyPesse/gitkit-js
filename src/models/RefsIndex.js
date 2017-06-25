@@ -54,7 +54,7 @@ class RefsIndex extends Record(DEFAULTS) {
      * It list both refs in the .git/refs directory, and decode the refs in
      * the .git/packed-refs
      */
-    static readFromRepository(repo: Repository): Promise<RefsIndex> {
+    static indexFromRepository(repo: Repository): Promise<RefsIndex> {
         return RefsIndex.hasPackedRefs(repo).then(
             hasPackedRefs =>
                 hasPackedRefs

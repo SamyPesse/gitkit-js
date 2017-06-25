@@ -12,7 +12,7 @@ type Kwargs = {
  * Print a tree entry.
  */
 function printEntry(entry: TreeEntry, filepath: string) {
-    console.log(`${entry.mode} ${entry.type} ${entry.sha} ${filepath}`);
+    console.log(`${entry.mode}\t${entry.type}\t${entry.sha}\t${filepath}`);
 }
 
 /*

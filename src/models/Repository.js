@@ -60,6 +60,15 @@ class Repository extends Record(DEFAULTS) {
     }
 
     /*
+     * Index all refs
+     */
+    indexRefs(): Promise<Repository> {
+        return RefsIndex.indexFromRepository(this).then(refs =>
+            this.merge({ refs })
+        );
+    }
+
+    /*
      * Index all objects
      */
     indexObjects(): Promise<Repository> {
