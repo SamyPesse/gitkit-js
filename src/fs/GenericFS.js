@@ -29,10 +29,21 @@ class GenericFS {
     }
 
     /*
-     * Read a file.
+     * Read the entire file.
      */
     read(filepath: string): Promise<Buffer> {
         return Promise.reject(new Error('Not implemented'));
+    }
+
+    /*
+     * Read specific position of a file.
+     * The basic implementation is to read the entire buffer and slice it.
+     * Custom FS can implement an optimized version.
+     */
+    readAt(filepath: string, offset: number, length: number): Promise<Buffer> {
+        return this.read(filepath).then(buffer =>
+            buffer.slice(offset, offset + length)
+        );
     }
 
     /*
