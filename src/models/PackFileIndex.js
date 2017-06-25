@@ -1,6 +1,6 @@
 /** @flow */
 
-import { Record } from 'immutable';
+import { Record, OrderedMap } from 'immutable';
 import Dissolve from 'dissolve';
 
 import PackIndexOffset from './PackIndexOffset';
@@ -17,9 +17,11 @@ import type { SHA } from '../types/SHA';
 const V2_MAGIC = 0xff744f63;
 
 const DEFAULTS: {
-    version: number
+    version: number,
+    objects: OrderedMap<SHA, PackIndexOffset>
 } = {
-    version: 2
+    version: 2,
+    objects: new OrderedMap()
 };
 
 class PackFileIndex extends Record(DEFAULTS) {
@@ -58,8 +60,18 @@ class PackFileIndex extends Record(DEFAULTS) {
         });
 
         return parsePackIndex(parser).tap(() => {
+            const { shas, crcs, version } = parser.vars;
+
             const index = new PackFileIndex({
-                version: parser.vars.version
+                version,
+                objects: new OrderedMap(
+                    shas.map((sha, i) => [
+                        sha,
+                        new PackIndexOffset({
+                            crc: crcs[i]
+                        })
+                    ])
+                )
             });
             parser.emit('index', index);
         });
@@ -73,7 +85,77 @@ class PackFileIndex extends Record(DEFAULTS) {
  */
 function parsePackIndex(parser: Dissolve): Dissolve {
     return parser.uint32be('magic').tap(() => {
-        parser.vars.version = parser.vars.magic == V2_MAGIC ? 2 : 1;
+        if (parser.vars.magic !== V2_MAGIC) {
+            parser.emit('error', new Error("Can't parse version 1 packfile"));
+            return;
+        }
+
+        parser.uint32be('version');
+        parseFanoutTable(parser);
+        parseObjectSHAs(parser);
+        parseObjectCRC32(parser);
+    });
+}
+
+/*
+ * Parse the fanout table.
+ */
+function parseFanoutTable(parser: Dissolve): Dissolve {
+    return parser.buffer('fanout', 1020).uint32be('expected');
+}
+
+/*
+ * Parse the object shas.
+ * It create a variable "shas": Array<SHA>.
+ */
+function parseObjectSHAs(parser: Dissolve): Dissolve {
+    return parser.tap(() => {
+        const { expected } = parser.vars;
+        let i = 0;
+
+        parser.vars.shas = [];
+
+        parser.loop(end => {
+            if (i == expected) {
+                end();
+                return;
+            }
+
+            parser.buffer('sha', 20).tap(() => {
+                const sha = parser.vars.sha.toString('hex');
+                parser.vars.shas.push(sha);
+
+                i += 1;
+            });
+        });
+    });
+}
+
+/*
+ * Parse the object CRC32s.
+ * It create a variable "crcs": Array<Number>.
+ */
+function parseObjectCRC32(parser: Dissolve): Dissolve {
+    return parser.tap(() => {
+        const { expected } = parser.vars;
+        let i = 0;
+
+        parser.vars.crcs = [];
+
+        parser.loop(end => {
+            if (i == expected) {
+                end();
+                return;
+            }
+
+            parser.int32('crc').tap(() => {
+                const { crc } = parser.vars;
+                parser.vars.crcs.push(crc);
+                console.log('found', parser.vars.shas[i], crc);
+
+                i += 1;
+            });
+        });
     });
 }
 

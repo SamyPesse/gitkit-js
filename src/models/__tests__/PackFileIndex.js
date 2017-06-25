@@ -16,4 +16,8 @@ describe('.createFromBuffer', () => {
     it('should parse correct version', () => {
         expect(index.version).toBe(2);
     });
+
+    it('should list all objects', () => {
+        expect(index.objects.size).toBe(481);
+    });
 });

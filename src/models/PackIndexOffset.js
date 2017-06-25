@@ -8,11 +8,9 @@ import { Record } from 'immutable';
 
 const DEFAULTS: {
     offset: number,
-    oid: string,
     crc: string
 } = {
     offset: 0,
-    oid: '',
     crc: ''
 };
 
