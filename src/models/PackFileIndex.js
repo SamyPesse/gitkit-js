@@ -60,7 +60,7 @@ class PackFileIndex extends Record(DEFAULTS) {
         });
 
         return parsePackIndex(parser).tap(() => {
-            const { shas, crcs, version } = parser.vars;
+            const { shas, crcs, offsets, version } = parser.vars;
 
             const index = new PackFileIndex({
                 version,
@@ -68,7 +68,8 @@ class PackFileIndex extends Record(DEFAULTS) {
                     shas.map((sha, i) => [
                         sha,
                         new PackIndexOffset({
-                            crc: crcs[i]
+                            crc: crcs[i],
+                            offset: offsets[i]
                         })
                     ])
                 )
@@ -94,6 +95,7 @@ function parsePackIndex(parser: Dissolve): Dissolve {
         parseFanoutTable(parser);
         parseObjectSHAs(parser);
         parseObjectCRC32(parser);
+        parseObjectOffsets(parser);
     });
 }
 
@@ -151,7 +153,35 @@ function parseObjectCRC32(parser: Dissolve): Dissolve {
             parser.int32('crc').tap(() => {
                 const { crc } = parser.vars;
                 parser.vars.crcs.push(crc);
-                console.log('found', parser.vars.shas[i], crc);
+
+                i += 1;
+            });
+        });
+    });
+}
+
+/*
+ * Parse the object offsets.
+ * It create a variable "offsets": Array<Number>.
+ *
+ * TODO: support large offset.
+ */
+function parseObjectOffsets(parser: Dissolve): Dissolve {
+    return parser.tap(() => {
+        const { expected } = parser.vars;
+        let i = 0;
+
+        parser.vars.offsets = [];
+
+        parser.loop(end => {
+            if (i == expected) {
+                end();
+                return;
+            }
+
+            parser.uint32be('offset').tap(() => {
+                const { offset } = parser.vars;
+                parser.vars.offsets.push(offset);
 
                 i += 1;
             });
