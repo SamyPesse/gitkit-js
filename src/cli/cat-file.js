@@ -1,6 +1,7 @@
 /** @flow */
 /* eslint-disable no-console */
 
+import { Blob, Commit, Tree } from '../';
 import type { Repository } from '../';
 
 type Kwargs = {
@@ -8,6 +9,24 @@ type Kwargs = {
     size: boolean,
     type: boolean
 };
+
+function prettyBlob(blob: Blob) {
+    console.log(blob.content.toString('utf8'));
+}
+
+function prettyCommit(commit: Commit) {
+    console.log(`tree ${commit.tree}`);
+    commit.parents.forEach(parent => console.log(`parent ${parent}`));
+    console.log(`author ${commit.author}`);
+    console.log(`committer ${commit.committer}`);
+    console.log(`\n${commit.message}`);
+}
+
+function prettyTree(tree: Tree) {
+    tree.entries.forEach((entry, filepath) =>
+        console.log(`${entry.mode}\t${entry.type}\t${entry.sha}\t${filepath}`)
+    );
+}
 
 /*
  * Print an object from the database.
@@ -31,6 +50,14 @@ function catFile(
                 console.log(object.type);
             } else if (size) {
                 console.log(object.length);
+            } else if (pretty) {
+                if (object.isBlob) {
+                    prettyBlob(Blob.createFromObject(object));
+                } else if (object.isCommit) {
+                    prettyCommit(Commit.createFromObject(object));
+                } else if (object.isTree) {
+                    prettyTree(Tree.createFromObject(object));
+                }
             }
         });
 }
@@ -46,7 +73,7 @@ export default {
             name: 'pretty',
             shortcut: 'p',
             description: "pretty-print object's content",
-            default: false
+            default: true
         },
         {
             type: 'boolean',
