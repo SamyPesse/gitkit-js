@@ -32,4 +32,21 @@ Transforms.addCommit = (transform: Transform, commit: Commit) => {
     transform.addObject(commit.toGitObject());
 };
 
+/*
+ * Flush all "pending" git objects form the transform to the disk.
+ */
+Transform.flushObjects = (transform: Transform) => {
+    const { repo, initialRepo } = transform;
+    const { objects } = repo;
+    const { objects: initialObjects } = initialRepo;
+
+    return objects.objects.reduce((prev, object, sha) => {
+        if (initialObjects.hasObject(sha)) {
+            return prev;
+        }
+
+        return prev.then(() => objects.writeObjectToRepository(repo));
+    }, Promise.resolve());
+};
+
 export default Transforms;

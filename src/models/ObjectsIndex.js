@@ -1,6 +1,7 @@
 /** @flow */
 
 import path from 'path';
+import Debug from 'debug';
 import { Record, Map } from 'immutable';
 import GitObject from './GitObject';
 import Tree from './Tree';
@@ -20,6 +21,8 @@ import type { SHA } from '../types/SHA';
  * - In a packfile, we need to index all packfiles to lookup the object
  * - In a .git/objects/... file
  */
+
+const debug = Debug('gitkit:objects');
 
 const TYPES: { [GitObjectType]: GitObjectSerializable } = {
     blob: Blob,
@@ -122,6 +125,7 @@ class ObjectsIndex extends Record(DEFAULTS) {
     readObjectFromFiles(repo: Repository, sha: SHA): Promise<GitObject> {
         const { fs } = repo;
 
+        debug(`read object ${sha} from file`);
         return fs
             .read(repo.resolveGitFile(GitObject.getPath(sha)))
             .then(buffer => GitObject.createFromZip(buffer))
@@ -140,6 +144,7 @@ class ObjectsIndex extends Record(DEFAULTS) {
         }
 
         // TODO: avoid reading the whole packfile each time.
+        debug(`read object ${sha} from packfile ${packFilename}`);
         return fs
             .readFile(packFilename)
             .then(buffer => PackFile.createFromBuffer(buffer))
@@ -151,6 +156,18 @@ class ObjectsIndex extends Record(DEFAULTS) {
 
                 return this.addObject(object);
             });
+    }
+
+    /*
+     * Write an object to the disk.
+     */
+    writeObjectToRepository(repo: Repository, object: GitObject): Promise<*> {
+        const { fs } = repo;
+        const buffer = object.getAsBuffer();
+        const objectPath = repo.resolveGitFile(object.path);
+
+        debug(`write object ${objectPath} to disk`);
+        return fs.writeFile(objectPath, buffer);
     }
 
     /*

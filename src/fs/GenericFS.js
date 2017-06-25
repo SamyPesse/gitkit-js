@@ -43,6 +43,13 @@ class GenericFS {
     }
 
     /*
+     * Create a directory.
+     */
+    mkdir(dirpath: string): Promise<*> {
+        return Promise.reject(new Error('Not implemented'));
+    }
+
+    /*
      * Delete a file.
      */
     unlink(filepath: string): Promise<*> {

@@ -14,10 +14,12 @@ import type { SHA } from '../types/SHA';
  * https://github.com/git/git/blob/master/Documentation/technical/pack-format.txt
  */
 
+const V2_MAGIC = 0xff744f63;
+
 const DEFAULTS: {
-    version: string
+    version: number
 } = {
-    version: ''
+    version: 2
 };
 
 class PackFileIndex extends Record(DEFAULTS) {
@@ -70,7 +72,9 @@ class PackFileIndex extends Record(DEFAULTS) {
  * it sets the vars "version" and "objects"
  */
 function parsePackIndex(parser: Dissolve): Dissolve {
-    return parser;
+    return parser.uint32be('magic').tap(() => {
+        parser.vars.version = parser.vars.magic == V2_MAGIC ? 2 : 1;
+    });
 }
 
 export default PackFileIndex;

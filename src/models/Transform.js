@@ -39,6 +39,10 @@ class Transform {
     addCommit: (commit: Commit) => Transform;
 
     writeFile: (filename: string, content: Buffer | string) => Transform;
+    mkdir: (filename: string) => Transform;
+    unlinkFile: (filename: string) => Transform;
+
+    addFile: (filename: string) => Transform;
 }
 
 /*
