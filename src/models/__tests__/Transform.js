@@ -1,6 +1,7 @@
 import Repository from '../Repository';
 import Transform from '../Transform';
 
+/*
 describe('then', () => {
     test('it should call the first callback with a transform', done => {
         const tr = new Transform(new Repository());
@@ -22,3 +23,4 @@ describe('writeFile', () => {
         });
     });
 });
+*/
