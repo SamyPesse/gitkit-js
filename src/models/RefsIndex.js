@@ -28,6 +28,14 @@ class RefsIndex extends Record(DEFAULTS) {
     }
 
     /*
+     * Get a ref by its name.
+     */
+    getRef(name: string): ?Ref {
+        const { refs } = this;
+        return refs.get(name);
+    }
+
+    /*
      * Update a reference.
      */
     setRef(name: string, ref: Ref): RefsIndex {

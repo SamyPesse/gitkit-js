@@ -16,6 +16,17 @@ This library can work both in the browser and Node.js.
 $ yarn add gitkit
 ```
 
+## CLI
+
+GitKit implements a CLI with the goal of being compatible with the official Git command.
+
+⚠️ **Do not use it:** GitKit is for testing-only.
+
+```js
+$ npm install gitkit --global
+$ gitkit clone https://github.com/GitbookIO/gitkit.git ./repo
+```
+
 ## Usage
 
 State of the Git repository is represented as a single immutable `Repository` instance. Read and write access to the repository is done using a `FS` driver, the implementation of the fs depends on the platform (`NativeFS` for Node.js, `LocalStorageFS` or `MemoryFS` for the browser).
@@ -78,11 +89,11 @@ repo.transform()
 | Walk the commits history | ✅ |
 | Create a new commit | ❌ |
 | **Clone / Fetch** | |
-| Discovery with the remote repository | ❌ |
+| Discovery with the remote repository | ✅ |
 | Fetch a reference | ❌ |
 | Clone a new repository | ❌ |
 | **Transports** | |
-| HTTP / HTTPS | ❌ |
+| HTTP / HTTPS | ✅ |
 | SSH | ❌ |
 
 ## Thanks

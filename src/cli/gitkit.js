@@ -14,6 +14,7 @@ import branch from './branch';
 import tag from './tag';
 import showRef from './show-ref';
 import catFile from './cat-file';
+import fetch from './fetch';
 
 program.version(pkg.version).option('--debug', 'Enable error debugging');
 
@@ -24,7 +25,8 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
     logCommits,
     lsTree,
     lsFiles,
-    showRef
+    showRef,
+    fetch
 ].forEach(({ name, description, exec, options = [] }) => {
     let command = program.command(name).description(description);
 
