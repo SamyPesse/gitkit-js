@@ -53,6 +53,21 @@ class Config extends Record(DEFAULTS) {
     }
 
     /*
+     * Add a new remote.
+     */
+    addRemote(name: string, url: string): Config {
+        const { remotes } = this;
+        const remote = new RemoteConfig({
+            url,
+            fetch: `+refs/heads/*:refs/remotes/${name}/*`
+        });
+
+        return this.merge({
+            remotes: remotes.set(name, remote)
+        });
+    }
+
+    /*
      * Parse the git config from a string.
      */
     static createFromString(content: string): Config {

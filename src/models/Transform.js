@@ -43,6 +43,8 @@ class Transform {
     unlinkFile: (filename: string) => Transform;
 
     addFile: (filename: string) => Transform;
+
+    addRemote: (name: string, url: string) => Transform;
 }
 
 /*
