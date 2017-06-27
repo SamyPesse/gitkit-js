@@ -4,6 +4,7 @@ import ini from 'ini';
 import { Record, Map, OrderedMap } from 'immutable';
 import RemoteConfig from './RemoteConfig';
 import BranchConfig from './BranchConfig';
+import type Repository from './Repository';
 
 /*
  * Model to represent the parsing of the .git/config file.
@@ -20,6 +21,37 @@ const DEFAULTS: {
 };
 
 class Config extends Record(DEFAULTS) {
+    /*
+     * Return a string version of the config.
+     */
+    toString() {
+        const { core, remotes, branches } = this;
+
+        const raw = {
+            core: core.toJS()
+        };
+
+        remotes.forEach((remote, name) => {
+            raw[`remote "${name}"`] = remote.toJS();
+        });
+
+        branches.forEach((branch, name) => {
+            raw[`branch "${name}"`] = branch.toJS();
+        });
+
+        return ini.stringify(raw);
+    }
+
+    /*
+     * Write the config to the disk.
+     */
+    writeToRepo(repo: Repository): Promise<*> {
+        const { fs } = repo;
+        const configPath = repo.resolveGitFile('config');
+
+        return fs.write(configPath, new Buffer(this.toString(), 'utf8'));
+    }
+
     /*
      * Parse the git config from a string.
      */
@@ -50,6 +82,18 @@ class Config extends Record(DEFAULTS) {
             branches,
             remotes
         });
+    }
+
+    /*
+     * Read the config from the repository.
+     */
+    static readFromRepository(repo: Repository): Promise<Config> {
+        const { fs } = repo;
+        const configPath = repo.resolveGitFile('config');
+
+        return fs
+            .read(configPath)
+            .then(buffer => Config.createFromString(buffer.toString('utf8')));
     }
 }
 
