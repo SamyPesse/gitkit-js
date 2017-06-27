@@ -2,7 +2,9 @@
 
 import Author from './Author';
 import Blob from './Blob';
+import BranchConfig from './BranchConfig';
 import Commit from './Commit';
+import Config from './Config';
 import FetchDiscovery from './FetchDiscovery';
 import GitObject from './GitObject';
 import Head from './Head';
@@ -14,6 +16,7 @@ import PackIndexOffset from './PackIndexOffset';
 import Person from './Person';
 import Ref from './Ref';
 import RefsIndex from './RefsIndex';
+import RemoteConfig from './RemoteConfig';
 import Repository from './Repository';
 import Transform from './Transform';
 import Tree from './Tree';
@@ -23,7 +26,9 @@ import WorkingIndex from './WorkingIndex';
 export {
     Author,
     Blob,
+    BranchConfig,
     Commit,
+    Config,
     FetchDiscovery,
     GitObject,
     Head,
@@ -35,6 +40,7 @@ export {
     Person,
     Ref,
     RefsIndex,
+    RemoteConfig,
     Repository,
     Transform,
     Tree,

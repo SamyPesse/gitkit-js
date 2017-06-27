@@ -3,7 +3,9 @@
 import {
     Author,
     Blob,
+    BranchConfig,
     Commit,
+    Config,
     FetchDiscovery,
     GitObject,
     Head,
@@ -15,6 +17,7 @@ import {
     Person,
     Ref,
     RefsIndex,
+    RemoteConfig,
     Repository,
     Transform,
     Tree,
@@ -23,10 +26,11 @@ import {
 } from './models';
 
 const GitKit = {
-    // Models
     Author,
     Blob,
+    BranchConfig,
     Commit,
+    Config,
     FetchDiscovery,
     GitObject,
     Head,
@@ -38,6 +42,7 @@ const GitKit = {
     Person,
     Ref,
     RefsIndex,
+    RemoteConfig,
     Repository,
     Transform,
     Tree,
@@ -47,19 +52,23 @@ const GitKit = {
 
 export default GitKit;
 export {
-    // Models
     Author,
     Blob,
+    BranchConfig,
     Commit,
+    Config,
     FetchDiscovery,
     GitObject,
     Head,
+    IndexEntry,
+    ObjectsIndex,
     PackFile,
     PackFileIndex,
     PackIndexOffset,
     Person,
     Ref,
     RefsIndex,
+    RemoteConfig,
     Repository,
     Transform,
     Tree,

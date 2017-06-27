@@ -4,6 +4,7 @@ import path from 'path';
 import { Record } from 'immutable';
 import GenericFS from '../fs/GenericFS';
 
+import Config from './Config';
 import WorkingIndex from './WorkingIndex';
 import ObjectsIndex from './ObjectsIndex';
 import RefsIndex from './RefsIndex';
@@ -15,6 +16,8 @@ import type { SHA } from '../types/SHA';
 const DEFAULTS: {
     isBare: boolean,
     fs: GenericFS,
+    // The .git/config
+    config: Config,
     // Head reference
     head: Head,
     // Index of working files (only for non-bare repos)
@@ -26,6 +29,7 @@ const DEFAULTS: {
 } = {
     isBare: false,
     fs: new GenericFS(),
+    config: new Config(),
     head: new Head(),
     workingIndex: new WorkingIndex(),
     objects: new ObjectsIndex(),

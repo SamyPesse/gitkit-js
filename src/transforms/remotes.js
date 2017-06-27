@@ -1,5 +1,4 @@
 /** @flow */
-
 import type { List } from 'immutable';
 import { FetchDiscovery } from '../models';
 import type { Transform, Ref } from '../models';
