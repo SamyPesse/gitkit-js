@@ -9,6 +9,20 @@ import type { Transform } from '../models';
 const Transforms = {};
 
 /*
+ * Read the config.
+ */
+Transforms.readConfig = (transform: Transform): Promise<*> =>
+    transform.repo.readConfig().then(repo => (transform.repo = repo));
+
+/*
+ * Write the config to the disk.
+ */
+Transforms.flushConfig = (transform: Transform): Promise<*> => {
+    const { repo } = transform;
+    return repo.config.writeToRepo(repo);
+};
+
+/*
  * Add a new remote.
  */
 Transforms.addRemote = (transform: Transform, name: string, url: string) => {

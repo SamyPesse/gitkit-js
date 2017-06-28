@@ -64,7 +64,16 @@ class Repository extends Record(DEFAULTS) {
     }
 
     /*
-     * Index all refs
+     * Read the config.
+     */
+    readConfig(): Promise<Repository> {
+        return Config.readFromRepository(this).then(config =>
+            this.merge({ config })
+        );
+    }
+
+    /*
+     * Index all refs.
      */
     indexRefs(): Promise<Repository> {
         return RefsIndex.indexFromRepository(this).then(refs =>

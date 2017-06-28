@@ -4,6 +4,7 @@ import { Record, OrderedMap, List } from 'immutable';
 import Ref from './Ref';
 
 import type { Transport } from '../transports';
+import { createDiscoveryParser } from '../transfer';
 
 /*
  * Model to represent the discovery between the server
@@ -30,35 +31,22 @@ class FetchDiscovery extends Record(DEFAULTS) {
             res =>
                 new Promise((resolve, reject) => {
                     let capabilities;
-                    let lineIndex = 0;
                     let refs = new OrderedMap();
 
                     res
-                        .pipe(createPKTLinesParser())
-                        .pipe(createPKTLinesMetaParser())
-                        .on('data', line => {
-                            lineIndex += 1;
-
-                            if (line.caps && !capabilities) {
-                                capabilities = line.caps;
+                        .pipe(
+                            createDiscoveryParser({
+                                onCapabilities: caps => {
+                                    capabilities = capabilities || caps;
+                                }
+                            })
+                        )
+                        .on(
+                            'data',
+                            ({ name, ref }: { name: string, ref: Ref }) => {
+                                refs = refs.set(name, ref);
                             }
-
-                            if (
-                                lineIndex === 1 ||
-                                line.type !== LINEMETA_TYPES.LINE
-                            ) {
-                                return;
-                            }
-
-                            const content = line.toString('utf8').trim();
-                            const parts = content.split(' ');
-
-                            const refName = parts[1];
-                            const sha = parts[0];
-                            const ref = new Ref({ commit: sha });
-
-                            refs = refs.set(refName, ref);
-                        })
+                        )
                         .on('error', err => {
                             reject(err);
                         })

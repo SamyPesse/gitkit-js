@@ -14,7 +14,7 @@ const DEFAULTS: {
 class Blob extends Record(DEFAULTS) implements GitObjectSerializable<Blob> {
     toGitObject(): GitObject {
         return new GitObject({
-            type: 'buffer',
+            type: 'blob',
             content: this.content
         });
     }

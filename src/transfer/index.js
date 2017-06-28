@@ -4,10 +4,12 @@ import {
     createPackLineParser,
     createPackLineMetaParser
 } from './lines';
+import { createDiscoveryParser } from './discovery';
 
 export {
     LINEMETA_TYPES,
     createPackLineParser,
     createPackLineMetaParser,
-    createUploadPackParser
+    createUploadPackParser,
+    createDiscoveryParser
 };

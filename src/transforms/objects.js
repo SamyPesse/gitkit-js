@@ -1,12 +1,19 @@
 /** @flow */
 
 import type { Transform, GitObject, Blob, Tree, Commit } from '../models';
+import type { SHA } from '../types/SHA';
 
 /*
  * Low-level operations for objects.
  */
 
 const Transforms = {};
+
+/*
+ * Read an object from the database.
+ */
+Transforms.readObject = (transform: Transform, sha: SHA): Promise<*> =>
+    transform.repo.readObject(sha).then(repo => (transform.repo = repo));
 
 /*
  * Create a new git object.

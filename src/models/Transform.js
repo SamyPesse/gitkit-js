@@ -8,6 +8,7 @@ import type GitObject from './GitObject';
 import type Blob from './Blob';
 import type Tree from './Tree';
 import type Commit from './Commit';
+import type { SHA } from '../types/SHA';
 
 const debug = Debug('gitkit:transform');
 
@@ -33,6 +34,7 @@ class Transform {
         return this.then(() => {}, onError);
     }
 
+    readObject: (sha: SHA) => Transform;
     addObject: (object: GitObject) => Transform;
     addBlob: (blob: Blob) => Transform;
     addTree: (tree: Tree) => Transform;
@@ -44,6 +46,8 @@ class Transform {
 
     addFile: (filename: string) => Transform;
 
+    readConfig: () => Transform;
+    flushConfig: () => Transform;
     addRemote: (name: string, url: string) => Transform;
 }
 

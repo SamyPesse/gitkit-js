@@ -1,7 +1,8 @@
 /** @flow */
+/* eslint-disable array-callback-return */
 
 import Dissolve from 'dissolve';
-import through from 'through2';
+import es from 'event-stream';
 
 const LINEMETA_TYPES = {
     FLUSH: 'pkt-flush',
@@ -49,7 +50,7 @@ function createPackLineMetaParser(isServer: boolean = false): Dissolve {
     // On which line shuld we look for capabilities?
     const checkCapsOn = isServer ? 1 : 0;
 
-    return through.obj((line, enc, callback) => {
+    return es.map((line, callback) => {
         let resultType;
         let result = line;
 

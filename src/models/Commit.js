@@ -2,8 +2,9 @@
 
 import { Record, List } from 'immutable';
 import Author from './Author';
+import GitObject from './GitObject';
 
-import type GitObject, { GitObjectSerializable } from './GitObject';
+import type { GitObjectSerializable } from './GitObject';
 import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
@@ -21,6 +22,29 @@ const DEFAULTS: {
 };
 
 class Commit extends Record(DEFAULTS) implements GitObjectSerializable<Commit> {
+    toGitObject(): GitObject {
+        return new GitObject({
+            type: 'commit',
+            content: this.toBuffer()
+        });
+    }
+
+    toBuffer(): Buffer {
+        return new Buffer(this.toString(), 'utf8');
+    }
+
+    toString(): string {
+        return `tree ${this.tree}
+${this.parents.map(parent => `parent ${parent}`).join('\n')}
+author ${this.author.toString()}
+committer ${this.committer.toString()}
+
+${this.message}`;
+    }
+
+    /*
+     * Parse a commit from string content of the git object.
+     */
     static createFromString(content: string): Commit {
         const lines = content.split('\n');
 
