@@ -63,12 +63,21 @@ class RefsIndex extends Record(DEFAULTS) {
      * the .git/packed-refs
      */
     static indexFromRepository(repo: Repository): Promise<RefsIndex> {
-        return RefsIndex.hasPackedRefs(repo).then(
-            hasPackedRefs =>
-                hasPackedRefs
-                    ? RefsIndex.readPackedFromRepository(repo)
-                    : RefsIndex.readRefsFromRepository(repo)
-        );
+        return RefsIndex.hasPackedRefs(repo)
+            .then(hasPackedRefs =>
+                Promise.all([
+                    hasPackedRefs
+                        ? RefsIndex.readPackedFromRepository(repo)
+                        : new RefsIndex(),
+                    RefsIndex.readRefsFromRepository(repo)
+                ])
+            )
+            .then(
+                ([packed, files]) =>
+                    new RefsIndex({
+                        refs: packed.refs.merge(files.refs)
+                    })
+            );
     }
 
     /*
