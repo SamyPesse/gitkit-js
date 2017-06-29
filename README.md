@@ -32,7 +32,7 @@ $ gitkit clone https://github.com/GitbookIO/gitkit.git ./repo
 State of the Git repository is represented as a single immutable `Repository` instance. Read and write access to the repository is done using a `FS` driver, the implementation of the fs depends on the platform (`NativeFS` for Node.js, `LocalStorageFS` or `MemoryFS` for the browser).
 
 ```js
-import { Repository } from 'gitkit';
+import GitKit, { Repository } from 'gitkit';
 
 import NativeFS from 'gitkit/lib/fs/native';
 
@@ -41,17 +41,13 @@ const fs = new NativeFS(process.cwd());
 
 // Create a repository:
 const repo = new Repository({ fs });
-```
+const gitkit = new GitKit(repo);
 
-#### Transforms
-
-GitKit uses a transform API.
-
-```js
-repo.transform()
+// Commit some changes
+gitkit
     .writeFile('README.md', 'Hello world')
-    .addFile('README.md')
-    .commit({
+    .then(() => gitkit.addFile('README.md'))
+    .then(() => gitkit.commit({
         message: 'Update README',
         author: Author.createFromPerson(
             Person.create({
@@ -59,8 +55,7 @@ repo.transform()
                 email: 'john.doe@gmail.com'
             })
         )
-    })
-    .apply();
+    }));
 ```
 
 ## Support
