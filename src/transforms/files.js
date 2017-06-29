@@ -14,7 +14,7 @@ Transforms.writeFile = (
     content: Buffer | string
 ): Promise<*> => {
     const { fs } = gitkit.repo;
-    return fs.writeFile(filename, content);
+    return fs.write(filename, content);
 };
 
 Transforms.mkdir = (gitkit: GitKit, dirname: string): Promise<*> => {

@@ -60,6 +60,13 @@ class GitObject extends Record(DEFAULTS) {
     }
 
     /*
+     * Get entire buffer that should be writen on the disk.
+     */
+    getAsZippedBuffer(): Buffer {
+        return zlib.zip(this.getAsBuffer());
+    }
+
+    /*
      * Get path in a git repository for an object.
      */
     static getPath(sha: string): string {

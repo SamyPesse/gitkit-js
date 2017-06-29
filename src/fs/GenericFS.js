@@ -8,9 +8,15 @@ export type FileType = 'file' | 'dir';
 
 export type FileStat = {
     path: string,
-    length: number,
+    size: number,
     mode: string,
-    type: FileType
+    type: FileType,
+    ctime: Date,
+    mtime: Date,
+    dev: number,
+    ino: number,
+    uid: number,
+    gid: number
 };
 
 class GenericFS {

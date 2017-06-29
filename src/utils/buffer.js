@@ -1,6 +1,7 @@
 /** @flow */
 
 import type Dissolve from 'dissolve';
+import nbo from 'network-byte-order';
 
 /*
  * Utility for dissolve to scan for a buffer
@@ -30,4 +31,15 @@ function scan(
     });
 }
 
-export { scan };
+/*
+ * Converts the given unsigned 32-bit (long) integer from host byte order
+ * to network byte order (Little-Endian to Big-Endian).
+ */
+function htonl(value: Number): Buffer {
+    const b = Buffer.alloc(4);
+    nbo.htonl(b, 0, value);
+
+    return b;
+}
+
+export { scan, htonl };

@@ -1,6 +1,7 @@
 /** @flow */
 
 import path from 'path';
+import { OrderedMap } from 'immutable';
 import { Blob, Tree, Commit } from '../models';
 import type { GitObject, TreeEntry } from '../models';
 import type { SHA } from '../types/SHA';
@@ -36,45 +37,42 @@ Transforms.readBlob = (gitkit: GitKit, sha: SHA): Promise<Blob> =>
 /*
  * Create a new git object.
  */
-Transforms.addObject = (gitkit: GitKit, object: GitObject): GitKit => {
-    const { repo } = gitkit;
-    const { objects } = repo;
+Transforms.addObjects = (gitkit: GitKit, toAdd: GitObject): Promise<*> => {
+    const { objects } = gitkit.repo;
 
-    gitkit.repo = repo.merge({
-        objects: objects.addObject(objects)
-    });
+    return toAdd
+        .reduce(
+            (prev, object) =>
+                prev.then(_objects => {
+                    const { sha } = object;
 
-    return gitkit;
+                    if (_objects.hasObject(sha)) {
+                        return _objects;
+                    }
+
+                    return _objects
+                        .writeObjectToRepository(gitkit.repo, object)
+                        .then(() => _objects.addObject(object));
+                }),
+            Promise.resolve(objects)
+        )
+        .then(() => toAdd);
 };
 
-Transforms.addBlob = (gitkit: GitKit, blob: Blob): GitKit => {
+Transforms.addObject = (
+    gitkit: GitKit,
+    object: GitObject
+): Promise<GitObject> =>
+    gitkit.addObjects([object]).then(objects => objects[0]);
+
+Transforms.addBlob = (gitkit: GitKit, blob: Blob): Promise<GitObject> =>
     gitkit.addObject(blob.toGitObject());
-};
 
-Transforms.addTree = (gitkit: GitKit, tree: Tree): GitKit => {
+Transforms.addTree = (gitkit: GitKit, tree: Tree): Promise<GitObject> =>
     gitkit.addObject(tree.toGitObject());
-};
 
-Transforms.addCommit = (gitkit: GitKit, commit: Commit): GitKit => {
+Transforms.addCommit = (gitkit: GitKit, commit: Commit): Promise<GitObject> =>
     gitkit.addObject(commit.toGitObject());
-};
-
-/*
- * Flush all "pending" git objects form the transform to the disk.
- */
-Transforms.flushObjects = (gitkit: GitKit): Promise<*> => {
-    const { repo, initialRepo } = gitkit;
-    const { objects } = repo;
-    const { objects: initialObjects } = initialRepo;
-
-    return objects.objects.reduce((prev, object, sha) => {
-        if (initialObjects.hasObject(sha)) {
-            return prev;
-        }
-
-        return prev.then(() => objects.writeObjectToRepository(repo));
-    }, Promise.resolve());
-};
 
 /*
  * Iterate over commits.
@@ -106,13 +104,31 @@ Transforms.walkTree = (
     gitkit.readTree(sha).then(tree => {
         const { entries } = tree;
 
-        return entries.reduce((prev, entry) => {
-            const filepath = path.join(baseName, entry.path);
-            if (!entry.isTree) {
-                return iter(entry, filepath);
-            }
-            return gitkit.walkTree(entry.sha, iter, filepath);
-        }, Promise.resolve());
+        return entries.reduce(
+            (prev, entry) =>
+                prev.then(() => {
+                    const filepath = path.join(baseName, entry.path);
+                    if (!entry.isTree) {
+                        return iter(entry, filepath);
+                    }
+                    return gitkit.walkTree(entry.sha, iter, filepath);
+                }),
+            Promise.resolve()
+        );
     });
+
+/*
+ * Read an entire tree.
+ * The returned Tree is not valid since it contains entire paths and only files entries.
+ */
+Transforms.readRecursiveTree = (gitkit: GitKit, sha: SHA): Promise<Tree> => {
+    let entries = new OrderedMap();
+
+    return gitkit
+        .walkTree(sha, (entry, filepath) => {
+            entries = entries.set(filepath, entry);
+        })
+        .then(() => new Tree({ entries }));
+};
 
 export default Transforms;

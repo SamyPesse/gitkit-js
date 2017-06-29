@@ -9,21 +9,22 @@ import type { SHA } from './types/SHA';
 const debug = Debug('gitkit:transform');
 
 class GitKit {
-    initialRepo: Repository;
     repo: Repository;
 
     constructor(repo: Repository) {
-        this.initialRepo = repo;
         this.repo = repo;
-        this.queue = Promise.resolve();
     }
 
-    indexObjects: () => Promise<*>;
     readObject: (sha: SHA) => Promise<GitObject>;
-    addObject: (object: GitObject) => Promise<*>;
-    addBlob: (blob: Blob) => Promise<*>;
-    addTree: (tree: Tree) => Promise<*>;
-    addCommit: (commit: Commit) => Promise<*>;
+    readTree: (sha: SHA) => Promise<Tree>;
+    readCommit: (sha: SHA) => Promise<Commit>;
+    readBlob: (sha: SHA) => Promise<Blob>;
+    readRecursiveTree: (sha: SHA) => Promise<Tree>;
+    addObjects: (objects: GitObject[]) => Promise<GitObject[]>;
+    addObject: (object: GitObject) => Promise<GitObject>;
+    addBlob: (blob: Blob) => Promise<GitObject>;
+    addTree: (tree: Tree) => Promise<GitObject>;
+    addCommit: (commit: Commit) => Promise<GitObject>;
 
     walkCommits: (
         sha: SHA,

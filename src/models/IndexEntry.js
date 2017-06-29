@@ -4,6 +4,9 @@ import { Record } from 'immutable';
 import Concentrate from 'concentrate';
 import Dissolve from 'dissolve';
 
+import type { FileStat } from '../fs/GenericFS';
+import { htonl } from '../utils/buffer';
+
 /*
  * Model to represent an entry in the git index.
  *
@@ -46,17 +49,18 @@ class IndexEntry extends Record(DEFAULTS) {
     toBuffer(version: number = 3): Buffer {
         let output = Concentrate()
             // ctime
-            .uint32be(this.ctime.getTime())
+            .uint32be(this.ctime.getTime() / 1000)
             .uint32be(0)
             // mtime
-            .uint32be(this.mtime.getTime())
+            .uint32be(this.mtime.getTime() / 1000)
             .uint32be(0)
-            .uint32be(this.dev)
-            .uint32be(this.ino)
-            .uint32be(this.uid)
-            .uint32be(this.gid)
-            .uint32be(this.fileSize)
-            .buffer(new Buffer(this.sha).toString('hex'))
+            .buffer(htonl(this.dev))
+            .buffer(htonl(this.ino))
+            .uint32be(this.mode)
+            .buffer(htonl(this.uid))
+            .buffer(htonl(this.gid))
+            .buffer(htonl(this.fileSize))
+            .string(new Buffer(this.sha).toString('hex'))
             .uint16be(this.flags);
 
         if (version >= 3) {
@@ -124,7 +128,7 @@ class IndexEntry extends Record(DEFAULTS) {
                     uid: parser.vars.uid,
                     gid: parser.vars.gid,
                     flags: parser.vars.flags,
-                    extendedFlags: parser.vars.extendedFlags
+                    extendedFlags: parser.vars.extendedFlags || 0
                 });
 
                 parser.vars.entry = entry;
@@ -132,6 +136,26 @@ class IndexEntry extends Record(DEFAULTS) {
             });
 
         return parser;
+    }
+
+    /*
+     * Create an index entry from the stat result of a file.
+     */
+    static createFromFileStat(stat: FileStat, sha: string): IndexEntry {
+        return new IndexEntry({
+            sha,
+            mode: stat.mode,
+            fileSize: stat.size,
+            path: stat.path,
+            ctime: stat.ctime,
+            mtime: stat.mtime,
+            dev: stat.dev,
+            ino: stat.ino,
+            uid: stat.uid,
+            gid: stat.gid,
+            flags: 0,
+            extendedFlags: 0
+        });
     }
 }
 

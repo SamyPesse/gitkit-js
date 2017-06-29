@@ -9,6 +9,7 @@ import NativeFS from '../fs/NativeFS';
 import pkg from '../../package.json';
 
 // Commands
+import add from './add';
 import lsTree from './ls-tree';
 import lsFiles from './ls-files';
 import logCommits from './log';
@@ -19,11 +20,14 @@ import catFile from './cat-file';
 import fetch from './fetch';
 import remote from './remote';
 import init from './init';
+import status from './status';
 
 program.version(pkg.version).option('--debug', 'Enable error debugging');
 
 [
     init,
+    status,
+    add,
     catFile,
     branch,
     tag,
@@ -74,7 +78,7 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
             })
             .catch(err => {
                 console.error(
-                    process.env.NODE_ENV == 'development'
+                    process.env.NODE_ENV == 'development' || process.env.DEBUG
                         ? err.stack
                         : err.message
                 );

@@ -170,11 +170,11 @@ class ObjectsIndex extends Record(DEFAULTS) {
      */
     writeObjectToRepository(repo: Repository, object: GitObject): Promise<*> {
         const { fs } = repo;
-        const buffer = object.getAsBuffer();
+        const buffer = object.getAsZippedBuffer();
         const objectPath = repo.resolveGitFile(object.path);
 
         debug(`write object ${objectPath} to disk`);
-        return fs.writeFile(objectPath, buffer);
+        return fs.write(objectPath, buffer);
     }
 
     /*

@@ -22,11 +22,13 @@ function lsTree(
     [sha]: string[],
     { recursive }: Kwargs
 ): Promise<*> {
-    if (recursive) {
-        return gitkit.walkTree(sha, printEntry);
-    }
-    return gitkit.readTree(sha).then(tree => {
-        tree.entries.forEach(printEntry);
+    return gitkit.indexObjects().then(() => {
+        if (recursive) {
+            return gitkit.walkTree(sha, printEntry);
+        }
+        return gitkit.readTree(sha).then(tree => {
+            tree.entries.forEach(printEntry);
+        });
     });
 }
 

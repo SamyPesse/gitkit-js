@@ -51,9 +51,15 @@ class NodeFS extends GenericFS {
                 } else {
                     resolve({
                         path: file,
-                        length: stat.size,
+                        size: stat.size,
                         mode: String(stat.mode),
-                        type: stat.isDirectory() ? 'dir' : 'file'
+                        type: stat.isDirectory() ? 'dir' : 'file',
+                        ctime: stat.ctime,
+                        mtime: stat.mtime,
+                        dev: stat.dev,
+                        ino: stat.ino,
+                        uid: stat.uid,
+                        gid: stat.gid
                     });
                 }
             });

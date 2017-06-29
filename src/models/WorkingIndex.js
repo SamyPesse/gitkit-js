@@ -1,10 +1,11 @@
 /** @flow */
 
+import Debug from 'debug';
 import { Record, OrderedMap } from 'immutable';
 import Dissolve from 'dissolve';
 import Concentrate from 'concentrate';
 import IndexEntry from './IndexEntry';
-
+import sha1 from '../utils/sha1';
 import type Repository from './Repository';
 
 /*
@@ -14,16 +15,28 @@ import type Repository from './Repository';
  */
 
 const SIGNATURE = 'DIRC';
+const debug = Debug('gitkit:workingIndex');
 
 const DEFAULTS: {
     version: number,
     entries: OrderedMap<string, IndexEntry>
 } = {
-    version: 0,
+    version: 2,
     entries: new OrderedMap()
 };
 
 class WorkingIndex extends Record(DEFAULTS) {
+    /*
+     * Add or update an entry.
+     */
+    addEntry(entry: IndexEntry): WorkingIndex {
+        const { entries } = this;
+
+        return this.merge({
+            entries: entries.set(entry.path, entry)
+        });
+    }
+
     /*
      * Convert this index to a buffer that can be written.
      */
@@ -35,11 +48,26 @@ class WorkingIndex extends Record(DEFAULTS) {
             .uint32be(version)
             .uint32be(entries.size);
 
-        entries.each(entry => {
+        entries.forEach(entry => {
             output.buffer(entry.toBuffer(version));
         });
 
-        return output.result;
+        const inner = output.result();
+        const innerSHA = sha1.encode(inner);
+
+        return Buffer.concat([inner, new Buffer(innerSHA, 'hex')]);
+    }
+
+    /*
+     * Write the index file in the repository.
+     */
+    writeToRepo(repo: Repository): Promise<*> {
+        const { fs } = repo;
+        const content = this.toBuffer();
+        const filepath = repo.resolveGitFile('index');
+
+        debug('write the index file');
+        return fs.write(filepath, content);
     }
 
     /*
@@ -49,9 +77,15 @@ class WorkingIndex extends Record(DEFAULTS) {
         const { fs } = repo;
         const indexpath = repo.resolveGitFile('index');
 
-        return fs
-            .read(indexpath)
-            .then(buffer => WorkingIndex.createFromBuffer(buffer));
+        debug(`read index file from ${indexpath}`);
+        return fs.read(indexpath).then(
+            buffer => WorkingIndex.createFromBuffer(buffer),
+            // The index file may not exist
+            error => {
+                debug('no index file found in the repository');
+                return Promise.resolve(new WorkingIndex());
+            }
+        );
     }
 
     /*
