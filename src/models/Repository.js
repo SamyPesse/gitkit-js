@@ -9,7 +9,6 @@ import WorkingIndex from './WorkingIndex';
 import ObjectsIndex from './ObjectsIndex';
 import RefsIndex from './RefsIndex';
 import Head from './Head';
-import type TreeEntry from './TreeEntry';
 import type { SHA } from '../types/SHA';
 
 const DEFAULTS: {
@@ -119,26 +118,6 @@ class Repository extends Record(DEFAULTS) {
         return ObjectsIndex.indexFromRepository(this).then(objects =>
             this.merge({ objects })
         );
-    }
-
-    /*
-     * Recursively walk a tree. The iterator is called for each tree entry.
-     */
-    walkTree(
-        sha: SHA,
-        iter: (entry: TreeEntry, filepath: string) => *,
-        baseName: string = ''
-    ): Promise<*> {
-        return this.readTree(sha).then(tree => {
-            const { entries } = tree;
-            return entries.reduce((prev, entry) => {
-                const filepath = path.join(baseName, entry.path);
-                if (!entry.isTree) {
-                    return iter(entry, filepath);
-                }
-                return this.walkTree(entry.sha, iter, filepath);
-            }, Promise.resolve());
-        });
     }
 }
 

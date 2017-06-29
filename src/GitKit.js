@@ -30,6 +30,11 @@ class GitKit {
         iter: (commit: Commit, sha: SHA) => ?boolean
     ) => Promise<*>;
 
+    walkTree: (
+        sha: SHA,
+        iter: (entry: TreeEntry, filepath: string) => *
+    ) => Promise<*>;
+
     writeFile: (filename: string, content: Buffer | string) => Promise<*>;
     mkdir: (filename: string) => Promise<*>;
     unlinkFile: (filename: string) => Promise<*>;

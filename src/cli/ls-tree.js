@@ -1,8 +1,7 @@
 /** @flow */
 /* eslint-disable no-console */
 
-import type Repository from '../models/Repository';
-import type TreeEntry from '../models/TreeEntry';
+import type GitKit, { TreeEntry } from '../';
 
 type Kwargs = {
     recursive: boolean
@@ -19,14 +18,14 @@ function printEntry(entry: TreeEntry, filepath: string) {
  * List all files in the repository.
  */
 function lsTree(
-    repo: Repository,
+    gitkit: GitKit,
     [sha]: string[],
     { recursive }: Kwargs
 ): Promise<*> {
     if (recursive) {
-        return repo.walkTree(sha, printEntry);
+        return gitkit.walkTree(sha, printEntry);
     }
-    return repo.readTree(sha).then(tree => {
+    return gitkit.readTree(sha).then(tree => {
         tree.entries.forEach(printEntry);
     });
 }

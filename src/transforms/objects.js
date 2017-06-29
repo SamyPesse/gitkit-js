@@ -1,7 +1,8 @@
 /** @flow */
 
+import path from 'path';
 import { Blob, Tree, Commit } from '../models';
-import type { GitObject } from '../models';
+import type { GitObject, TreeEntry } from '../models';
 import type { SHA } from '../types/SHA';
 import type GitKit from '../GitKit';
 
@@ -84,18 +85,34 @@ Transforms.walkCommits = (
     iter: (commit: Commit, sha: SHA) => ?boolean
 ): Promise<*> =>
     gitkit.readCommit(sha).then(commit => {
-        if (!commit) {
-            return;
-        }
-
         if (iter(commit, sha) == false) {
-            return;
+            return false;
         }
 
         return commit.parents.reduce(
             (prev, parent) => prev.then(() => gitkit.walkCommits(parent, iter)),
             Promise.resolve()
         );
+    });
+/*
+ * Iterate over tree.
+ */
+Transforms.walkTree = (
+    gitkit: GitKit,
+    sha: SHA,
+    iter: (entry: TreeEntry, filepath: string) => *,
+    baseName: string = ''
+): Promise<*> =>
+    gitkit.readTree(sha).then(tree => {
+        const { entries } = tree;
+
+        return entries.reduce((prev, entry) => {
+            const filepath = path.join(baseName, entry.path);
+            if (!entry.isTree) {
+                return iter(entry, filepath);
+            }
+            return gitkit.walkTree(entry.sha, iter, filepath);
+        }, Promise.resolve());
     });
 
 export default Transforms;

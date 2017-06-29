@@ -44,17 +44,19 @@ class ObjectsIndex extends Record(DEFAULTS) {
     /*
      * Get an object.
      */
-    getObject(sha: SHA): ?GitObject {
+    getObject(sha: SHA): GitObject {
         const { objects } = this;
-        return objects.get(sha);
-    }
-
-    getObjectOfType(sha: SHA, type: GitObjectType): Blob | Commit | Tree {
-        const object = this.getObject(sha);
+        const object = objects.get(sha);
 
         if (!object) {
             throw new Error(`object "${sha}" not found`);
         }
+
+        return object;
+    }
+
+    getObjectOfType(sha: SHA, type: GitObjectType): Blob | Commit | Tree {
+        const object = this.getObject(sha);
 
         if (object.type != type) {
             throw new Error(`"${sha}" is not a ${type} but a ${object.type}`);
