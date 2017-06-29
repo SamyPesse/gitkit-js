@@ -33,16 +33,20 @@ function logCommits(
 ): Promise<*> {
     let count = 0;
 
-    return gitkit.readHEAD().then(() => gitkit.indexRefs()).then(() => {
-        const { headCommit } = gitkit.repo;
+    return gitkit
+        .indexObjects()
+        .then(() => gitkit.readHEAD())
+        .then(() => gitkit.indexRefs())
+        .then(() => {
+            const { headCommit } = gitkit.repo;
 
-        return gitkit.walkCommits(headCommit, (commit, commitSHA) => {
-            printCommit(commit, commitSHA);
+            return gitkit.walkCommits(headCommit, (commit, commitSHA) => {
+                printCommit(commit, commitSHA);
 
-            count += 1;
-            return count < max;
+                count += 1;
+                return count < max;
+            });
         });
-    });
 }
 
 export default {
