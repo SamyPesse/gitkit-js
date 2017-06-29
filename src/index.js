@@ -1,5 +1,7 @@
 /** @flow */
 
+import GitKit from './GitKit';
+
 import {
     Author,
     Blob,
@@ -19,36 +21,10 @@ import {
     RefsIndex,
     RemoteConfig,
     Repository,
-    Transform,
     Tree,
     TreeEntry,
     WorkingIndex
 } from './models';
-
-const GitKit = {
-    Author,
-    Blob,
-    BranchConfig,
-    Commit,
-    Config,
-    FetchDiscovery,
-    GitObject,
-    Head,
-    IndexEntry,
-    ObjectsIndex,
-    PackFile,
-    PackFileIndex,
-    PackIndexOffset,
-    Person,
-    Ref,
-    RefsIndex,
-    RemoteConfig,
-    Repository,
-    Transform,
-    Tree,
-    TreeEntry,
-    WorkingIndex
-};
 
 export default GitKit;
 export {
@@ -70,7 +46,6 @@ export {
     RefsIndex,
     RemoteConfig,
     Repository,
-    Transform,
     Tree,
     TreeEntry,
     WorkingIndex

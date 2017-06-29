@@ -1,15 +1,16 @@
 /** @flow */
 /* eslint-disable no-console */
 
-import type { Repository } from '../';
-import { RefsIndex } from '../';
+import type GitKit from '../';
 
 /*
  * Log the list of branches.
  */
-function logTags(repo: Repository): Promise<*> {
-    return RefsIndex.readFromRepository(repo).then(({ tags }) => {
-        tags.forEach((ref, tagName) => {
+function logTags(gitkit: GitKit): Promise<*> {
+    return gitkit.indexRefs().then(() => {
+        const { refs } = gitkit.repo;
+
+        refs.tags.forEach((ref, tagName) => {
             console.log(`${tagName}`);
         });
     });

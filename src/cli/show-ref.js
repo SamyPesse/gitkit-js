@@ -1,14 +1,14 @@
 /** @flow */
 /* eslint-disable no-console */
 
-import type Repository from '../models/Repository';
+import type GitKit from '../';
 
 /*
  * Log the list of refs in the repository
  */
-function showRef(repo: Repository): Promise<*> {
-    return repo.indexRefs().then(_repo => {
-        const { refs } = _repo;
+function showRef(gitkit: GitKit): Promise<*> {
+    return gitkit.indexRefs().then(() => {
+        const { refs } = gitkit.repo;
 
         refs.refs.forEach((ref, refName) => {
             console.log(`${ref.commit || ref.ref}  ${refName}`);

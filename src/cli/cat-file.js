@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 
 import { Blob, Commit, Tree } from '../';
-import type { Repository } from '../';
+import type GitKit from '../';
 
 type Kwargs = {
     pretty: boolean,
@@ -32,7 +32,7 @@ function prettyTree(tree: Tree) {
  * Print an object from the database.
  */
 function catFile(
-    repo: Repository,
+    gitkit: GitKit,
     [sha]: string[],
     { pretty, type, size }: Kwargs
 ): Promise<*> {
@@ -40,12 +40,10 @@ function catFile(
         throw new Error('Missing argument "sha"');
     }
 
-    return repo
+    return gitkit
         .indexObjects()
-        .then(_repo => _repo.readObject(sha))
-        .then(_repo => {
-            const object = _repo.objects.getObject(sha);
-
+        .then(() => gitkit.readObject(sha))
+        .then(object => {
             if (type) {
                 console.log(object.type);
             } else if (size) {

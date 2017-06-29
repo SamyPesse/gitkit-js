@@ -18,7 +18,6 @@ import Ref from './Ref';
 import RefsIndex from './RefsIndex';
 import RemoteConfig from './RemoteConfig';
 import Repository from './Repository';
-import Transform from './Transform';
 import Tree from './Tree';
 import TreeEntry from './TreeEntry';
 import WorkingIndex from './WorkingIndex';
@@ -42,7 +41,6 @@ export {
     RefsIndex,
     RemoteConfig,
     Repository,
-    Transform,
     Tree,
     TreeEntry,
     WorkingIndex

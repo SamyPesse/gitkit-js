@@ -8,7 +8,6 @@ import Config from './Config';
 import WorkingIndex from './WorkingIndex';
 import ObjectsIndex from './ObjectsIndex';
 import RefsIndex from './RefsIndex';
-import Transform from './Transform';
 import Head from './Head';
 import type TreeEntry from './TreeEntry';
 import type { SHA } from '../types/SHA';
@@ -38,10 +37,26 @@ const DEFAULTS: {
 
 class Repository extends Record(DEFAULTS) {
     /*
-     * Start a transformation.
+     * Return sha of head commit.
      */
-    transform(): Transform {
-        return new Transform(this);
+    get headCommit(): SHA {
+        const { head, refs } = this;
+
+        if (!head.commit && !head.ref) {
+            throw new Error('Invalid HEAD');
+        }
+
+        if (head.isDetached) {
+            return head.commit;
+        }
+
+        const ref = refs.getRef(head.ref);
+
+        if (!ref) {
+            throw new Error(`Ref from HEAD "${head.ref}" not found`);
+        }
+
+        return ref.commit;
     }
 
     /*
@@ -64,11 +79,27 @@ class Repository extends Record(DEFAULTS) {
     }
 
     /*
+     * Read the HEAD.
+     */
+    readHEAD(): Promise<Repository> {
+        return Head.readFromRepository(this).then(head => this.merge({ head }));
+    }
+
+    /*
      * Read the config.
      */
     readConfig(): Promise<Repository> {
         return Config.readFromRepository(this).then(config =>
             this.merge({ config })
+        );
+    }
+
+    /*
+     * Read the working index.
+     */
+    readWorkingIndex(): Promise<Repository> {
+        return WorkingIndex.readFromRepository(this).then(workingIndex =>
+            this.merge({ workingIndex })
         );
     }
 
@@ -107,32 +138,6 @@ class Repository extends Record(DEFAULTS) {
                 }
                 return this.walkTree(entry.sha, iter, filepath);
             }, Promise.resolve());
-        });
-    }
-
-    /*
-     * Recursively walk the commit history. The iterator can return "false" to stop.
-     */
-    walkCommits(
-        sha: SHA,
-        iter: (commit: Commit, sha: SHA) => ?boolean
-    ): Promise<boolean> {
-        return this.readObject(sha).then(commit => {
-            if (iter(commit, sha) == false) {
-                return true;
-            }
-
-            return commit.parents.reduce(
-                (prev, parent) =>
-                    prev.then(stopped => {
-                        if (stopped) {
-                            return true;
-                        }
-
-                        return this.walkCommits(parent, iter);
-                    }),
-                Promise.resolve()
-            );
         });
     }
 }

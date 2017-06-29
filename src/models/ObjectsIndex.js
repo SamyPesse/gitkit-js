@@ -53,7 +53,7 @@ class ObjectsIndex extends Record(DEFAULTS) {
         const object = this.getObject(sha);
 
         if (!object) {
-            return null;
+            throw new Error(`object "${sha}" not found`);
         }
 
         if (object.type != type) {
@@ -63,15 +63,15 @@ class ObjectsIndex extends Record(DEFAULTS) {
         return TYPES[type].createFromObject(object);
     }
 
-    getBlob(sha: SHA): ?Blob {
+    getBlob(sha: SHA): Blob {
         return this.getObjectOfType(sha, 'blob');
     }
 
-    getTree(sha: SHA): ?Blob {
+    getTree(sha: SHA): Tree {
         return this.getObjectOfType(sha, 'tree');
     }
 
-    getCommit(sha: SHA): ?Blob {
+    getCommit(sha: SHA): Commit {
         return this.getObjectOfType(sha, 'commit');
     }
 

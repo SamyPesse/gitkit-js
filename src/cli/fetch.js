@@ -1,12 +1,12 @@
 /** @flow */
 /* eslint-disable no-console */
 
-import type { Repository } from '../';
+import type GitKit from '../';
 
 /*
  * Download objects and refs from another repository
  */
-function fetch(repo: Repository): Promise<*> {}
+function fetch(gitkit: GitKit): Promise<*> {}
 
 export default {
     name: 'fetch [repository] [refspec]',

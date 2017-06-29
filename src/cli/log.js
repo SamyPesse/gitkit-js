@@ -1,8 +1,7 @@
 /** @flow */
 /* eslint-disable no-console */
 
-import type Repository from '../models/Repository';
-import type Commit from '../models/Commit';
+import type GitKit, { Commit } from '../';
 
 type Kwargs = {
     max: number
@@ -28,22 +27,26 @@ function printCommit(commit: Commit, sha: string) {
  * Log the commits history
  */
 function logCommits(
-    repo: Repository,
-    [sha]: string[],
+    gitkit: GitKit,
+    args: string[],
     { max }: Kwargs
 ): Promise<*> {
     let count = 0;
 
-    return repo.walkCommits(sha, (commit, commitSHA) => {
-        printCommit(commit, commitSHA);
+    return gitkit.readHEAD().then(() => gitkit.indexRefs()).then(() => {
+        const { headCommit } = gitkit.repo;
 
-        count += 1;
-        return count < max;
+        return gitkit.walkCommits(headCommit, (commit, commitSHA) => {
+            printCommit(commit, commitSHA);
+
+            count += 1;
+            return count < max;
+        });
     });
 }
 
 export default {
-    name: 'log [sha]',
+    name: 'log',
     description: 'Show commit logs',
     exec: logCommits,
     options: [

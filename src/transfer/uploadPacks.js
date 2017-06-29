@@ -1,5 +1,6 @@
 /* @flow */
-import throughFilter from 'through2-filter';
+
+import es from 'event-stream';
 import combine from 'stream-combiner2';
 
 import {
@@ -18,11 +19,15 @@ function createUploadPackParser(opts): WritableStream {
         // Parse metatdata of lines
         createPackLineMetaParser(),
         // Filter packs
-        throughFilter.obj(line => line.type == LINEMETA_TYPES.PACKFILE),
+        es.map((line, callback) => {
+            if (line.type == LINEMETA_TYPES.PACKFILE) {
+                callback(null, line);
+            } else {
+                callback();
+            }
+        }),
         // Parse pack as objects
-        parsePack(opts),
-        // Not sure why... But without this filter, .on('data') doesn't work
-        throughFilter.obj(() => true)
+        parsePack(opts)
     );
 }
 

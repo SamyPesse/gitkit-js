@@ -1,6 +1,6 @@
 /** @flow */
 
-import type { Transform } from '../models';
+import type GitKit from '../GitKit';
 
 /*
  * Transforms to the configuration.
@@ -11,27 +11,29 @@ const Transforms = {};
 /*
  * Read the config.
  */
-Transforms.readConfig = (transform: Transform): Promise<*> =>
-    transform.repo.readConfig().then(repo => (transform.repo = repo));
+Transforms.readConfig = (gitkit: GitKit): Promise<*> =>
+    gitkit.repo.readConfig().then(repo => (gitkit.repo = repo));
 
 /*
  * Write the config to the disk.
  */
-Transforms.flushConfig = (transform: Transform): Promise<*> => {
-    const { repo } = transform;
+Transforms.flushConfig = (gitkit: GitKit): Promise<*> => {
+    const { repo } = gitkit;
     return repo.config.writeToRepo(repo);
 };
 
 /*
  * Add a new remote.
  */
-Transforms.addRemote = (transform: Transform, name: string, url: string) => {
-    const { repo } = transform;
+Transforms.addRemote = (gitkit: GitKit, name: string, url: string): GitKit => {
+    const { repo } = gitkit;
     const { config } = repo;
 
-    transform.repo = repo.merge({
+    gitkit.repo = repo.merge({
         config: config.addRemote(name, url)
     });
+
+    return gitkit;
 };
 
 export default Transforms;

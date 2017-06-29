@@ -1,20 +1,21 @@
 /** @flow */
 /* eslint-disable no-console */
 
-import type Repository from '../models/Repository';
-import { Ref, RefsIndex } from '../';
+import type GitKit from '../';
 
 /*
  * Log the list of branches.
  */
-function logBranches(repo: Repository): Promise<*> {
-    return Promise.all([
-        Ref.readHEADFromRepository(repo),
-        RefsIndex.readFromRepository(repo)
-    ]).then(([head, { branches }]) => {
+function logBranches(gitkit: GitKit): Promise<*> {
+    return gitkit.readHEAD().then(() => gitkit.indexRefs()).then(() => {
+        const { head } = gitkit.repo;
+        const { branches } = gitkit.repo.refs;
+
         branches.forEach((ref, branchName) => {
             console.log(
-                `${head.pointToBranch(branchName) ? '*' : ' '} ${branchName}`
+                `${head.isPointingToBranch(branchName)
+                    ? '*'
+                    : ' '} ${branchName}`
             );
         });
     });

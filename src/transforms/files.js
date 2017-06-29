@@ -1,6 +1,6 @@
 /** @flow */
 
-import type { Transform } from '../models';
+import type GitKit from '../GitKit';
 
 /*
  * Transforms to edit files.
@@ -9,21 +9,21 @@ import type { Transform } from '../models';
 const Transforms = {};
 
 Transforms.writeFile = (
-    transform: Transform,
+    gitkit: GitKit,
     filename: string,
     content: Buffer | string
-) => {
-    const { fs } = transform.repo;
+): Promise<*> => {
+    const { fs } = gitkit.repo;
     return fs.writeFile(filename, content);
 };
 
-Transforms.mkdir = (transform: Transform, dirname: string) => {
-    const { fs } = transform.repo;
+Transforms.mkdir = (gitkit: GitKit, dirname: string): Promise<*> => {
+    const { fs } = gitkit.repo;
     return fs.mkdir(dirname);
 };
 
-Transforms.unlinkFile = (transform: Transform, filename: string) => {
-    const { fs } = transform.repo;
+Transforms.unlinkFile = (gitkit: GitKit, filename: string): Promise<*> => {
+    const { fs } = gitkit.repo;
     return fs.unlinkFile(filename);
 };
 

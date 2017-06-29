@@ -3,8 +3,9 @@
 
 import program from 'commander';
 
-import Repository from '../models/Repository';
+import GitKit, { Repository } from '../';
 import NativeFS from '../fs/NativeFS';
+
 import pkg from '../../package.json';
 
 import lsTree from './ls-tree';
@@ -15,6 +16,7 @@ import tag from './tag';
 import showRef from './show-ref';
 import catFile from './cat-file';
 import fetch from './fetch';
+import remote from './remote';
 
 program.version(pkg.version).option('--debug', 'Enable error debugging');
 
@@ -26,7 +28,8 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
     lsTree,
     lsFiles,
     showRef,
-    fetch
+    fetch,
+    remote
 ].forEach(({ name, description, exec, options = [] }) => {
     let command = program.command(name).description(description);
 
@@ -47,6 +50,7 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
                 const repo = new Repository({
                     fs: new NativeFS(process.cwd())
                 });
+                const gitkit = new GitKit(repo);
 
                 const args = fnargs.slice(0, -1);
                 const kwargs = options.reduce((out, opt) => {
@@ -63,7 +67,7 @@ program.version(pkg.version).option('--debug', 'Enable error debugging');
                     };
                 }, {});
 
-                return exec(repo, args, kwargs);
+                return exec(gitkit, args, kwargs);
             })
             .catch(err => {
                 console.error(

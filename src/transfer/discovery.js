@@ -14,7 +14,7 @@ import {
 
 /*
  * Parse an upload result into a list of packs.
- * It emits "data" for each ref.
+ * It emits "data" for each { name: string, ref: Ref }
  */
 function createDiscoveryParser({
     onCapabilities = () => {}

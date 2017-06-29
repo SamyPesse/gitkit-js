@@ -1,8 +1,10 @@
 /** @flow */
+
 import type { List } from 'immutable';
 import { FetchDiscovery } from '../models';
-import type { Transform, Ref } from '../models';
+import type { Ref } from '../models';
 import type { Transport } from '../transports';
+import type GitKit from '../GitKit';
 
 /*
  * Transforms to do remote operations.
@@ -13,20 +15,20 @@ const Transforms = {};
 /*
  * Clone a remote repository.
  */
-Transforms.clone = (transform: Transform, transport: Transport) => {};
+Transforms.clone = (gitkit: GitKit, transport: Transport) => {};
 
 /*
  * Fetch from a remote transport.
  */
 Transforms.fetch = (
-    transform: Transform,
+    gitkit: GitKit,
     transport: Transport,
     // Ref to fetch/update
     refName: string = 'HEAD'
 ) =>
-    FetchDiscovery.fetch(transform).then(discovery => {
+    FetchDiscovery.fetch(transport).then(discovery => {
         const remoteRef = discovery.refs.get(refName);
-        const localRef = transform.repo.refs.getRef(refName);
+        const localRef = gitkit.repo.refs.getRef(refName);
 
         if (!remoteRef) {
             throw new Error(`Couldn't find remote ref ${refName}`);

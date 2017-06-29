@@ -1,6 +1,6 @@
 /** @flow */
 
-import type { Transform } from '../models';
+import type GitKit from '../GitKit';
 
 /*
  * Transforms to edit the working index.
@@ -8,8 +8,11 @@ import type { Transform } from '../models';
 
 const Transforms = {};
 
-Transforms.addFile = (transform: Transform, filename: string) => {
-    const { fs } = transform.repo;
+Transforms.readWorkingIndex = (gitkit: GitKit): Promise<*> =>
+    gitkit.repo.readWorkingIndex().then(repo => (gitkit.repo = repo));
+
+Transforms.addFile = (gitkit: GitKit, filename: string): Promise<*> => {
+    const { fs } = gitkit.repo;
 
     return fs.stat(filename).then(stat => {});
 };

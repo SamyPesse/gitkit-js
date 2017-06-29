@@ -14,24 +14,14 @@ const DEFAULTS: {
 
 class Ref extends Record(DEFAULTS) {
     /*
-     * A detached head is when the HEAD is pointing to a commit
-     * instead of a ref.
-     *
-     * https://git-scm.com/docs/git-checkout#_detached_head
-     */
-    get isDetached(): boolean {
-        return !!this.commit;
-    }
-
-    /*
      * Check if this ref points to a branch name "branch".
      */
-    pointToBranch(branch: string): boolean {
+    isPointingToBranch(branch: string): boolean {
         return this.ref == `refs/heads/${branch}`;
     }
 
     toString(): string {
-        if (this.isDetached) {
+        if (this.commit) {
             return `${this.commit}\n`;
         }
         return `ref: ${this.ref}\n`;

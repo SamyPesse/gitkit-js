@@ -5,6 +5,16 @@ import type Repository from './Repository';
 
 class Head extends Ref {
     /*
+     * A detached head is when the HEAD is pointing to a commit
+     * instead of a ref.
+     *
+     * https://git-scm.com/docs/git-checkout#_detached_head
+     */
+    get isDetached(): boolean {
+        return !!this.commit;
+    }
+
+    /*
      * Read the HEAD from the repository.
      * The HEAD reference is not stored in the packed-refs
      */

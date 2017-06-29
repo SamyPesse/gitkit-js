@@ -1,18 +1,16 @@
 /** @flow */
 /* eslint-disable no-console */
 
-import type Repository from '../models/Repository';
+import type GitKit from '../';
 
 /*
  * Log the list of remotes.
  */
-function listRemotes(repo: Repository): Promise<*> {
-    const transform = repo.transform();
+function listRemotes(gitkit: GitKit): Promise<*> {
+    return gitkit.readConfig().then(() => {
+        const { config } = gitkit.repo;
 
-    return transform.readConfig().then(() => {
-        const { remotes } = transform.repo;
-
-        remotes.forEach((remote, name) => {
+        config.remotes.forEach((remote, name) => {
             console.log(name);
         });
     });
