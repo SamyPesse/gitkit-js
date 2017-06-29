@@ -1,6 +1,7 @@
 /** @flow */
 /* eslint-disable no-console */
 
+import path from 'path';
 import GitKit, { Repository } from '../';
 import NativeFS from '../fs/NativeFS';
 
@@ -8,14 +9,25 @@ type Kwargs = {
     bare: boolean
 };
 
-function init(_gitkit: GitKit, { bare }: Kwargs): Promise<*> {
+function init(
+    _gitkit: GitKit,
+    [relativeDir = '']: string[],
+    { bare }: Kwargs
+): Promise<*> {
+    const directory = path.resolve(process.cwd(), relativeDir);
     const repo = new Repository({
-        fs: new NativeFS(process.cwd()),
+        fs: new NativeFS(directory),
         isBare: bare
     });
     const gitkit = new GitKit(repo);
 
-    return gitkit.init();
+    return gitkit.init().then(() => {
+        console.log(
+            `Initialized empty Git repository in ${bare
+                ? directory
+                : path.join(directory, '.git')}`
+        );
+    });
 }
 
 export default {
