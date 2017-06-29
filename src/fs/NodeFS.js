@@ -80,23 +80,9 @@ class NodeFS extends GenericFS {
      */
     write(file: string, content: Buffer): Promise<*> {
         const filepath = this.resolve(file);
-        const dirpath = path.dirname(filepath);
+        const dirpath = path.dirname(file);
 
-        return new Promise((resolve, reject) => {
-            mkdirp(
-                dirpath,
-                {
-                    fs: this.fs
-                },
-                err => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                }
-            );
-        }).then(
+        return this.mkdir(dirpath).then(
             () =>
                 new Promise((resolve, reject) => {
                     this.fs.writeFile(filepath, content, err => {
@@ -122,6 +108,29 @@ class NodeFS extends GenericFS {
                     resolve();
                 }
             });
+        });
+    }
+
+    /*
+     * Create a directory.
+     */
+    mkdir(dir: string): Promise<*> {
+        const dirpath = this.resolve(dir);
+
+        return new Promise((resolve, reject) => {
+            mkdirp(
+                dirpath,
+                {
+                    fs: this.fs
+                },
+                err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                }
+            );
         });
     }
 }

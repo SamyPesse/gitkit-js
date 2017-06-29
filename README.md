@@ -67,7 +67,7 @@ repo.transform()
 
 | Description | Status |
 | --------- |:-----------:|
-| Initialize a new repository | ❌ |
+| Initialize a new repository | ✅ |
 | **References** | |
 | Listing refs (branches, tags), both from packed-refs or refs folder |  ✅ |
 | Create a new reference | ❌ |

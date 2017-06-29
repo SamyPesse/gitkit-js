@@ -32,6 +32,17 @@ class Ref extends Record(DEFAULTS) {
     }
 
     /*
+     * Write the ref as a file.
+     */
+    writeToRepo(repo: Repository, filename: string): Promise<*> {
+        const { fs } = repo;
+        const content = this.toBuffer();
+        const filepath = repo.resolveGitFile(filename);
+
+        return fs.write(filepath, content);
+    }
+
+    /*
      * Create a Ref instance from the content of a ref file.
      */
     static createFromBuffer(buffer: Buffer): Ref {

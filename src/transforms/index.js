@@ -1,5 +1,6 @@
 /* @flow */
 
+import InitTransforms from './init';
 import ObjectsTransforms from './objects';
 import RefsTransforms from './refs';
 import RemotesTransforms from './remotes';
@@ -8,6 +9,7 @@ import WorkingTransforms from './working';
 import ConfigTransforms from './config';
 
 const Transforms = {
+    ...InitTransforms,
     ...ObjectsTransforms,
     ...RefsTransforms,
     ...RemotesTransforms,

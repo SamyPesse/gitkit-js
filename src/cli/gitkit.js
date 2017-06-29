@@ -8,6 +8,7 @@ import NativeFS from '../fs/NativeFS';
 
 import pkg from '../../package.json';
 
+// Commands
 import lsTree from './ls-tree';
 import lsFiles from './ls-files';
 import logCommits from './log';
@@ -17,10 +18,12 @@ import showRef from './show-ref';
 import catFile from './cat-file';
 import fetch from './fetch';
 import remote from './remote';
+import init from './init';
 
 program.version(pkg.version).option('--debug', 'Enable error debugging');
 
 [
+    init,
     catFile,
     branch,
     tag,
