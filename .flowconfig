@@ -1,0 +1,10 @@
+[ignore]
+./lib
+
+[include]
+
+[libs]
+
+[options]
+emoji=true
+unsafe.enable_getters_and_setters=true

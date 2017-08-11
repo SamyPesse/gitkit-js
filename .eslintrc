@@ -1,23 +1,32 @@
 {
-    "rules": {
-        "indent": [ 2, 4 ],
-        "quotes": [ 2, "single" ],
-        "linebreak-style": [ 2, "unix" ],
-        "semi": [ 2, "always" ],
-        "no-unused-vars": [ 2, {
-            "vars": "all",
-            "args": "none"
-        } ],
-        "spaced-comment": [ 2, "always" ]
-    },
-    "env": {
-        "node": true,
-        "mocha": true,
-        "browser": true,
-        "jasmine": true
-    },
-    "globals": {
-        "fixtures": true
-    },
-    "extends": "eslint:recommended"
+  "extends": [
+    "airbnb-base",
+    "plugin:flowtype/recommended",
+    "prettier",
+    "prettier/flowtype"
+  ],
+  "plugins": [
+    "flowtype",
+    "prettier"
+  ],
+  "env": {
+    "jest": true
+  },
+  "rules": {
+    "eqeqeq": ["off"],
+    "no-bitwise": ["off"],
+    "class-methods-use-this": ["off"],
+    "import/prefer-default-export": ["off"],
+    "arrow-body-style": ["error", "as-needed"],
+    "no-use-before-define": ["error", { "functions": false }],
+    "no-param-reassign": ["error", { "props": false }],
+    "no-unused-vars": ["error", {
+        "args": "none"
+    }],
+    "prettier/prettier": ["error", {
+        "singleQuote": true,
+        "parser": "flow",
+        "tabWidth": 4
+    }]
+  }
 }

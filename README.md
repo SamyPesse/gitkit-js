@@ -4,100 +4,92 @@
 [![Linux Build Status](https://travis-ci.org/SamyPesse/gitkit-js.svg?branch=master)](https://travis-ci.org/SamyPesse/gitkit-js)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/63nlflxcwmb2pue6?svg=true)](https://ci.appveyor.com/project/SamyPesse/gitkit-js)
 
-Pure JavaScript implementation of Git backed by immutable models and promises.
+GitKit is a pure JavaScript implementation of Git backed by immutable models and promises.
 
-The goal is to provide both a low and high level API for manipulating Git repositories: read files, commit changes, edit working index, clone, push, fetch, etc.
+The goal of this project is not to be used in real-world projects, but instead to provides a readable (the code is typed using flow) JS implementation of the Git-backend with a high-level API for manipulating repositories: read files, commit changes, clone, push, etc. See [Support](#support) for details about supported operations.
 
 This library can work both in the browser and Node.js.
 
 ## Installation
 
 ```
-$ npm install gitkit
+$ yarn add gitkit
+```
+
+## CLI
+
+GitKit implements a CLI with the goal of being compatible with the official Git command.
+
+⚠️ **Do not use it:** GitKit is for testing-only.
+
+```js
+$ npm install gitkit --global
+$ gitkit clone https://github.com/GitbookIO/gitkit.git ./repo
 ```
 
 ## Usage
 
-#### API Basics
-
-State of the Git repository is represented as a single immutable `Repository` object. Read and write access to the repository is done using a `FS` driver, the implementation of the fs depends on the plaftrom (`NativeFS` for Node.js/Native, `LocalStorageFS` or `MemoryFS` for the browser).
+State of the Git repository is represented as a single immutable `Repository` instance. Read and write access to the repository is done using a `FS` driver, the implementation of the fs depends on the platform (`NativeFS` for Node.js, `LocalStorageFS` or `MemoryFS` for the browser).
 
 ```js
-var GitKit = require('gitkit');
-var NativeFS = require('gitkit/lib/fs/native');
+import GitKit, { Repository } from 'gitkit';
 
-// Prepare the filesystem
-var fs = NativeFS(process.cwd());
+import NativeFS from 'gitkit/lib/fs/native';
 
-// Create a repository instance
-var repo = GitKit.Repository.createWithFS(fs, isBare);
+// Create a filesystem to access the repository on the disk:
+const fs = new NativeFS(process.cwd());
+
+// Create a repository:
+const repo = new Repository({ fs });
+const gitkit = new GitKit(repo);
+
+// Commit some changes
+gitkit
+    .writeFile('README.md', 'Hello world')
+    .then(() => gitkit.addFile('README.md'))
+    .then(() => gitkit.commit({
+        message: 'Update README',
+        author: Author.createFromPerson(
+            Person.create({
+                name: 'John Doe',
+                email: 'john.doe@gmail.com'
+            })
+        )
+    }));
 ```
 
-##### Clone a remote repository
+## Support
 
-```js
-// Create a transport instance for the GitHub repository
-var transport = new GitKit.HTTPTransport('https://github.com/GitbookIO/gitbook.git');
-
-GitKit.TransferUtils.clone(repo, transport)
-.then(function(newRepo) {
-    // Clone succeed!
-}, function(err) {
-    // Clone failed
-})
-```
-
-##### List branches
-
-`GitKit.BranchUtils.list` returns a promise listing branches as a list of strings.
-
-```js
-GitKit.BranchUtils.list(repo)
-    .then(function(branches) { ... })
-```
-
-##### Get current branch
-
-`GitKit.BranchUtils.getCurrent` returns a promise resolved with the name of the current active branch.
-
-```js
-GitKit.BranchUtils.getCurrent(repo)
-    .then(function(branch) { ... })
-```
-
-##### List files in repository
-
-`GitKit.WorkingIndex` provides a set of methods to work with the working index.
-
-```js
-GitKit.WorkingIndex.readFromRepo(repo)
-    .then(function(workingIndex) {
-        var entries = workingIndex.getEntries();
-    });
-```
-
-##### List changes not staged for commit
-
-`GitKit.ChangesUtils` provides a set of methods to work with pending changes.
-
-```js
-GitKit.ChangesUtils.list(repo)
-    .then(function(changes) { ... });
-```
-
-##### Commit changes
-
-```js
-var author = GitKit.Person.create('Bob', 'bob@gmail.com');
-var message = 'My First commit';
-
-GitKit.CommitUtils.createForChanges(repo, author, message, changes)
-    .then(function(newRepo) { ... });
-```
-
-##### More example and documentation coming soon!
-
-I'll publish a better documentation for this library soon.
+| Description | Status |
+| --------- |:-----------:|
+| Initialize a new repository | ✅ |
+| **References** | |
+| Listing refs (branches, tags), both from packed-refs or refs folder |  ✅ |
+| Create a new reference | ❌ |
+| **Branches** | |
+| Read current HEAD | ✅ |
+| Checkout a branch (update HEAD and working files) | ❌ |
+| **Index** | |
+| Listing files in the `.git/index` |  ✅ |
+| Add new file in the index | ❌ |
+| Update the index from the file in the repository | ❌ |
+| **Trees** | |
+| List all entries in a tree | ✅ |
+| Create a new tree | ❌ |
+| **Blobs** | |
+| Read a blob by its sha | ✅ |
+| Create a new blob | ❌ |
+| **Commits** | |
+| Read a commit by its sha | ✅ |
+| Walk the commits history | ✅ |
+| Create a new commit | ❌ |
+| **Clone / Fetch** | |
+| Discovery with the remote repository | ✅ |
+| Fetch a reference | ❌ |
+| Clone a new repository | ❌ |
+| **Transports** | |
+| HTTP / HTTPS | ✅ |
+| SSH | ❌ |
 
 ## Thanks
 
